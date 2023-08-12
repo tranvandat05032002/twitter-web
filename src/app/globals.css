@@ -1,3 +1,37 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@layer base {
+  body {
+    background-color: #000000;
+    color: white;
+  }
+}
+
+@layer base {
+  a {
+    color: #1d9bf0;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+}
+/* @layer base {
+  .css-1yk1gt9-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root {
+    border: 1px solid red;
+  }
+} */
+@layer base {
+  body,
+  h1,
+  h2,
+  h3,
+  ul,
+  li {
+    margin: 0;
+    padding: 0;
+  }
+  .css-hfutr2-MuiSvgIcon-root-MuiSelect-icon {
+    color: gray;
+  }
+}
