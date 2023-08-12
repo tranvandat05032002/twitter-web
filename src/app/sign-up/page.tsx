@@ -5,10 +5,8 @@ import { SelectChangeEvent } from "@mui/material/Select";
 import { MenuItem } from "@mui/material";
 import { Input, LayoutAuth, PrimaryButton } from "@/components/common";
 import { DateOfBirth } from "@/components/SingleUseComponents";
+import { useDateStore } from "@/store";
 const SignUp: React.FC = () => {
-  const [month, setMonth] = React.useState<string | number>("");
-  const [day, setDay] = React.useState<string | number>("");
-  const [year, setYear] = React.useState<string | number>("");
   const date = new Date();
   const lastYear = date.getFullYear();
   const dayItem = generateMenuItems({ start: 1, end: 31 });
@@ -18,6 +16,10 @@ const SignUp: React.FC = () => {
     end: lastYear,
     ascending: false,
   });
+  const { day, month, year, setDay, setMonth, setYear } = useDateStore(
+    (state) => state
+  );
+  console.log(day, month, year);
   const handleChangeMonth = (event: SelectChangeEvent<unknown>) => {
     setMonth(event.target.value as string | number);
   };
