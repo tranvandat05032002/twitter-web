@@ -1,9 +1,33 @@
 import { useRouter } from "next/navigation";
 import type React from "react";
 
-import { ButtonProps, createButton } from "./Button";
+import { ButtonProps, Type, createButton } from "./Button";
+interface ButtonProp {
+  children: React.ReactNode;
+  className?: string;
+  type?: Type
+}
+const PrimaryButton = ({ children, className, type }: ButtonProp) => {
+  const propsPrimary: ButtonProps = {
+    children,
+    className,
+    type,
+  };
+  const PrimaryButton = createButton(propsPrimary, "primary");
+  return PrimaryButton;
+};
 
-const AuthButtonGoogle = ({ children }: { children: React.ReactNode }) => {
+const GhostButton = ({children, className, type}: ButtonProp) => {
+  const propsGhost: ButtonProps ={
+    children,
+    className,
+    type
+  }
+  const GhostButton = createButton(propsGhost, "ghost");
+  return GhostButton
+}
+
+const AuthButtonGoogle = ({ children }: ButtonProp) => {
   const propsGoogle: ButtonProps = {
     type: "button",
     // onClick: () => console.log("buttonAuth"),
@@ -12,7 +36,7 @@ const AuthButtonGoogle = ({ children }: { children: React.ReactNode }) => {
   const GoogleButton = createButton(propsGoogle, "OAuth");
   return GoogleButton;
 };
-const AuthButtonFacebook = ({ children }: { children: React.ReactNode }) => {
+const AuthButtonFacebook = ({ children }: ButtonProp) => {
   const propsFacebook: ButtonProps = {
     type: "button",
     // onClick: () => console.log("buttonAuth"),
@@ -22,7 +46,7 @@ const AuthButtonFacebook = ({ children }: { children: React.ReactNode }) => {
   return FacebookButton;
 };
 
-const AuthButtonGithub = ({ children }: { children: React.ReactNode }) => {
+const AuthButtonGithub = ({ children }: ButtonProp) => {
   const propsGithub: ButtonProps = {
     type: "button",
     // onClick: () => console.log("buttonAuth"),
@@ -32,23 +56,7 @@ const AuthButtonGithub = ({ children }: { children: React.ReactNode }) => {
   return GithubButton;
 };
 
-const AuthButtonCredentials = ({
-  isLoading,
-  children,
-}: {
-  isLoading: boolean;
-  children: React.ReactNode;
-}) => {
-  const propsCredentials: ButtonProps = {
-    type: "submit",
-    children,
-    // isLoading,
-  };
-  const CredentialsButton = createButton(propsCredentials, "credentials");
-  return CredentialsButton;
-};
-
-const AuthButtonSignOut = ({ children }: { children: React.ReactNode }) => {
+const AuthButtonSignOut = ({ children }: ButtonProp) => {
   const router = useRouter();
   const handleLogoutAuth = () => {
     console.log("buttonAuth");
@@ -63,9 +71,10 @@ const AuthButtonSignOut = ({ children }: { children: React.ReactNode }) => {
 };
 
 export {
-  AuthButtonCredentials,
+  PrimaryButton,
   AuthButtonFacebook,
   AuthButtonGithub,
   AuthButtonGoogle,
   AuthButtonSignOut,
+  GhostButton
 };

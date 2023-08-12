@@ -1,22 +1,22 @@
 "use client";
 import React from "react";
 import { BsChevronDown, BsApple, BsTwitter } from "react-icons/bs";
-import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
+import { GhostButton, PrimaryButton } from "@/components/common";
+import {
+  AppleIcon,
+  GoogleIcon,
+  TermsAndPrivacyNotice,
+  TwitterIcon,
+} from "@/components/SingleUseComponents";
 export default function Home() {
   return (
-    <div className="relative text-white">
-      <main>
+    <main>
+      <div className="relative text-white">
         <div className="grid grid-cols-[1fr,2fr]">
           <div className="flex items-center justify-center">
             <div className="p-8">
-              <BsTwitter
-                style={{
-                  width: "250px",
-                  height: "270px",
-                  color: "#1d9bf0",
-                }}
-              />
+              <TwitterIcon size="big"></TwitterIcon>
             </div>
           </div>
 
@@ -50,26 +50,13 @@ export default function Home() {
                       <BsChevronDown style={{ margin: "0px 0px 0px 8px" }} />
                     </div>
                   </div>
-                  <FcGoogle
-                    style={{
-                      width: "24px",
-                      height: "24px",
-                      position: "absolute",
-                      right: "4px",
-                    }}
-                  />
+                  <GoogleIcon></GoogleIcon>
                 </div>
               </button>
 
               <button className="w-80 h-11 rounded-full bg-white text-[#202124] transition-all hover:bg-[#e0e0e0                                                                                                                                  ] py-[2px] px-[10px]">
                 <div className="flex items-center justify-center">
-                  <BsApple
-                    style={{
-                      width: "24px",
-                      height: "24px",
-                      margin: "0px 4px 0px 0px",
-                    }}
-                  />
+                  <AppleIcon></AppleIcon>
                   <span className="text-[#3c4043] text-base font-bold">
                     Đăng ký bằng Apple
                   </span>
@@ -86,36 +73,23 @@ export default function Home() {
                 </div>
               </div>
 
-              <Link
-                href="/sign-up"
-                className="w-80 h-11 rounded-full bg-[#1d9bf0] hover:bg-[#1486d2] no-underline hover:no-underline transition-all flex items-center justify-center text-white py-[2px] px-[10px] text-base"
-              >
-                Tạo tài khoản
+              <Link href="/sign-up" className="hover:no-underline">
+                <PrimaryButton className="w-80 h-11 text-base py-[2px] px-[10px]">
+                  Tạo tài khoản
+                </PrimaryButton>
               </Link>
 
-              <div className="text-xs text-[#71767b] min-w-0 break-words">
-                Khi đăng ký, bạn đã đồng ý với{" "}
-                <a href="https://twitter.com/en/tos">Điều khoản Dịch vụ</a> và{" "}
-                <a href="https://twitter.com/en/privacy">
-                  Chính sách Quyền riêng tư
-                </a>
-                , gồm cả{" "}
-                <a href="https://help.twitter.com/en/rules-and-policies/twitter-cookies">
-                  Sử dụng Cookie
-                </a>
-                .
-              </div>
+              <TermsAndPrivacyNotice></TermsAndPrivacyNotice>
             </div>
 
             <div className="flex flex-col gap-y-3 max-w-[320px]">
               <p className="text-[#1d9bf0] text-lg font-bold">
                 Đã có tài khoản?
               </p>
-              <Link
-                href={"/sign-in"}
-                className="w-80 h-11 rounded-full bg-transparent border font-semibold transition-all hover:no-underline hover:bg-[rgba(29,155,240,0.1)] flex items-center justify-center border-[#536472] text-[#1d9bf0] py-[2px] px-[10px] text-base"
-              >
-                Đăng nhập
+              <Link href={"/sign-in"} className="hover:no-underline">
+                <GhostButton className="w-80 h-11 rounded-full  py-[2px] px-[10px] text-base">
+                  Đăng nhập
+                </GhostButton>
               </Link>
             </div>
           </div>
@@ -124,7 +98,7 @@ export default function Home() {
           <span>&copy; 2023 Twitter. </span>
           <span>Contact: tranvandatevondev0503@gmail.com</span>
         </footer>
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }

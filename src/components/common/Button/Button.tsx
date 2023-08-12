@@ -1,7 +1,6 @@
-import { LoadingSniper } from "./LoadingSniper";
+import { LoadingSniper } from "../Loading/LoadingSniper";
 
-type ButtonType = "credentials" | "OAuth" | "logout";
-type Type = "submit" | "reset" | "button";
+export type Type = "submit" | "reset" | "button";
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   type?: Type;
@@ -10,11 +9,13 @@ export interface ButtonProps
   className?: string;
   // isLoading?: boolean;
 }
-function getButtonClass(typeButton: ButtonType): string {
+function getButtonClass(typeButton: string): string {
   switch (typeButton) {
-    case "credentials":
-      return "w-full rounded-lg bg-[#007bff] px-5 py-3 text-white border border-[#333639]";
-    case "OAuth":
+    case "primary":
+      return "rounded-full bg-[#1d9bf0] hover:bg-[#1486d2] hover:no-underline no-underline hover:no-underline transition-all flex items-center justify-center text-white";
+    case "ghost": 
+      return "bg-transparent border font-semibold transition-all hover:no-underline hover:bg-[rgba(29,155,240,0.1)] flex items-center justify-center border-[#536472] text-[#1d9bf0]"
+      case "OAuth":
       return "w-full rounded-lg bg-transparent border flex items-center hover:bg-[#161616] border border-[#333639] hover:scale-105 transition-all font-medium gap-x-[10px] justify-center px-5 py-3 text-[#71767b] shadow";
     case "logout":
       return "w-max rounded-lg bg-yellow-500 px-5 py-3 border border-[#333639] text-white";
@@ -22,10 +23,7 @@ function getButtonClass(typeButton: ButtonType): string {
       return "";
   }
 }
-const createButton = (
-  props: ButtonProps,
-  typeButton: ButtonType
-): JSX.Element => {
+const createButton = (props: ButtonProps, typeButton: string): JSX.Element => {
   const { children, type, className } = props;
   const buttonClass = getButtonClass(typeButton);
   // const child = props.isLoading ? <LoadingSniper /> : children;
