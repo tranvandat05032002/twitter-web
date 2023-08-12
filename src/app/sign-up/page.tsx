@@ -19,7 +19,6 @@ const SignUp: React.FC = () => {
   const { day, month, year, setDay, setMonth, setYear } = useDateStore(
     (state) => state
   );
-  console.log(day, month, year);
   const handleChangeMonth = (event: SelectChangeEvent<unknown>) => {
     setMonth(event.target.value as string | number);
   };

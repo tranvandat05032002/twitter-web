@@ -6,8 +6,10 @@ import {
   PrimaryButton,
   GhostButton,
 } from "./Button/AuthButton";
-import LayoutAuth from "./Form/LayoutAuth"
-import Input from "./Form/Input"
+import LayoutAuth from "./Form/LayoutAuth";
+import Input from "./Form/Input";
+import { ERROR_FORM_MESSAGES } from "./message";
+import {ErrorMessage} from "./Form/ErrorMessage"
 export {
   AuthButtonFacebook,
   AuthButtonGithub,
@@ -16,5 +18,7 @@ export {
   PrimaryButton,
   GhostButton,
   LayoutAuth,
-  Input
+  Input,
+  ERROR_FORM_MESSAGES,
+  ErrorMessage
 };

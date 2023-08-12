@@ -2,10 +2,14 @@ import { useRouter } from "next/navigation";
 import type React from "react";
 
 import { ButtonProps, Type, createButton } from "./Button";
-interface ButtonProp {
+interface ButtonProp
+  extends React.DetailedHTMLProps<
+    React.ButtonHTMLAttributes<HTMLButtonElement>,
+    HTMLButtonElement
+  > {
   children: React.ReactNode;
   className?: string;
-  type?: Type
+  type?: Type;
 }
 const PrimaryButton = ({ children, className, type }: ButtonProp) => {
   const propsPrimary: ButtonProps = {
@@ -17,15 +21,15 @@ const PrimaryButton = ({ children, className, type }: ButtonProp) => {
   return PrimaryButton;
 };
 
-const GhostButton = ({children, className, type}: ButtonProp) => {
-  const propsGhost: ButtonProps ={
+const GhostButton = ({ children, className, type }: ButtonProp) => {
+  const propsGhost: ButtonProps = {
     children,
     className,
-    type
-  }
+    type,
+  };
   const GhostButton = createButton(propsGhost, "ghost");
-  return GhostButton
-}
+  return GhostButton;
+};
 
 const AuthButtonGoogle = ({ children }: ButtonProp) => {
   const propsGoogle: ButtonProps = {
@@ -76,5 +80,5 @@ export {
   AuthButtonGithub,
   AuthButtonGoogle,
   AuthButtonSignOut,
-  GhostButton
+  GhostButton,
 };
