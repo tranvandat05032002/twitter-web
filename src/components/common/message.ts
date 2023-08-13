@@ -1,6 +1,5 @@
 export const ERROR_FORM_MESSAGES = {
-    firstNameRequired: 'Vui lòng nhập tên',
-    lastNameRequired: 'Vui lòng nhập họ',
+    userNameRequired: 'Vui lòng nhập tên của bạn',
     emailRequired: 'Vui lòng nhập địa chỉ email của bạn',
     isEmail: 'Vui lòng nhập đúng địa chỉ email',
     passwordRequired: 'Vui lòng nhập mật khẩu',

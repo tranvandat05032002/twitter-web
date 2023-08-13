@@ -10,12 +10,22 @@ interface ButtonProp
   children: React.ReactNode;
   className?: string;
   type?: Type;
+  isLoading?: boolean;
+  disabledForm?: boolean;
 }
-const PrimaryButton = ({ children, className, type }: ButtonProp) => {
+const PrimaryButton = ({
+  children,
+  className,
+  type,
+  isLoading,
+  disabledForm,
+}: ButtonProp) => {
   const propsPrimary: ButtonProps = {
     children,
     className,
     type,
+    isLoading,
+    disabledForm,
   };
   const PrimaryButton = createButton(propsPrimary, "primary");
   return PrimaryButton;
