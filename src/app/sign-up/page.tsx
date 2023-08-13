@@ -3,9 +3,37 @@ import React from "react";
 import Link from "next/link";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { MenuItem } from "@mui/material";
-import { Input, LayoutAuth, PrimaryButton } from "@/components/common";
+import {
+  ERROR_FORM_MESSAGES,
+  ErrorMessage,
+  Input,
+  LayoutAuth,
+  PrimaryButton,
+} from "@/components/common";
 import { DateOfBirth } from "@/components/SingleUseComponents";
 import { useDateStore } from "@/store";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { RegisterForm } from "@/types/userTypes";
+import { isObjectEmpty } from "@/utils/handlers";
+
+const schemaValidator = yup.object().shape({
+  userName: yup.string().required(ERROR_FORM_MESSAGES.userNameRequired),
+  email: yup
+    .string()
+    .required(ERROR_FORM_MESSAGES.emailRequired)
+    .email(ERROR_FORM_MESSAGES.isEmail),
+  password: yup
+    .string()
+    .required(ERROR_FORM_MESSAGES.passwordRequired)
+    .min(6, ERROR_FORM_MESSAGES.minPasswordLength),
+  confirmPassword: yup
+    .string()
+    .required(ERROR_FORM_MESSAGES.passwordRequired)
+    .min(6, ERROR_FORM_MESSAGES.minPasswordLength)
+    .oneOf([yup.ref("password")], ERROR_FORM_MESSAGES.passwordMatch),
+});
 const SignUp: React.FC = () => {
   const date = new Date();
   const lastYear = date.getFullYear();
@@ -16,6 +44,7 @@ const SignUp: React.FC = () => {
     end: lastYear,
     ascending: false,
   });
+  const [canSubmit, setCanSubmit] = React.useState<boolean>(true);
   const { day, month, year, setDay, setMonth, setYear } = useDateStore(
     (state) => state
   );
@@ -28,15 +57,74 @@ const SignUp: React.FC = () => {
   const handleChangeYear = (event: SelectChangeEvent<unknown>) => {
     setYear(event.target.value as string | number);
   };
+  const {
+    control,
+    handleSubmit,
+    getValues,
+    formState: { errors, isValid, isSubmitting },
+  } = useForm<RegisterForm>({
+    resolver: yupResolver(schemaValidator),
+    mode: "onSubmit",
+    defaultValues: {
+      email: "",
+      password: "",
+      confirmPassword: "",
+      userName: "",
+    },
+    context: { canSubmit },
+  });
+  React.useEffect(() => {
+    if (isObjectEmpty(getValues())) {
+      setCanSubmit(true);
+    }
+    setCanSubmit(false);
+  }, [canSubmit]);
+  const handleRegister = (values: RegisterForm) => {
+    if (isObjectEmpty(values)) return;
+    console.log(values);
+  };
   return (
     <LayoutAuth>
-      <form action="">
+      <form onSubmit={handleSubmit(handleRegister)} autoComplete="off">
         <h1 className="text-3xl font-bold pb-5">Tạo tài khoản của bạn</h1>
-        <Input placeholder="Tên" type="text"></Input>
-        <Input placeholder="Email" type="email"></Input>
-        <Input placeholder="Mật khẩu" type="text"></Input>
-        <Input placeholder="Nhập lại mật khẩu" type="text"></Input>
-
+        <div className="py-[13px]">
+          <Input
+            placeholder="Tên"
+            type="text"
+            name="userName"
+            control={control}
+          ></Input>
+          {errors && <ErrorMessage>{errors.userName?.message}</ErrorMessage>}
+        </div>
+        <div className="py-[13px]">
+          <Input
+            placeholder="Email"
+            type="email"
+            name="email"
+            control={control}
+          ></Input>
+          {errors && <ErrorMessage>{errors.email?.message}</ErrorMessage>}
+        </div>
+        <div className="py-[13px]">
+          <Input
+            placeholder="Mật khẩu"
+            type="text"
+            name="password"
+            control={control}
+          ></Input>
+          {errors && <ErrorMessage>{errors.password?.message}</ErrorMessage>}
+        </div>
+        <div className="py-[13px]">
+          <Input
+            placeholder="Nhập lại mật khẩu"
+            type="text"
+            name="confirmPassword"
+            control={control}
+          ></Input>
+          {errors && (
+            <ErrorMessage>{errors.confirmPassword?.message}</ErrorMessage>
+          )}
+        </div>
         <div>
           <DateOfBirth
             day={day}
@@ -59,7 +147,9 @@ const SignUp: React.FC = () => {
 
         <PrimaryButton
           className="w-[440px] h-[52px] text-base  my-6 px-8"
-          type="button"
+          type="submit"
+          isLoading={isSubmitting}
+          disabledForm={canSubmit}
         >
           Tạo tài khoản
         </PrimaryButton>
@@ -67,7 +157,7 @@ const SignUp: React.FC = () => {
     </LayoutAuth>
   );
 };
-
+export default SignUp;
 export const generateMenuItems = ({
   start,
   end,
@@ -99,4 +189,3 @@ export const generateMenuItems = ({
   }
   return items;
 };
-export default SignUp;

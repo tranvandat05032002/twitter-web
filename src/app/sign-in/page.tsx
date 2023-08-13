@@ -21,27 +21,43 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { LoginForm } from "@/types/userTypes";
+import { isObjectEmpty } from "@/utils/handlers";
+const schemaValidator = yup.object().shape({
+  email: yup
+    .string()
+    .required(ERROR_FORM_MESSAGES.emailRequired)
+    .email(ERROR_FORM_MESSAGES.isEmail),
+  password: yup
+    .string()
+    .required(ERROR_FORM_MESSAGES.passwordRequired)
+    .min(6, ERROR_FORM_MESSAGES.minPasswordLength),
+});
 const SignIn: React.FC = () => {
-  const schemaValidator = yup.object().shape({
-    email: yup
-      .string()
-      .required(ERROR_FORM_MESSAGES.emailRequired)
-      .email(ERROR_FORM_MESSAGES.isEmail),
-    password: yup
-      .string()
-      .required(ERROR_FORM_MESSAGES.passwordRequired)
-      .min(6, ERROR_FORM_MESSAGES.minPasswordLength),
-  });
+  const [canSubmit, setCanSubmit] = React.useState<boolean>(true);
   const {
     control,
     handleSubmit,
+    getValues,
     formState: { errors, isValid, isSubmitting },
   } = useForm<LoginForm>({
     resolver: yupResolver(schemaValidator),
     mode: "onSubmit",
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+    context: { canSubmit },
   });
-  const handleRegister = (values: LoginForm) => {
-    if (!isValid) return;
+  React.useEffect(() => {
+    if (isObjectEmpty(getValues())) {
+      setCanSubmit(true);
+    }
+    setCanSubmit(false);
+  }, [canSubmit]);
+  const handleLogin = (values: LoginForm) => {
+    if (isObjectEmpty(values)) {
+      return;
+    }
     console.log(values);
   };
   return (
@@ -49,8 +65,8 @@ const SignIn: React.FC = () => {
       <div className="flex items-center justify-center">
         <TwitterIcon size="small"></TwitterIcon>
       </div>
-      <form onSubmit={handleSubmit(handleRegister)} autoComplete="off">
-        <div className="">
+      <form onSubmit={handleSubmit(handleLogin)} autoComplete="off">
+        <div>
           <div>
             <h1 className="text-3xl font-bold pb-5 text-center">
               Đăng nhập vào Twitter
@@ -107,8 +123,12 @@ const SignIn: React.FC = () => {
           </div>
         </div>
         <PrimaryButton
-          className="w-[440px] h-[52px] text-base  my-6 px-8"
+          className={`w-[440px] h-[52px] text-base  my-6 px-8 ${
+            canSubmit ? "hover:bg-none" : ""
+          }`}
           type="submit"
+          isLoading={isSubmitting}
+          disabledForm={canSubmit}
         >
           Đăng nhập
         </PrimaryButton>
