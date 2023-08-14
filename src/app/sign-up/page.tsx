@@ -61,6 +61,7 @@ const SignUp: React.FC = () => {
     control,
     handleSubmit,
     getValues,
+    reset,
     formState: { errors, isValid, isSubmitting },
   } = useForm<RegisterForm>({
     resolver: yupResolver(schemaValidator),
@@ -82,6 +83,7 @@ const SignUp: React.FC = () => {
   const handleRegister = (values: RegisterForm) => {
     if (isObjectEmpty(values)) return;
     console.log(values);
+    reset({});
   };
   return (
     <LayoutAuth>
@@ -108,7 +110,7 @@ const SignUp: React.FC = () => {
         <div className="py-[13px]">
           <Input
             placeholder="Mật khẩu"
-            type="text"
+            type="password"
             name="password"
             control={control}
           ></Input>

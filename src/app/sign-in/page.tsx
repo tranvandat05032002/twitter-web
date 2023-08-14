@@ -38,6 +38,7 @@ const SignIn: React.FC = () => {
     control,
     handleSubmit,
     getValues,
+    reset,
     formState: { errors, isValid, isSubmitting },
   } = useForm<LoginForm>({
     resolver: yupResolver(schemaValidator),
@@ -59,6 +60,7 @@ const SignIn: React.FC = () => {
       return;
     }
     console.log(values);
+    reset({});
   };
   return (
     <LayoutAuth>
@@ -85,7 +87,7 @@ const SignIn: React.FC = () => {
             <Input
               control={control}
               placeholder="Mật khẩu"
-              type="text"
+              type="password"
               name="password"
             ></Input>
             {errors && <ErrorMessage>{errors.password?.message}</ErrorMessage>}
