@@ -11,7 +11,7 @@ import {
   PrimaryButton,
 } from "@/components/common";
 import { DateOfBirth } from "@/components/SingleUseComponents";
-import { useDateStore } from "@/store";
+import { useDateStore } from "@/hooks";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
