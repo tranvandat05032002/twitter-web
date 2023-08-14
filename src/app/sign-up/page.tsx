@@ -2,6 +2,7 @@
 import React from "react";
 import Link from "next/link";
 import { SelectChangeEvent } from "@mui/material/Select";
+import { parse, formatISO } from "date-fns";
 import { MenuItem } from "@mui/material";
 import {
   ERROR_FORM_MESSAGES,
@@ -16,7 +17,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { RegisterForm } from "@/types/userTypes";
-import { isObjectEmpty } from "@/utils/handlers";
+import { isObjectEmpty, formatISO8601 } from "@/utils/handlers";
 
 const schemaValidator = yup.object().shape({
   userName: yup.string().required(ERROR_FORM_MESSAGES.userNameRequired),
@@ -45,9 +46,8 @@ const SignUp: React.FC = () => {
     ascending: false,
   });
   const [canSubmit, setCanSubmit] = React.useState<boolean>(true);
-  const { day, month, year, setDay, setMonth, setYear } = useDateStore(
-    (state) => state
-  );
+  const { day, month, year, iso8601, setDay, setMonth, setYear, setISO8601 } =
+    useDateStore((state) => state);
   const handleChangeMonth = (event: SelectChangeEvent<unknown>) => {
     setMonth(event.target.value as string | number);
   };
@@ -62,6 +62,7 @@ const SignUp: React.FC = () => {
     handleSubmit,
     getValues,
     reset,
+    setValue,
     formState: { errors, isValid, isSubmitting },
   } = useForm<RegisterForm>({
     resolver: yupResolver(schemaValidator),
@@ -75,6 +76,12 @@ const SignUp: React.FC = () => {
     context: { canSubmit },
   });
   React.useEffect(() => {
+    if (day && month && year) {
+      const isoDate = formatISO8601(month, day, year);
+      setValue("dateOfBirth", isoDate as string);
+    }
+  }, [day, month, year]);
+  React.useEffect(() => {
     if (isObjectEmpty(getValues())) {
       setCanSubmit(true);
     }
@@ -84,6 +91,7 @@ const SignUp: React.FC = () => {
     if (isObjectEmpty(values)) return;
     console.log(values);
     reset({});
+    setMonth(""), setDay(""), setYear("");
   };
   return (
     <LayoutAuth>
