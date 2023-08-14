@@ -3,11 +3,11 @@ export type LoginForm = {
   password: string;
 };
 export type RegisterForm = {
-  userName: string;
+  name: string;
   email: string;
   password: string;
-  confirmPassword: string;
-  dateOfBirth?: string;
+  confirm_password: string;
+  date_of_birth?: string;
 };
 
 export interface IUser {

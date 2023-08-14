@@ -1,3 +1,3 @@
 import { useDateStore } from "./useDate";
-
-export { useDateStore };
+import {useAuth} from "./useAuth"
+export { useDateStore, useAuth };

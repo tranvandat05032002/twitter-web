@@ -2,7 +2,6 @@
 import React from "react";
 import Link from "next/link";
 import { SelectChangeEvent } from "@mui/material/Select";
-import { parse, formatISO } from "date-fns";
 import { MenuItem } from "@mui/material";
 import {
   ERROR_FORM_MESSAGES,
@@ -12,7 +11,7 @@ import {
   PrimaryButton,
 } from "@/components/common";
 import { DateOfBirth } from "@/components/SingleUseComponents";
-import { useDateStore } from "@/store";
+import { useDateStore, useAuth } from "@/store";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
@@ -20,7 +19,7 @@ import { RegisterForm } from "@/types/userTypes";
 import { isObjectEmpty, formatISO8601 } from "@/utils/handlers";
 
 const schemaValidator = yup.object().shape({
-  userName: yup.string().required(ERROR_FORM_MESSAGES.userNameRequired),
+  name: yup.string().required(ERROR_FORM_MESSAGES.userNameRequired),
   email: yup
     .string()
     .required(ERROR_FORM_MESSAGES.emailRequired)
@@ -29,7 +28,7 @@ const schemaValidator = yup.object().shape({
     .string()
     .required(ERROR_FORM_MESSAGES.passwordRequired)
     .min(6, ERROR_FORM_MESSAGES.minPasswordLength),
-  confirmPassword: yup
+  confirm_password: yup
     .string()
     .required(ERROR_FORM_MESSAGES.passwordRequired)
     .min(6, ERROR_FORM_MESSAGES.minPasswordLength)
@@ -46,8 +45,9 @@ const SignUp: React.FC = () => {
     ascending: false,
   });
   const [canSubmit, setCanSubmit] = React.useState<boolean>(true);
-  const { day, month, year, iso8601, setDay, setMonth, setYear, setISO8601 } =
+  const { day, month, year, setDay, setMonth, setYear, setISO8601 } =
     useDateStore((state) => state);
+  const { register, registerErrorMessage } = useAuth((state) => state);
   const handleChangeMonth = (event: SelectChangeEvent<unknown>) => {
     setMonth(event.target.value as string | number);
   };
@@ -70,28 +70,35 @@ const SignUp: React.FC = () => {
     defaultValues: {
       email: "",
       password: "",
-      confirmPassword: "",
-      userName: "",
+      confirm_password: "",
+      name: "",
+      date_of_birth: "",
     },
     context: { canSubmit },
   });
   React.useEffect(() => {
     if (day && month && year) {
       const isoDate = formatISO8601(month, day, year);
-      setValue("dateOfBirth", isoDate as string);
+      setValue("date_of_birth", isoDate as string);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [day, month, year]);
   React.useEffect(() => {
     if (isObjectEmpty(getValues())) {
       setCanSubmit(true);
     }
     setCanSubmit(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canSubmit]);
-  const handleRegister = (values: RegisterForm) => {
+  const handleRegister = async (values: RegisterForm) => {
     if (isObjectEmpty(values)) return;
-    console.log(values);
-    reset({});
-    setMonth(""), setDay(""), setYear("");
+    try {
+      const result = await register(values);
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
+    // reset form
   };
   return (
     <LayoutAuth>
@@ -101,10 +108,10 @@ const SignUp: React.FC = () => {
           <Input
             placeholder="Tên"
             type="text"
-            name="userName"
+            name="name"
             control={control}
           ></Input>
-          {errors && <ErrorMessage>{errors.userName?.message}</ErrorMessage>}
+          {errors && <ErrorMessage>{errors.name?.message}</ErrorMessage>}
         </div>
         <div className="py-[13px]">
           <Input
@@ -128,11 +135,11 @@ const SignUp: React.FC = () => {
           <Input
             placeholder="Nhập lại mật khẩu"
             type="text"
-            name="confirmPassword"
+            name="confirm_password"
             control={control}
           ></Input>
           {errors && (
-            <ErrorMessage>{errors.confirmPassword?.message}</ErrorMessage>
+            <ErrorMessage>{errors.confirm_password?.message}</ErrorMessage>
           )}
         </div>
         <div>
