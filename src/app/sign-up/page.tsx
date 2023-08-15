@@ -94,7 +94,6 @@ const SignUp: React.FC = () => {
     if (isObjectEmpty(values)) return;
     try {
       const result = await register(values);
-      console.log(result);
     } catch (error) {
       console.log(error);
     }

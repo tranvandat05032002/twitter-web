@@ -3,9 +3,8 @@ import { apiInstance } from "@/utils/api";
 import { create } from "zustand";
 type IAuthStore = {
   user: IUser | null;
-  loginStatus: boolean;
   errorMessage: string;
-  login: (infoLogin: LoginForm) => Promise<void>;
+  login: (infoLogin: LoginForm) => void;
   logout: () => void;
   registerErrorMessage: string;
   register: (data: RegisterForm) => Promise<void>;
@@ -14,7 +13,6 @@ export const useAuth = create<IAuthStore>((set) => ({
   user: null,
   registerErrorMessage: "",
   register: async (userForm: RegisterForm) => {
-    console.log(userForm);
     try {
       const response = await apiInstance.post("/users/register", {
         ...userForm,
@@ -26,9 +24,18 @@ export const useAuth = create<IAuthStore>((set) => ({
       console.log(error);
     }
   },
-  //feature
-  loginStatus: true,
+  //features
   errorMessage: "",
-  login: async () => {},
+  login: async (user) => {
+    console.log(user);
+    try {
+      const response = await apiInstance.post("/users/login", {
+        ...user,
+      });
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  },
   logout() {},
 }));

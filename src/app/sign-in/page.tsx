@@ -22,6 +22,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { LoginForm } from "@/types/userTypes";
 import { isObjectEmpty } from "@/utils/handlers";
+import { useAuth } from "@/store";
 const schemaValidator = yup.object().shape({
   email: yup
     .string()
@@ -34,6 +35,7 @@ const schemaValidator = yup.object().shape({
 });
 const SignIn: React.FC = () => {
   const [canSubmit, setCanSubmit] = React.useState<boolean>(true);
+  const { login } = useAuth((state) => state);
   const {
     control,
     handleSubmit,
@@ -54,13 +56,13 @@ const SignIn: React.FC = () => {
       setCanSubmit(true);
     }
     setCanSubmit(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canSubmit]);
   const handleLogin = (values: LoginForm) => {
-    if (isObjectEmpty(values)) {
-      return;
-    }
     console.log(values);
-    reset({});
+    if (isObjectEmpty(values)) return;
+    const result = login(values);
+    console.log("result: ", result);
   };
   return (
     <LayoutAuth>
