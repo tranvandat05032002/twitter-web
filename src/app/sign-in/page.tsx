@@ -10,6 +10,7 @@ import {
   PrimaryButton,
 } from "@/components/common";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
 import {
   FacebookIcon,
@@ -20,7 +21,7 @@ import {
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { LoginForm } from "@/types/userTypes";
+import { IUser, LoginForm } from "@/types/userTypes";
 import { isObjectEmpty } from "@/utils/handlers";
 import { useAuth } from "@/store";
 const schemaValidator = yup.object().shape({
@@ -36,6 +37,7 @@ const schemaValidator = yup.object().shape({
 const SignIn: React.FC = () => {
   const [canSubmit, setCanSubmit] = React.useState<boolean>(true);
   const { login } = useAuth((state) => state);
+  const router = useRouter();
   const {
     control,
     handleSubmit,
@@ -58,11 +60,13 @@ const SignIn: React.FC = () => {
     setCanSubmit(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canSubmit]);
-  const handleLogin = (values: LoginForm) => {
-    console.log(values);
+  const handleLogin = async (values: LoginForm) => {
     if (isObjectEmpty(values)) return;
-    const result = login(values);
-    console.log("result: ", result);
+    const user = await login(values);
+    if (user) {
+      router.push("/home");
+    }
+    console.log(user);
   };
   return (
     <LayoutAuth>
@@ -109,7 +113,7 @@ const SignIn: React.FC = () => {
           </div>
         </div>
         <div className="pb-[13px]">
-          <div className="grid grid-cols-1 gap-x-2 sm:grid-cols-3">
+          <div className="grid grid-cols-1 gap-x-2 gap-y-1 sm:grid-cols-3">
             <AuthButtonGoogle>
               <GoogleIconSignIn></GoogleIconSignIn>
               <p>Google</p>

@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { MenuItem } from "@mui/material";
 import {
@@ -45,6 +46,7 @@ const SignUp: React.FC = () => {
     ascending: false,
   });
   const [canSubmit, setCanSubmit] = React.useState<boolean>(true);
+  const router = useRouter();
   const { day, month, year, setDay, setMonth, setYear, setISO8601 } =
     useDateStore((state) => state);
   const { register, registerErrorMessage } = useAuth((state) => state);
@@ -94,6 +96,9 @@ const SignUp: React.FC = () => {
     if (isObjectEmpty(values)) return;
     try {
       const result = await register(values);
+      if (result?.status === 200) {
+        router.push("/sign-in");
+      }
     } catch (error) {
       console.log(error);
     }

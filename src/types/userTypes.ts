@@ -10,10 +10,25 @@ export type RegisterForm = {
   date_of_birth?: string;
 };
 
+// export interface IUser {
+//   userName: string;
+//   email: string;
+//   image: string;
+//   accessToken: string;
+//   id: string;
+// }
 export interface IUser {
-  userName: string;
+  _id?: string;
+  name: string;
   email: string;
-  image: string;
-  accessToken: string;
-  id: string;
+  date_of_birth: Date;
+  created_at?: Date;
+  updated_at?: Date;
+  verify?: number;
+  bio?: string;
+  location?: string;
+  website?: string;
+  username?: string;
+  avatar?: string;
+  cover_photo?: string;
 }

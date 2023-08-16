@@ -1,41 +1,71 @@
 import { IUser, LoginForm, RegisterForm } from "@/types/userTypes";
 import { apiInstance } from "@/utils/api";
+import { saveToken } from "@/utils/auth/cookies";
+import { AxiosResponse } from "axios";
 import { create } from "zustand";
 type IAuthStore = {
-  user: IUser | null;
+  userInfo: IUser | null;
   errorMessage: string;
-  login: (infoLogin: LoginForm) => void;
+  login: (infoLogin: LoginForm) => Promise<IUser>;
   logout: () => void;
+  fetchMe: (token: string) => void;
+  updateUser: (userData: IUser) => void;
   registerErrorMessage: string;
-  register: (data: RegisterForm) => Promise<void>;
+  register: (data: RegisterForm) => Promise<AxiosResponse | undefined>;
 };
-export const useAuth = create<IAuthStore>((set) => ({
-  user: null,
-  registerErrorMessage: "",
-  register: async (userForm: RegisterForm) => {
-    try {
-      const response = await apiInstance.post("/users/register", {
-        ...userForm,
-      });
-      if (response?.status === 200) {
-        return response?.data;
+export const useAuth = create<IAuthStore>((set) => {
+  const authFunctions = {
+    userInfo: null,
+    registerErrorMessage: "",
+    register: async (userForm: RegisterForm) => {
+      try {
+        const response = await apiInstance.post("/users/register", {
+          ...userForm,
+        });
+          return response;
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
-    }
-  },
-  //features
-  errorMessage: "",
-  login: async (user) => {
-    console.log(user);
-    try {
-      const response = await apiInstance.post("/users/login", {
-        ...user,
-      });
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-    }
-  },
-  logout() {},
-}));
+    },
+    fetchMe: async (access_token: string) => {
+      if (!access_token) return;
+      try {
+        const response = await apiInstance.get("/users/me", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access_token}`,
+          },
+        });
+        return response?.data?.result;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    errorMessage: "",
+    updateUser: (userData: IUser) => set({ userInfo: userData }),
+    login: async (user: LoginForm) => {
+      try {
+        const response = await apiInstance.post("/users/login", {
+          ...user,
+        });
+        const access_token = response?.data?.result?.access_token as string;
+        const refresh_token = response?.data?.result?.refresh_token as string;
+        if (access_token && refresh_token) {
+          saveToken({ access_token, refresh_token });
+          // fetch data /me here
+          const fetchedUser = await authFunctions.fetchMe(access_token);
+          return fetchedUser;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    logout() {
+      set({ userInfo: null });
+    },
+  };
+
+  return {
+    ...authFunctions,
+  };
+});
