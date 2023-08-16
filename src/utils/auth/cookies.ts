@@ -40,3 +40,19 @@ export const getToken = () => {
     refresh_token,
   };
 };
+
+export const logOutCookies = () => {
+  const access_token = Cookies.get(accessTokenKey);
+  if (access_token) {
+    Cookies.remove(accessTokenKey, {
+      ...objCookies,
+      path: "/",
+      domain: "localhost",
+    });
+    Cookies.remove(refreshTokenKey, {
+      ...objCookies,
+      path: "/",
+      domain: "localhost",
+    });
+  }
+};

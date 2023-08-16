@@ -1,15 +1,23 @@
 import { IUser, LoginForm, RegisterForm } from "@/types/userTypes";
 import { apiInstance } from "@/utils/api";
-import { saveToken } from "@/utils/auth/cookies";
+import Cookies from "js-cookie";
+import { getToken, logOutCookies, saveToken } from "@/utils/auth/cookies";
 import { AxiosResponse } from "axios";
 import { create } from "zustand";
 type IAuthStore = {
   userInfo: IUser | null;
   errorMessage: string;
+  access_token: string | null;
   login: (infoLogin: LoginForm) => Promise<IUser>;
-  logout: () => void;
+  logout: () => Promise<AxiosResponse | undefined>;
   fetchMe: (token: string) => void;
-  updateUser: (userData: IUser) => void;
+  updateUserAndToken: ({
+    userData,
+    token,
+  }: {
+    userData: IUser | null;
+    token: string;
+  }) => void;
   registerErrorMessage: string;
   register: (data: RegisterForm) => Promise<AxiosResponse | undefined>;
 };
@@ -17,12 +25,13 @@ export const useAuth = create<IAuthStore>((set) => {
   const authFunctions = {
     userInfo: null,
     registerErrorMessage: "",
+    access_token: "",
     register: async (userForm: RegisterForm) => {
       try {
         const response = await apiInstance.post("/users/register", {
           ...userForm,
         });
-          return response;
+        return response;
       } catch (error) {
         console.log(error);
       }
@@ -36,13 +45,19 @@ export const useAuth = create<IAuthStore>((set) => {
             Authorization: `Bearer ${access_token}`,
           },
         });
-        return response?.data?.result;
+        return response?.data?.result?.user;
       } catch (error) {
         console.log(error);
       }
     },
     errorMessage: "",
-    updateUser: (userData: IUser) => set({ userInfo: userData }),
+    updateUserAndToken: ({
+      userData,
+      token,
+    }: {
+      userData: IUser | null;
+      token: string;
+    }) => set({ userInfo: userData, access_token: token }),
     login: async (user: LoginForm) => {
       try {
         const response = await apiInstance.post("/users/login", {
@@ -60,8 +75,29 @@ export const useAuth = create<IAuthStore>((set) => {
         console.log(error);
       }
     },
-    logout() {
-      set({ userInfo: null });
+    logout: async () => {
+      const { access_token, refresh_token } = getToken();
+      console.log(access_token, refresh_token);
+      try {
+        const response = await apiInstance.post(
+          "/users/logout",
+          {
+            refresh_token: refresh_token,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${access_token}`,
+            },
+          }
+        );
+        if (response?.status === 200) {
+          logOutCookies();
+          return response;
+        }
+      } catch (error) {
+        console.log(error);
+      }
     },
   };
 

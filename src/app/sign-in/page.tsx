@@ -24,6 +24,7 @@ import * as yup from "yup";
 import { IUser, LoginForm } from "@/types/userTypes";
 import { isObjectEmpty } from "@/utils/handlers";
 import { useAuth } from "@/store";
+import { getToken } from "@/utils/auth/cookies";
 const schemaValidator = yup.object().shape({
   email: yup
     .string()
@@ -36,7 +37,7 @@ const schemaValidator = yup.object().shape({
 });
 const SignIn: React.FC = () => {
   const [canSubmit, setCanSubmit] = React.useState<boolean>(true);
-  const { login } = useAuth((state) => state);
+  const { login, updateUserAndToken, access_token } = useAuth((state) => state);
   const router = useRouter();
   const {
     control,
@@ -64,9 +65,11 @@ const SignIn: React.FC = () => {
     if (isObjectEmpty(values)) return;
     const user = await login(values);
     if (user) {
+      const { access_token } = getToken();
+      updateUserAndToken({ userData: user, token: access_token as string });
       router.push("/home");
     }
-    console.log(user);
+    console.log(user, access_token);
   };
   return (
     <LayoutAuth>
