@@ -10,7 +10,8 @@ type IAuthStore = {
   access_token: string | null;
   login: (infoLogin: LoginForm) => Promise<IUser>;
   logout: () => Promise<AxiosResponse | undefined>;
-  fetchMe: (token: string) => void;
+  fetchMe: (token: string) => Promise<IUser>;
+  getUserReload: (token: string) => void;
   updateUserAndToken: ({
     userData,
     token,
@@ -77,7 +78,7 @@ export const useAuth = create<IAuthStore>((set) => {
     },
     logout: async () => {
       const { access_token, refresh_token } = getToken();
-      console.log(access_token, refresh_token);
+      if(!access_token && !refresh_token) return;
       try {
         const response = await apiInstance.post(
           "/users/logout",
@@ -97,6 +98,31 @@ export const useAuth = create<IAuthStore>((set) => {
         }
       } catch (error) {
         console.log(error);
+      }
+    },
+    getUserReload: async (token: string) => {
+      const { access_token } = getToken();
+      const response = await apiInstance.post(
+        "/users/refresh-token",
+        {
+          refresh_token: token,
+        },
+        {
+          headers: {
+            "Content-Type": "Application/json",
+            Authorization: `Bearer ${access_token}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        const access_token = response?.data?.result?.access_token;
+        const refresh_token = response?.data?.result?.refresh_token;
+        saveToken({ access_token, refresh_token });
+        const user = await useAuth.getState().fetchMe(access_token);
+        useAuth.getState().updateUserAndToken({
+          userData: user as IUser,
+          token: access_token
+        })
       }
     },
   };

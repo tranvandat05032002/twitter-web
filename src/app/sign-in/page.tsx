@@ -64,12 +64,10 @@ const SignIn: React.FC = () => {
   const handleLogin = async (values: LoginForm) => {
     if (isObjectEmpty(values)) return;
     const user = await login(values);
-    if (user) {
-      const { access_token } = getToken();
-      updateUserAndToken({ userData: user, token: access_token as string });
-      router.push("/home");
-    }
-    console.log(user, access_token);
+    if(!user) return;
+    const { access_token } = getToken();
+    updateUserAndToken({ userData: user, token: access_token as string });
+    router.push("/home");
   };
   return (
     <LayoutAuth>

@@ -5,27 +5,32 @@ import { useRouter } from "next/navigation";
 import React from "react";
 
 const Home = () => {
-  const { userInfo, updateUserAndToken, logout, access_token } = useAuth(
-    (state) => state
-  );
+  const { userInfo, updateUserAndToken, logout, access_token, getUserReload } =
+    useAuth((state) => state);
   const router = useRouter();
   React.useEffect(() => {
-    if (userInfo) {
+    if (userInfo && userInfo._id) {
       const { access_token } = getToken();
       updateUserAndToken({ userData: userInfo, token: access_token as string });
     } else {
-      // get accessToken when refresh site
-
-      // updateUserAndToken({ userData: null, token: "" });
-      // router.push("/sign-in");
+      const { refresh_token } = getToken();
+      if (refresh_token) {
+        getUserReload(refresh_token);
+      } else {
+        router.push("/sign-in");
+        updateUserAndToken({
+          userData: null,
+          token: "",
+        });
+        logout();
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userInfo]);
-  console.log(userInfo, access_token);
   const handleLogout = async () => {
     const response = await logout();
-    if(response?.status === 200 || !userInfo) {
-      router.push("/sign-in")
+    if (response?.status === 200 || !userInfo) {
+      router.push("/sign-in");
     }
   };
   return (
