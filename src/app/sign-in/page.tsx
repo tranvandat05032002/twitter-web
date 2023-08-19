@@ -101,10 +101,15 @@ const SignIn: React.FC = () => {
             ></Input>
             {errors && <ErrorMessage>{errors.password?.message}</ErrorMessage>}
           </div>
-          <div className="text-xs">
-            <span>Bạn chưa có tài khoản? </span>
-            <Link href="/sign-up" className="text-[#1d9bf0]">
-              Đăng ký ngay
+          <div className="text-xs flex justify-between items-center">
+            <div>
+              <span>Bạn chưa có tài khoản? </span>
+              <Link href="/sign-up" className="text-[#1d9bf0]">
+                Đăng ký ngay
+              </Link>
+            </div>
+            <Link href={"/forgot-password?token="} className="text-[#1d9bf0]">
+              Quên mật khẩu?
             </Link>
           </div>
         </div>

@@ -39,7 +39,7 @@ const Page = () => {
     },
     context: { canSubmit },
   });
-  const {verifyForgotPasswordToken} = useAuth((state) => state)
+  const { verifyForgotPasswordToken } = useAuth((state) => state);
   React.useEffect(() => {
     if (isObjectEmpty(getValues())) {
       setCanSubmit(true);
@@ -49,8 +49,6 @@ const Page = () => {
   }, [canSubmit]);
   const handleResetPassword = async (values: ForgotForm) => {
     if (isObjectEmpty(values)) return;
-    const response = await verifyForgotPasswordToken(values);
-    console.log(response)
   };
   return (
     <LayoutAuth>

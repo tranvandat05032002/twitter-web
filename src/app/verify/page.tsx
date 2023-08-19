@@ -20,7 +20,7 @@ const VerifyPage = () => {
     getResultVerify();
   }, [token, statusVerify]);
   const handleResendVerify = async () => {
-    const response = await resendEmailToken(token as string);
+    const response = await resendEmailToken();
     response?.status === 200
       ? toast.success("Email resent success!")
       : toast.error("Email resent error!");
