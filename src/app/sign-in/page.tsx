@@ -71,7 +71,6 @@ const SignIn: React.FC = () => {
       router.push("/home");
     }
   };
-  console.log(userInfo)
   return (
     <LayoutAuth>
       <div className="flex items-center justify-center">

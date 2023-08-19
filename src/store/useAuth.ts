@@ -149,7 +149,6 @@ export const useAuth = create<IAuthStore>((set) => {
     resendEmailToken: async (token: string) => {
       const { access_token } = getToken();
       if (!access_token) return;
-      console.log(access_token);
       try {
         const response = await apiInstance.post(
           "/users/resend-verify-email",
