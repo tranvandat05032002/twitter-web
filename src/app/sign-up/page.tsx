@@ -49,7 +49,7 @@ const SignUp: React.FC = () => {
   const router = useRouter();
   const { day, month, year, setDay, setMonth, setYear, setISO8601 } =
     useDateStore((state) => state);
-  const { register, registerErrorMessage } = useAuth((state) => state);
+  const { register } = useAuth((state) => state);
   const handleChangeMonth = (event: SelectChangeEvent<unknown>) => {
     setMonth(event.target.value as string | number);
   };
@@ -97,7 +97,7 @@ const SignUp: React.FC = () => {
     try {
       const result = await register(values);
       if (result?.status === 200) {
-        router.push("/sign-in");
+        router.push('/verify?token=');
       }
     } catch (error) {
       console.log(error);

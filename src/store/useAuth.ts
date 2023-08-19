@@ -21,6 +21,8 @@ type IAuthStore = {
   }) => void;
   registerErrorMessage: string;
   register: (data: RegisterForm) => Promise<AxiosResponse | undefined>;
+  verifyEmailToken: (token: string) => Promise<AxiosResponse | undefined>;
+  resendEmailToken: (token: string) => Promise<AxiosResponse | undefined>;
 };
 export const useAuth = create<IAuthStore>((set) => {
   const authFunctions = {
@@ -32,6 +34,11 @@ export const useAuth = create<IAuthStore>((set) => {
         const response = await apiInstance.post("/users/register", {
           ...userForm,
         });
+        const access_token = response?.data?.result?.access_token as string;
+        const refresh_token = response?.data?.result?.refresh_token as string;
+        if (access_token && refresh_token) {
+          saveToken({ access_token, refresh_token });
+        }
         return response;
       } catch (error) {
         console.log(error);
@@ -70,6 +77,10 @@ export const useAuth = create<IAuthStore>((set) => {
           saveToken({ access_token, refresh_token });
           // fetch data /me here
           const fetchedUser = await authFunctions.fetchMe(access_token);
+          useAuth.getState().updateUserAndToken({
+            userData: fetchedUser as IUser,
+            token: access_token,
+          });
           return fetchedUser;
         }
       } catch (error) {
@@ -78,7 +89,7 @@ export const useAuth = create<IAuthStore>((set) => {
     },
     logout: async () => {
       const { access_token, refresh_token } = getToken();
-      if(!access_token && !refresh_token) return;
+      if (!access_token && !refresh_token) return;
       try {
         const response = await apiInstance.post(
           "/users/logout",
@@ -121,8 +132,42 @@ export const useAuth = create<IAuthStore>((set) => {
         const user = await useAuth.getState().fetchMe(access_token);
         useAuth.getState().updateUserAndToken({
           userData: user as IUser,
-          token: access_token
-        })
+          token: access_token,
+        });
+      }
+    },
+    verifyEmailToken: async (token: string) => {
+      try {
+        const response = await apiInstance.post("/users/verify-email", {
+          email_verify_token: token as string,
+        });
+        return response;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    resendEmailToken: async (token: string) => {
+      const { access_token } = getToken();
+      if (!access_token) return;
+      console.log(access_token);
+      try {
+        const response = await apiInstance.post(
+          "/users/resend-verify-email",
+          {},
+          {
+            headers: {
+              "Content-Type": "Application/json",
+              Authorization: `Bearer ${access_token}`,
+            },
+          }
+        );
+        // console.log(response);
+        // if (response.status === 200) {
+        //   useAuth.getState().verifyEmailToken(token);
+        // }
+        return response;
+      } catch (error) {
+        console.log(error);
       }
     },
   };

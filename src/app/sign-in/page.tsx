@@ -37,7 +37,9 @@ const schemaValidator = yup.object().shape({
 });
 const SignIn: React.FC = () => {
   const [canSubmit, setCanSubmit] = React.useState<boolean>(true);
-  const { login, updateUserAndToken, access_token } = useAuth((state) => state);
+  const { login, updateUserAndToken, access_token, userInfo } = useAuth(
+    (state) => state
+  );
   const router = useRouter();
   const {
     control,
@@ -64,11 +66,12 @@ const SignIn: React.FC = () => {
   const handleLogin = async (values: LoginForm) => {
     if (isObjectEmpty(values)) return;
     const user = await login(values);
-    if(!user) return;
     const { access_token } = getToken();
-    updateUserAndToken({ userData: user, token: access_token as string });
-    router.push("/home");
+    if (user?.verify === 1 && user) {
+      router.push("/home");
+    }
   };
+  console.log(userInfo)
   return (
     <LayoutAuth>
       <div className="flex items-center justify-center">
