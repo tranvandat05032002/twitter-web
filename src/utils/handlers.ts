@@ -17,3 +17,11 @@ export function formatISO8601(
   const isoDate = formatISO(parsedDate);
   return isoDate;
 }
+
+export function normalizeEmail(email: string) {
+  let excludedPart = email.substring(0, 2);
+  let remainingPart = email.substring(2);
+  let outputString = email.replace(/[^@]/g, "*");
+  let finalOutput = excludedPart + outputString;
+  return finalOutput;
+}

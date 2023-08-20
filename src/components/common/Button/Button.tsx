@@ -4,7 +4,7 @@ export type Type = "submit" | "reset" | "button";
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   type?: Type;
-  // onClick?: () => void;
+  onClick?: () => void;
   children: React.ReactNode;
   className?: string;
   isLoading?: boolean;
@@ -25,13 +25,14 @@ function getButtonClass(typeButton: string): string {
   }
 }
 const createButton = (props: ButtonProps, typeButton: string): JSX.Element => {
-  const { children, type, className, disabledForm } = props;
+  const { children, type, className, disabledForm, onClick } = props;
   const buttonClass = getButtonClass(typeButton);
   const child = props.isLoading ? <LoadingSniper /> : children;
   return (
     <button
       disabled={disabledForm}
       type={type}
+      onClick = {onClick}
       className={`${className || ""} ${buttonClass} ${
         disabledForm ? "opacity-60" : ""
       }`}
