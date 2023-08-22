@@ -13,4 +13,5 @@ export const ERROR_FORM_MESSAGES = {
     serverError: 'Có lỗi máy chủ xảy ra. Vui lòng thử lại sau.',
     invalidLoginError:
       'Tài khoản hoặc mật khẩu không đúng. Vui lòng kiểm tra lại.',
+    otpRequired: 'Vui lòng nhập OTP'
   };

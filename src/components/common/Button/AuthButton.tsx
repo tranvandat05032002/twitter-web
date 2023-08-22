@@ -11,7 +11,7 @@ interface ButtonProp
   className?: string;
   type?: Type;
   isLoading?: boolean;
-  onClick?: () => void,
+  onClick?: () => void;
   disabledForm?: boolean;
 }
 const PrimaryButton = ({
@@ -19,6 +19,7 @@ const PrimaryButton = ({
   className,
   type,
   isLoading,
+  onClick,
   disabledForm,
 }: ButtonProp) => {
   const propsPrimary: ButtonProps = {
@@ -26,6 +27,7 @@ const PrimaryButton = ({
     className,
     type,
     isLoading,
+    onClick,
     disabledForm,
   };
   const PrimaryButton = createButton(propsPrimary, "primary");

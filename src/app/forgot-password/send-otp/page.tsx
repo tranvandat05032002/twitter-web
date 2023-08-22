@@ -15,31 +15,28 @@ import * as yup from "yup";
 import { isObjectEmpty, normalizeEmail } from "@/utils/handlers";
 import { useAuth } from "@/store";
 import { useEmail } from "@/store/useEmail";
-export interface ForgotForm {
-  email: string;
+import { getOTPToken } from "@/utils/auth/cookies";
+export interface OTPForm {
+  otp_auth: string;
 }
 const FindEmail = () => {
   const [canSubmit, setCanSubmit] = React.useState<boolean>(true);
   const router = useRouter();
-  const { findEmail } = useAuth((state) => state);
+  const { checkOTP } = useAuth((state) => state);
   const { setEmailWithoutAt, saveEmail } = useEmail((state) => state);
   const schemaValidator = yup.object().shape({
-    email: yup
-      .string()
-      .required(ERROR_FORM_MESSAGES.emailRequired)
-      .email(ERROR_FORM_MESSAGES.isEmail),
+    otp_auth: yup.string().required(ERROR_FORM_MESSAGES.otpRequired),
   });
   const {
     control,
     handleSubmit,
     getValues,
-    setValue,
     formState: { errors, isSubmitting },
-  } = useForm<ForgotForm>({
+  } = useForm<OTPForm>({
     resolver: yupResolver(schemaValidator),
     mode: "onSubmit",
     defaultValues: {
-      email: "",
+      otp_auth: "",
     },
     context: { canSubmit },
   });
@@ -50,14 +47,16 @@ const FindEmail = () => {
     setCanSubmit(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canSubmit]);
-  const handleFindEmail = async (values: ForgotForm) => {
+  const handleVerifyOTP = async (values: OTPForm) => {
     if (isObjectEmpty(values)) return;
-    saveEmail(values.email);
-    const response = await findEmail(values);
+    // const response
+    const { otp_token } = getOTPToken();
+    const response = await checkOTP({
+      otpInfo: values,
+      otpToken: otp_token as string,
+    });
     if (response?.status === 200) {
-      const email_normalized = normalizeEmail(values.email);
-      setEmailWithoutAt(email_normalized);
-      router.push("/forgot-password");
+      router.push("/reset-password")
     }
   };
   return (
@@ -67,25 +66,24 @@ const FindEmail = () => {
           <TwitterIcon size="small"></TwitterIcon>
         </div>
 
-        <form onSubmit={handleSubmit(handleFindEmail)} autoComplete="off">
+        <form onSubmit={handleSubmit(handleVerifyOTP)} autoComplete="off">
           <div>
             <div>
               <h1 className="text-3xl font-bold pb-2 text-center">
-                Tìm tài khoản Twitter của bạn
+                Xác thực OTP
               </h1>
               <p className="text-base text-[#71767B] font-light">
-                Nhập email được liên kết với tài khoản của bạn để thực hiện thay
-                đổi mật khẩu
+                Nhập OTP chúng tôi đã gửi về tài khoản của bạn
               </p>
             </div>
             <div className="py-[13px]">
               <Input
                 control={control}
-                placeholder="Email"
-                type="email"
-                name="email"
+                placeholder="OTP"
+                type="otp_auth"
+                name="otp_auth"
               ></Input>
-              {errors && <ErrorMessage>{errors.email?.message}</ErrorMessage>}
+              {errors && <ErrorMessage>{errors.otp_auth?.message}</ErrorMessage>}
             </div>
           </div>
           <PrimaryButton
@@ -96,7 +94,7 @@ const FindEmail = () => {
             isLoading={isSubmitting}
             disabledForm={canSubmit}
           >
-            Tiếp theo
+            Xác nhận
           </PrimaryButton>
         </form>
       </LayoutAuth>
