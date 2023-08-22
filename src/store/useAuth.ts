@@ -1,9 +1,16 @@
 import { IUser, LoginForm, RegisterForm } from "@/types/userTypes";
 import { apiInstance } from "@/utils/api";
 import Cookies from "js-cookie";
-import { getToken, logOutCookies, saveToken } from "@/utils/auth/cookies";
+import {
+  getOTPToken,
+  getToken,
+  logOutCookies,
+  saveToken,
+} from "@/utils/auth/cookies";
 import { AxiosResponse } from "axios";
 import { create } from "zustand";
+import { ForgotForm } from "@/app/find-account/page";
+import { OTPForm } from "@/app/forgot-password/send-otp/page";
 type IAuthStore = {
   userInfo: IUser | null;
   errorMessage: string;
@@ -22,7 +29,16 @@ type IAuthStore = {
   registerErrorMessage: string;
   register: (data: RegisterForm) => Promise<AxiosResponse | undefined>;
   verifyEmailToken: (token: string) => Promise<AxiosResponse | undefined>;
-  resendEmailToken: (token: string) => Promise<AxiosResponse | undefined>;
+  resendEmailToken: () => Promise<AxiosResponse | undefined>;
+  findEmail: (email: ForgotForm) => Promise<AxiosResponse | undefined>;
+  forgotPasswordToken: (email: string) => Promise<AxiosResponse | undefined>;
+  checkOTP: ({
+    otpInfo,
+    otpToken,
+  }: {
+    otpInfo: OTPForm;
+    otpToken: string;
+  }) => Promise<AxiosResponse | undefined>;
 };
 export const useAuth = create<IAuthStore>((set) => {
   const authFunctions = {
@@ -146,7 +162,7 @@ export const useAuth = create<IAuthStore>((set) => {
         console.log(error);
       }
     },
-    resendEmailToken: async (token: string) => {
+    resendEmailToken: async () => {
       const { access_token } = getToken();
       if (!access_token) return;
       try {
@@ -160,10 +176,51 @@ export const useAuth = create<IAuthStore>((set) => {
             },
           }
         );
-        // console.log(response);
-        // if (response.status === 200) {
-        //   useAuth.getState().verifyEmailToken(token);
-        // }
+        return response;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    findEmail: async (email: ForgotForm) => {
+      try {
+        const response = await apiInstance.post("/users/find-email", {
+          ...email,
+        });
+        return response;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    forgotPasswordToken: async (email: string) => {
+      try {
+        const response = await apiInstance.post("/users/forgot-password", {
+          email,
+        });
+        return response;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    checkOTP: async ({
+      otpInfo,
+      otpToken,
+    }: {
+      otpInfo: OTPForm;
+      otpToken: string;
+    }) => {
+      try {
+        const response = await apiInstance.post(
+          "/users/verify-otp",
+          {
+            ...otpInfo,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${otpToken}`,
+            },
+          }
+        );
         return response;
       } catch (error) {
         console.log(error);
