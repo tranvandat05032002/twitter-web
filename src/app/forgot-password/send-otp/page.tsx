@@ -56,7 +56,7 @@ const FindEmail = () => {
       otpToken: otp_token as string,
     });
     if (response?.status === 200) {
-      router.push("/reset-password")
+      router.push("/reset-password");
     }
   };
   return (
@@ -80,10 +80,12 @@ const FindEmail = () => {
               <Input
                 control={control}
                 placeholder="OTP"
-                type="otp_auth"
+                type="text"
                 name="otp_auth"
               ></Input>
-              {errors && <ErrorMessage>{errors.otp_auth?.message}</ErrorMessage>}
+              {errors && (
+                <ErrorMessage>{errors.otp_auth?.message}</ErrorMessage>
+              )}
             </div>
           </div>
           <PrimaryButton

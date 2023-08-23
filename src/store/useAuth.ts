@@ -11,6 +11,7 @@ import { AxiosResponse } from "axios";
 import { create } from "zustand";
 import { ForgotForm } from "@/app/find-account/page";
 import { OTPForm } from "@/app/forgot-password/send-otp/page";
+import { ResetPasswordForm } from "@/app/reset-password/page";
 type IAuthStore = {
   userInfo: IUser | null;
   errorMessage: string;
@@ -37,6 +38,13 @@ type IAuthStore = {
     otpToken,
   }: {
     otpInfo: OTPForm;
+    otpToken: string;
+  }) => Promise<AxiosResponse | undefined>;
+  resetPassword: ({
+    resetForm,
+    otpToken,
+  }: {
+    resetForm: ResetPasswordForm;
     otpToken: string;
   }) => Promise<AxiosResponse | undefined>;
 };
@@ -221,6 +229,23 @@ export const useAuth = create<IAuthStore>((set) => {
             },
           }
         );
+        return response;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    resetPassword: async ({
+      resetForm,
+      otpToken,
+    }: {
+      resetForm: ResetPasswordForm;
+      otpToken: string;
+    }) => {
+      try {
+        const response = await apiInstance.post("/users/reset-password", {
+          ...resetForm,
+          otp_password_token: otpToken,
+        });
         return response;
       } catch (error) {
         console.log(error);
