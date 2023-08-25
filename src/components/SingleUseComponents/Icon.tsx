@@ -1,5 +1,5 @@
 import { FcGoogle } from "react-icons/fc";
-import { BsApple, BsTwitter } from "react-icons/bs";
+import { BsApple, BsTwitter, BsArrowRight } from "react-icons/bs";
 import { FaFacebookF, FaGithub } from "react-icons/fa";
 export const GoogleIcon = () => {
   return (
@@ -9,6 +9,17 @@ export const GoogleIcon = () => {
         height: "24px",
         position: "absolute",
         right: "4px",
+      }}
+    />
+  );
+};
+
+export const BsArrowRightIcon = () => {
+  return (
+    <BsArrowRight
+      style={{
+        color: "#71767b",
+        width: "20px",
       }}
     />
   );
@@ -38,7 +49,7 @@ export const GoogleIconSignIn = () => {
   return <FcGoogle style={{ height: "25px", width: "25px" }} />;
 };
 
-export const TwitterIcon = ({size}: {size: "big" | "small"}) => {
+export const TwitterIcon = ({ size }: { size: "big" | "small" }) => {
   return size === "big" ? (
     <BsTwitter
       style={{

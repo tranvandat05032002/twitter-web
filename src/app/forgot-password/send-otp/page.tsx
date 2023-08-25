@@ -1,104 +1,123 @@
 "use client";
 import { useRouter } from "next/navigation";
-import {
-  ERROR_FORM_MESSAGES,
-  ErrorMessage,
-  Input,
-  LayoutAuth,
-  PrimaryButton,
-} from "@/components/common";
+import Link from "next/link";
+import { GhostButton, LayoutAuth, PrimaryButton } from "@/components/common";
 import React from "react";
-import { TwitterIcon } from "@/components/SingleUseComponents";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { isObjectEmpty, normalizeEmail } from "@/utils/handlers";
 import { useAuth } from "@/store";
 import { useEmail } from "@/store/useEmail";
-import { getOTPToken } from "@/utils/auth/cookies";
+import { getOTPToken, saveOTP } from "@/utils/auth/cookies";
+import dynamic from "next/dynamic";
+import { toast } from "react-toastify";
+import { BsArrowRightIcon } from "@/components/SingleUseComponents/Icon";
+const DynamicOtpInput = dynamic(() => import("react-otp-input"), {
+  ssr: false,
+}); // render client
 export interface OTPForm {
   otp_auth: string;
 }
 const FindEmail = () => {
-  const [canSubmit, setCanSubmit] = React.useState<boolean>(true);
+  const [otp, setOtp] = React.useState<string>("");
   const router = useRouter();
-  const { checkOTP } = useAuth((state) => state);
-  const { setEmailWithoutAt, saveEmail } = useEmail((state) => state);
-  const schemaValidator = yup.object().shape({
-    otp_auth: yup.string().required(ERROR_FORM_MESSAGES.otpRequired),
-  });
-  const {
-    control,
-    handleSubmit,
-    getValues,
-    formState: { errors, isSubmitting },
-  } = useForm<OTPForm>({
-    resolver: yupResolver(schemaValidator),
-    mode: "onSubmit",
-    defaultValues: {
-      otp_auth: "",
-    },
-    context: { canSubmit },
-  });
-  React.useEffect(() => {
-    if (isObjectEmpty(getValues())) {
-      setCanSubmit(true);
-    }
-    setCanSubmit(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [canSubmit]);
-  const handleVerifyOTP = async (values: OTPForm) => {
-    if (isObjectEmpty(values)) return;
-    // const response
+  const { checkOTP, resendOTP } = useAuth((state) => state);
+  const { emailSave } = useEmail((state) => state);
+  const [nextButton, setNextButton] = React.useState<boolean>(false);
+  const handleVerifyOTP = async () => {
     const { otp_token } = getOTPToken();
     const response = await checkOTP({
-      otpInfo: values,
+      otp,
       otpToken: otp_token as string,
     });
     if (response?.status === 200) {
+      toast.success("Xác thực thành công. Vui lòng chờ trong gây lát", {
+        pauseOnHover: false,
+      });
       router.push("/reset-password");
     }
   };
+  const handleCancel = () => {
+    router.push("/sign-in");
+  };
+  const handleResendOTP = async () => {
+    const { otp_token } = getOTPToken();
+    const response = await resendOTP(otp_token as string);
+    if (response?.status === 200) {
+      toast.success("Chúng tôi đã gửi lại mã OTP mới đến bạn", {
+        pauseOnHover: false,
+      });
+      saveOTP({
+        otp_token: response.data.jwtToken,
+      });
+    } else {
+      toast.error("Đã xảy ra lỗi", {
+        pauseOnHover: false,
+      });
+    }
+  };
+  React.useEffect(() => {
+    if (!otp) {
+      setNextButton(false);
+    } else {
+      setNextButton(true);
+    }
+  }, [otp]);
+  const handleSetOTP = (value: string) => {
+    setOtp(value);
+  };
   return (
     <>
-      <LayoutAuth>
-        <div className="flex items-center justify-center">
-          <TwitterIcon size="small"></TwitterIcon>
-        </div>
-
-        <form onSubmit={handleSubmit(handleVerifyOTP)} autoComplete="off">
+      <LayoutAuth className="px-8 border border-[#536473]">
+        <div className="py-8">
           <div>
-            <div>
-              <h1 className="text-3xl font-bold pb-2 text-center">
-                Xác thực OTP
-              </h1>
-              <p className="text-base text-[#71767B] font-light">
-                Nhập OTP chúng tôi đã gửi về tài khoản của bạn
-              </p>
+            <div className="text-base font-medium">
+              <p className="text-white">Chúng tôi đã gửi mã OTP tới </p>
+              <p className="text-[#1d9bf0] mb-4 font-light">{emailSave}</p>
+
+              <div className="flex items-center">
+                <BsArrowRightIcon />
+                <span className="text-[#ea4aaa] ml-2">Enter code*</span>
+              </div>
             </div>
-            <div className="py-[13px]">
-              <Input
-                control={control}
-                placeholder="OTP"
-                type="text"
-                name="otp_auth"
-              ></Input>
-              {errors && (
-                <ErrorMessage>{errors.otp_auth?.message}</ErrorMessage>
-              )}
+            <div className="py-4 w-full ">
+              <DynamicOtpInput
+                value={otp}
+                onChange={(otp) => handleSetOTP(otp)}
+                numInputs={6}
+                inputStyle={
+                  "bg-transparent mx-[5px] flex-1 !w-[52px] otp-input h-[58px] border border-[#536473] focus:outline-none focus:border focus:border-[#66b3ff]"
+                }
+                renderInput={(props) => <input {...props} />}
+              />
             </div>
           </div>
-          <PrimaryButton
-            className={`w-[440px] h-[52px] text-base  my-6 px-8 ${
-              canSubmit ? "hover:bg-none" : ""
-            }`}
-            type="submit"
-            isLoading={isSubmitting}
-            disabledForm={canSubmit}
-          >
-            Xác nhận
-          </PrimaryButton>
-        </form>
+          <React.Fragment>
+            {nextButton ? (
+              <PrimaryButton
+                className={`w-full py-[12px] text-base rounded-full  my-6 px-8`}
+                onClick={handleVerifyOTP}
+              >
+                Xác nhận
+              </PrimaryButton>
+            ) : (
+              <GhostButton
+                className={`w-full py-[12px] text-base rounded-full  my-6 px-8`}
+                onClick={handleCancel}
+              >
+                Hủy
+              </GhostButton>
+            )}
+          </React.Fragment>
+          <div className="text-xs text-[#71767b] min-w-0 break-words">
+            <span> Bạn không nhận được OTP? </span>
+            <button
+              onClick={handleResendOTP}
+              className="text-[#1d9bf0] hover:underline"
+            >
+              Gửi lại mã
+            </button>
+            <span> hoặc </span>
+            <Link href={"/find-account"}>cập nhật địa chỉ email.</Link>
+          </div>
+        </div>
       </LayoutAuth>
     </>
   );

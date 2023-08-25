@@ -34,10 +34,10 @@ type IAuthStore = {
   findEmail: (email: ForgotForm) => Promise<AxiosResponse | undefined>;
   forgotPasswordToken: (email: string) => Promise<AxiosResponse | undefined>;
   checkOTP: ({
-    otpInfo,
+    otp,
     otpToken,
   }: {
-    otpInfo: OTPForm;
+    otp: string;
     otpToken: string;
   }) => Promise<AxiosResponse | undefined>;
   resetPassword: ({
@@ -47,6 +47,7 @@ type IAuthStore = {
     resetForm: ResetPasswordForm;
     otpToken: string;
   }) => Promise<AxiosResponse | undefined>;
+  resendOTP: (otpToken: string) => Promise<AxiosResponse | undefined>;
 };
 export const useAuth = create<IAuthStore>((set) => {
   const authFunctions = {
@@ -210,17 +211,17 @@ export const useAuth = create<IAuthStore>((set) => {
       }
     },
     checkOTP: async ({
-      otpInfo,
+      otp,
       otpToken,
     }: {
-      otpInfo: OTPForm;
+      otp: string;
       otpToken: string;
     }) => {
       try {
         const response = await apiInstance.post(
           "/users/verify-otp",
           {
-            ...otpInfo,
+            otp_auth: otp,
           },
           {
             headers: {
@@ -251,6 +252,19 @@ export const useAuth = create<IAuthStore>((set) => {
         console.log(error);
       }
     },
+    resendOTP: async (otpToken: string) => {
+      try {
+        const response = await apiInstance.post("/users/resend-otp", {}, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${otpToken}`,
+          },
+        })
+        return response
+      } catch (error) {
+        console.log(error)
+      }
+    }
   };
 
   return {
