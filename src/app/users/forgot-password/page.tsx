@@ -12,6 +12,8 @@ import {
   saveOTP,
 } from "@/utils/auth/cookies";
 import { normalizeEmail } from "@/utils/handlers";
+import { useForm } from "react-hook-form";
+import { Radio } from "@mui/material";
 
 export interface ForgotForm {
   email: string;
@@ -20,6 +22,9 @@ const Page = () => {
   const router = useRouter();
   const [emailCookies, setEmailCookies] = React.useState<string>("");
   const { forgotPasswordToken } = useAuth((state) => state);
+  const { control } = useForm({
+    mode: "onChange",
+  });
   const handleCancelForgot = () => {
     removeEmailCookies();
     router.push("/sign-in");
@@ -44,7 +49,7 @@ const Page = () => {
         <TwitterIcon size="small"></TwitterIcon>
       </div>
       <div>
-        <div className="text-[15px]">
+        <div className="text-[15px] w-[420px]">
           <h1 className="text-3xl font-semibold mb-2">
             Chúng tôi nên gửi mã xác nhận ở đâu?
           </h1>
@@ -58,7 +63,7 @@ const Page = () => {
 
           <div className="flex justify-between items-center mb-4">
             <p>Send an email to {email_normal}</p>
-            <input type="radio" />
+            <Radio name="accept-send" checked={true} size="small" />
           </div>
 
           <p>
