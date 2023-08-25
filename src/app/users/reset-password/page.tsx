@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import {
   ERROR_FORM_MESSAGES,
   ErrorMessage,
+  GhostButton,
   Input,
   LayoutAuth,
   PrimaryButton,
@@ -14,7 +15,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { isObjectEmpty } from "@/utils/handlers";
 import { useAuth } from "@/store";
-import { getOTPToken } from "@/utils/auth/cookies";
+import {
+  getOTPToken,
+  removeEmailCookies,
+  removeOTPToken,
+} from "@/utils/auth/cookies";
 import { toast } from "react-toastify";
 export interface ResetPasswordForm {
   password: string;
@@ -56,6 +61,11 @@ const FindEmail = () => {
     setCanSubmit(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canSubmit]);
+  const handleCancel = () => {
+    removeEmailCookies();
+    removeOTPToken();
+    router.push("/sign-in");
+  };
   const handleResetPassword = async (values: ResetPasswordForm) => {
     const { otp_token } = getOTPToken();
     if (isObjectEmpty(values)) return;
@@ -64,12 +74,12 @@ const FindEmail = () => {
       otpToken: otp_token as string,
     });
     if (response?.status === 200) {
+      removeEmailCookies();
+      removeOTPToken();
       toast.success("Đổi mật khẩu thành công!", {
         pauseOnHover: false,
       });
-      setTimeout(() => {
-        router.push("/sign-in");
-      }, 2000);
+      router.push("/sign-in");
     }
   };
   return (
@@ -85,8 +95,11 @@ const FindEmail = () => {
               <h1 className="text-3xl font-bold pb-2 text-center">
                 Đặt lại mật khẩu
               </h1>
+              <p className="text-base text-[#71767B] font-light mt-4">
+                Vui lòng đặt lại mật khẩu mới cho tài khoản của bạn.
+              </p>
             </div>
-            <div className="py-[13px]">
+            <div className="pt-[13px] pb-2">
               <Input
                 control={control}
                 placeholder="Mật khẩu mới"
@@ -97,7 +110,7 @@ const FindEmail = () => {
                 <ErrorMessage>{errors.password?.message}</ErrorMessage>
               )}
             </div>
-            <div className="py-[13px]">
+            <div className="pb-[13px] pt-2">
               <Input
                 control={control}
                 placeholder="Nhập lại mật khẩu mới"
@@ -120,6 +133,12 @@ const FindEmail = () => {
             Tiếp theo
           </PrimaryButton>
         </form>
+        <GhostButton
+          className={`w-full py-[12px] text-base rounded-full  mb-6 mt-4 px-8`}
+          onClick={handleCancel}
+        >
+          Hủy
+        </GhostButton>
       </LayoutAuth>
     </>
   );

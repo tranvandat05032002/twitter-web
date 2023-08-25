@@ -1,4 +1,6 @@
 import { formatISO, parse } from "date-fns";
+import { getEmailCookies } from "./auth/cookies";
+import React from "react";
 export function isObjectEmpty(obj: Object): boolean {
   if (Object.values(obj).every((value) => value !== "")) {
     return false;
@@ -19,6 +21,7 @@ export function formatISO8601(
 }
 
 export function normalizeEmail(email: string) {
+  if (!email) return;
   let excludedPart = email.substring(0, 2);
   let remainingPart = email.substring(2);
   let outputString = email.replace(/[^@]/g, "*");

@@ -8,6 +8,7 @@ import { useAuth } from "@/store";
 import {
   getEmailCookies,
   removeEmailCookies,
+  removeOTPToken,
   saveOTP,
 } from "@/utils/auth/cookies";
 import { normalizeEmail } from "@/utils/handlers";
@@ -17,14 +18,18 @@ export interface ForgotForm {
 }
 const Page = () => {
   const router = useRouter();
+  const [emailCookies, setEmailCookies] = React.useState<string>("");
   const { forgotPasswordToken } = useAuth((state) => state);
   const handleCancelForgot = () => {
     removeEmailCookies();
-    router.push("/");
+    router.push("/sign-in");
   };
-  const { email_cookies } = getEmailCookies();
+  React.useEffect(() => {
+    const { email_cookies } = getEmailCookies();
+    setEmailCookies(email_cookies);
+  }, [emailCookies]);
   const handleSendToken = async () => {
-    const response = await forgotPasswordToken(email_cookies as string);
+    const response = await forgotPasswordToken(emailCookies as string);
     if (response?.status === 200) {
       saveOTP({
         otp_token: response.data?.jwtToken,
@@ -32,6 +37,7 @@ const Page = () => {
       router.push("/users/forgot-password/send-otp?token=");
     }
   };
+  const email_normal = normalizeEmail(emailCookies);
   return (
     <LayoutAuth>
       <div className="flex items-center justify-center">
@@ -51,9 +57,7 @@ const Page = () => {
           </p>
 
           <div className="flex justify-between items-center mb-4">
-            <p>
-              Send an email to {normalizeEmail(email_cookies as string | "")}
-            </p>
+            <p>Send an email to {email_normal}</p>
             <input type="radio" />
           </div>
 
@@ -83,7 +87,7 @@ const Page = () => {
             type="submit"
             onClick={handleCancelForgot}
           >
-            Cancel
+            Hủy
           </GhostButton>
         </div>
       </div>
