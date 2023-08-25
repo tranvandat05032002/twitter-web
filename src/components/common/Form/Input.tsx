@@ -1,7 +1,11 @@
 import React from "react";
 import { Control, useController } from "react-hook-form";
 
-interface IInput {
+interface IInput
+  extends React.DetailedHTMLProps<
+    React.InputHTMLAttributes<HTMLInputElement>,
+    HTMLInputElement
+  > {
   type: string;
   placeholder: string;
   control: Control<any>;
