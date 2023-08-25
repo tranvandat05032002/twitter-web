@@ -1,8 +1,10 @@
 "use client";
 import { useRouter } from "next/navigation";
 import {
+  ConditionalButton,
   ERROR_FORM_MESSAGES,
   ErrorMessage,
+  GhostButton,
   Input,
   LayoutAuth,
   PrimaryButton,
@@ -22,7 +24,9 @@ const FindEmail = () => {
   const [canSubmit, setCanSubmit] = React.useState<boolean>(true);
   const router = useRouter();
   const { findEmail } = useAuth((state) => state);
-  const { setEmailWithoutAt, saveEmail } = useEmail((state) => state);
+  const { setEmailWithoutAt, setSaveEmail, emailSave } = useEmail(
+    (state) => state
+  );
   const schemaValidator = yup.object().shape({
     email: yup
       .string()
@@ -33,7 +37,6 @@ const FindEmail = () => {
     control,
     handleSubmit,
     getValues,
-    setValue,
     formState: { errors, isSubmitting },
   } = useForm<ForgotForm>({
     resolver: yupResolver(schemaValidator),
@@ -50,9 +53,12 @@ const FindEmail = () => {
     setCanSubmit(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canSubmit]);
+  const handleCancel = () => {
+    router.push("/sign-in");
+  };
   const handleFindEmail = async (values: ForgotForm) => {
     if (isObjectEmpty(values)) return;
-    saveEmail(values.email);
+    setSaveEmail(values.email);
     const response = await findEmail(values);
     if (response?.status === 200) {
       const email_normalized = normalizeEmail(values.email);
@@ -89,7 +95,7 @@ const FindEmail = () => {
             </div>
           </div>
           <PrimaryButton
-            className={`w-[440px] h-[52px] text-base  my-6 px-8 ${
+            className={`w-full py-[12px] text-base rounded-full  mt-6 mb-4 px-8 ${
               canSubmit ? "hover:bg-none" : ""
             }`}
             type="submit"
@@ -99,6 +105,12 @@ const FindEmail = () => {
             Tiếp theo
           </PrimaryButton>
         </form>
+        <GhostButton
+          className={`w-full py-[12px] text-base rounded-full  mb-6 mt-4 px-8`}
+          onClick={handleCancel}
+        >
+          Hủy
+        </GhostButton>
       </LayoutAuth>
     </>
   );

@@ -1,7 +1,12 @@
 "use client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { GhostButton, LayoutAuth, PrimaryButton } from "@/components/common";
+import {
+  ConditionalButton,
+  GhostButton,
+  LayoutAuth,
+  PrimaryButton,
+} from "@/components/common";
 import React from "react";
 import { useAuth } from "@/store";
 import { useEmail } from "@/store/useEmail";
@@ -20,7 +25,6 @@ const FindEmail = () => {
   const router = useRouter();
   const { checkOTP, resendOTP } = useAuth((state) => state);
   const { emailSave } = useEmail((state) => state);
-  const [nextButton, setNextButton] = React.useState<boolean>(false);
   const handleVerifyOTP = async () => {
     const { otp_token } = getOTPToken();
     const response = await checkOTP({
@@ -33,9 +37,6 @@ const FindEmail = () => {
       });
       router.push("/reset-password");
     }
-  };
-  const handleCancel = () => {
-    router.push("/sign-in");
   };
   const handleResendOTP = async () => {
     const { otp_token } = getOTPToken();
@@ -53,13 +54,6 @@ const FindEmail = () => {
       });
     }
   };
-  React.useEffect(() => {
-    if (!otp) {
-      setNextButton(false);
-    } else {
-      setNextButton(true);
-    }
-  }, [otp]);
   const handleSetOTP = (value: string) => {
     setOtp(value);
   };
@@ -89,23 +83,10 @@ const FindEmail = () => {
               />
             </div>
           </div>
-          <React.Fragment>
-            {nextButton ? (
-              <PrimaryButton
-                className={`w-full py-[12px] text-base rounded-full  my-6 px-8`}
-                onClick={handleVerifyOTP}
-              >
-                Xác nhận
-              </PrimaryButton>
-            ) : (
-              <GhostButton
-                className={`w-full py-[12px] text-base rounded-full  my-6 px-8`}
-                onClick={handleCancel}
-              >
-                Hủy
-              </GhostButton>
-            )}
-          </React.Fragment>
+          <ConditionalButton
+            value={otp}
+            handleRequest={handleVerifyOTP}
+          ></ConditionalButton>
           <div className="text-xs text-[#71767b] min-w-0 break-words">
             <span> Bạn không nhận được OTP? </span>
             <button
