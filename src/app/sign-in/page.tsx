@@ -108,7 +108,7 @@ const SignIn: React.FC = () => {
                 Đăng ký ngay
               </Link>
             </div>
-            <Link href={"/find-account"} className="text-[#1d9bf0]">
+            <Link href={"/users/find-account"} className="text-[#1d9bf0]">
               Quên mật khẩu?
             </Link>
           </div>

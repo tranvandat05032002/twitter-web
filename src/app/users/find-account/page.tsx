@@ -63,7 +63,7 @@ const FindEmail = () => {
     if (response?.status === 200) {
       const email_normalized = normalizeEmail(values.email);
       setEmailWithoutAt(email_normalized);
-      router.push("/forgot-password");
+      router.push("/users/forgot-password");
     }
   };
   return (

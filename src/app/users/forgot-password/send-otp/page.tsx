@@ -35,7 +35,7 @@ const FindEmail = () => {
       toast.success("Xác thực thành công. Vui lòng chờ trong gây lát", {
         pauseOnHover: false,
       });
-      router.push("/reset-password");
+      router.push("/users/reset-password");
     }
   };
   const handleResendOTP = async () => {
@@ -96,7 +96,7 @@ const FindEmail = () => {
               Gửi lại mã
             </button>
             <span> hoặc </span>
-            <Link href={"/find-account"}>cập nhật địa chỉ email.</Link>
+            <Link href={"/users/find-account"}>cập nhật địa chỉ email.</Link>
           </div>
         </div>
       </LayoutAuth>

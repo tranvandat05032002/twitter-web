@@ -27,7 +27,7 @@ const Page = () => {
       saveOTP({
         otp_token: response.data?.jwtToken,
       });
-      router.push("/forgot-password/send-otp?token=");
+      router.push("/users/forgot-password/send-otp?token=");
     }
   };
   return (

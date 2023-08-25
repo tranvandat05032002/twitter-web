@@ -9,9 +9,9 @@ import {
 } from "@/utils/auth/cookies";
 import { AxiosResponse } from "axios";
 import { create } from "zustand";
-import { ForgotForm } from "@/app/find-account/page";
-import { OTPForm } from "@/app/forgot-password/send-otp/page";
-import { ResetPasswordForm } from "@/app/reset-password/page";
+import { ForgotForm } from "@/app/users/find-account/page";
+import { OTPForm } from "@/app/users/forgot-password/send-otp/page";
+import { ResetPasswordForm } from "@/app/users/reset-password/page";
 type IAuthStore = {
   userInfo: IUser | null;
   errorMessage: string;
@@ -210,13 +210,7 @@ export const useAuth = create<IAuthStore>((set) => {
         console.log(error);
       }
     },
-    checkOTP: async ({
-      otp,
-      otpToken,
-    }: {
-      otp: string;
-      otpToken: string;
-    }) => {
+    checkOTP: async ({ otp, otpToken }: { otp: string; otpToken: string }) => {
       try {
         const response = await apiInstance.post(
           "/users/verify-otp",
@@ -254,17 +248,21 @@ export const useAuth = create<IAuthStore>((set) => {
     },
     resendOTP: async (otpToken: string) => {
       try {
-        const response = await apiInstance.post("/users/resend-otp", {}, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${otpToken}`,
-          },
-        })
-        return response
+        const response = await apiInstance.post(
+          "/users/resend-otp",
+          {},
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${otpToken}`,
+            },
+          }
+        );
+        return response;
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
-    }
+    },
   };
 
   return {
