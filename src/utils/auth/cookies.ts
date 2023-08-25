@@ -2,6 +2,7 @@ import Cookies from "js-cookie";
 const accessTokenKey = "twitter_access_token";
 const refreshTokenKey = "twitter_refresh_token";
 const otpTokenKey = "twitter_otp_token";
+const emailKey = "twitter_email";
 const objTokenCookies = {
   expires: 30,
   domain: "localhost", // set env
@@ -63,6 +64,12 @@ export const getOTPToken = () => {
     otp_token,
   };
 };
+export const removeOTPToken = () => {
+  Cookies.remove(otpTokenKey, {
+    path: "/",
+    domain: "localhost",
+  });
+};
 export const logOutCookies = () => {
   const access_token = Cookies.get(accessTokenKey);
   if (access_token) {
@@ -77,4 +84,33 @@ export const logOutCookies = () => {
       domain: "localhost",
     });
   }
+};
+
+// handle Email
+export const saveEmailCookies = (email: string) => {
+  if (email) {
+    Cookies.set(emailKey, email, {
+      path: "/users",
+      domain: "localhost",
+    });
+  } else {
+    Cookies.remove(emailKey, {
+      path: "/users",
+      domain: "localhost",
+    });
+  }
+};
+
+export const removeEmailCookies = () => {
+  Cookies.remove(emailKey, {
+    path: "/users",
+    domain: "localhost",
+  });
+};
+
+export const getEmailCookies = () => {
+  const email_cookies = Cookies.get(emailKey);
+  return {
+    email_cookies: email_cookies as string,
+  };
 };

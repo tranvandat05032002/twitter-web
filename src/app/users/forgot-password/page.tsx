@@ -5,24 +5,26 @@ import { GhostButton, LayoutAuth, PrimaryButton } from "@/components/common";
 import React from "react";
 import { TwitterIcon } from "@/components/SingleUseComponents";
 import { useAuth } from "@/store";
-import { useEmail } from "@/store/useEmail";
-import { saveOTP } from "@/utils/auth/cookies";
+import {
+  getEmailCookies,
+  removeEmailCookies,
+  saveOTP,
+} from "@/utils/auth/cookies";
+import { normalizeEmail } from "@/utils/handlers";
 
 export interface ForgotForm {
   email: string;
 }
 const Page = () => {
   const router = useRouter();
-  const { emailWithoutAt, setEmailWithoutAt, emailSave } = useEmail(
-    (state) => state
-  );
   const { forgotPasswordToken } = useAuth((state) => state);
   const handleCancelForgot = () => {
-    setEmailWithoutAt("");
+    removeEmailCookies();
     router.push("/");
   };
+  const { email_cookies } = getEmailCookies();
   const handleSendToken = async () => {
-    const response = await forgotPasswordToken(emailSave);
+    const response = await forgotPasswordToken(email_cookies as string);
     if (response?.status === 200) {
       saveOTP({
         otp_token: response.data?.jwtToken,
@@ -49,7 +51,9 @@ const Page = () => {
           </p>
 
           <div className="flex justify-between items-center mb-4">
-            <p>Send an email to {emailWithoutAt}</p>
+            <p>
+              Send an email to {normalizeEmail(email_cookies as string | "")}
+            </p>
             <input type="radio" />
           </div>
 

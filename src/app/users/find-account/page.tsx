@@ -1,7 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
 import {
-  ConditionalButton,
   ERROR_FORM_MESSAGES,
   ErrorMessage,
   GhostButton,
@@ -14,9 +13,13 @@ import { TwitterIcon } from "@/components/SingleUseComponents";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { isObjectEmpty, normalizeEmail } from "@/utils/handlers";
+import { isObjectEmpty } from "@/utils/handlers";
 import { useAuth } from "@/store";
-import { useEmail } from "@/store/useEmail";
+import {
+  getEmailCookies,
+  removeEmailCookies,
+  saveEmailCookies,
+} from "@/utils/auth/cookies";
 export interface ForgotForm {
   email: string;
 }
@@ -24,9 +27,6 @@ const FindEmail = () => {
   const [canSubmit, setCanSubmit] = React.useState<boolean>(true);
   const router = useRouter();
   const { findEmail } = useAuth((state) => state);
-  const { setEmailWithoutAt, setSaveEmail, emailSave } = useEmail(
-    (state) => state
-  );
   const schemaValidator = yup.object().shape({
     email: yup
       .string()
@@ -58,12 +58,12 @@ const FindEmail = () => {
   };
   const handleFindEmail = async (values: ForgotForm) => {
     if (isObjectEmpty(values)) return;
-    setSaveEmail(values.email);
+    saveEmailCookies(values.email);
     const response = await findEmail(values);
     if (response?.status === 200) {
-      const email_normalized = normalizeEmail(values.email);
-      setEmailWithoutAt(email_normalized);
       router.push("/users/forgot-password");
+    } else {
+      removeEmailCookies();
     }
   };
   return (

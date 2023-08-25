@@ -12,9 +12,8 @@ import { TwitterIcon } from "@/components/SingleUseComponents";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { isObjectEmpty, normalizeEmail } from "@/utils/handlers";
+import { isObjectEmpty } from "@/utils/handlers";
 import { useAuth } from "@/store";
-import { useEmail } from "@/store/useEmail";
 import { getOTPToken } from "@/utils/auth/cookies";
 import { toast } from "react-toastify";
 export interface ResetPasswordForm {

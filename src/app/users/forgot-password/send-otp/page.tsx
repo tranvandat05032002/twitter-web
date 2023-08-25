@@ -3,14 +3,11 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   ConditionalButton,
-  GhostButton,
   LayoutAuth,
-  PrimaryButton,
 } from "@/components/common";
 import React from "react";
 import { useAuth } from "@/store";
-import { useEmail } from "@/store/useEmail";
-import { getOTPToken, saveOTP } from "@/utils/auth/cookies";
+import { getEmailCookies, getOTPToken, saveOTP } from "@/utils/auth/cookies";
 import dynamic from "next/dynamic";
 import { toast } from "react-toastify";
 import { BsArrowRightIcon } from "@/components/SingleUseComponents/Icon";
@@ -24,7 +21,7 @@ const FindEmail = () => {
   const [otp, setOtp] = React.useState<string>("");
   const router = useRouter();
   const { checkOTP, resendOTP } = useAuth((state) => state);
-  const { emailSave } = useEmail((state) => state);
+  const { email_cookies } = getEmailCookies();
   const handleVerifyOTP = async () => {
     const { otp_token } = getOTPToken();
     const response = await checkOTP({
@@ -64,7 +61,7 @@ const FindEmail = () => {
           <div>
             <div className="text-base font-medium">
               <p className="text-white">Chúng tôi đã gửi mã OTP tới </p>
-              <p className="text-[#1d9bf0] mb-4 font-light">{emailSave}</p>
+              <p className="text-[#1d9bf0] mb-4 font-light">{email_cookies}</p>
 
               <div className="flex items-center">
                 <BsArrowRightIcon />
