@@ -94,7 +94,7 @@ const SignUpPage = () => {
     try {
       const result = await register(values);
       if (result?.status === 200) {
-        router.push(Routers.signInPage);
+        router.push(Routers.verifyPage);
       }
     } catch (error) {
       console.log(error);
