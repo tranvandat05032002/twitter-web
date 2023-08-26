@@ -20,10 +20,12 @@ import {
 } from "@/utils/auth/cookies";
 import { Routers } from "@/utils/router/routers";
 import { ForgotForm } from "@/app/users/find-account/page";
+import { useEmail } from "@/store/useEmail";
 const FindAccountPage = () => {
   const [canSubmit, setCanSubmit] = React.useState<boolean>(true);
   const router = useRouter();
   const { findEmail } = useAuth((state) => state);
+  const {setSaveEmail} = useEmail((state) => state)
   const schemaValidator = yup.object().shape({
     email: yup
       .string()
@@ -58,6 +60,7 @@ const FindAccountPage = () => {
     saveEmailCookies(values.email);
     const response = await findEmail(values);
     if (response?.status === 200) {
+      setSaveEmail(values.email)
       router.push(Routers.forgotPasswordPage);
     } else {
       removeEmailCookies();

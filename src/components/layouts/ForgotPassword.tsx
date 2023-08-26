@@ -14,10 +14,12 @@ import { normalizeEmail } from "@/utils/handlers";
 import { useForm } from "react-hook-form";
 import { Radio } from "@mui/material";
 import { Routers } from "@/utils/router/routers";
+import { useEmail } from "@/store/useEmail";
 const ForgotPasswordPage = () => {
   const router = useRouter();
   const [emailCookies, setEmailCookies] = React.useState<string>("");
   const { forgotPasswordToken } = useAuth((state) => state);
+  const { emailSave } = useEmail((state) => state);
   const handleCancelForgot = () => {
     removeEmailCookies();
     router.push(Routers.signInPage);
@@ -27,7 +29,7 @@ const ForgotPasswordPage = () => {
     setEmailCookies(email_cookies);
   }, [emailCookies]);
   const handleSendToken = async () => {
-    const response = await forgotPasswordToken(emailCookies as string);
+    const response = await forgotPasswordToken(emailCookies as string || emailSave);
     if (response?.status === 200) {
       saveOTP({
         otp_token: response.data?.jwtToken,
@@ -35,7 +37,7 @@ const ForgotPasswordPage = () => {
       router.push(Routers.sendOTPPage);
     }
   };
-  const email_normal = normalizeEmail(emailCookies);
+  const email_normal = normalizeEmail(emailCookies || emailSave);
   return (
     <React.Fragment>
       <div className="flex items-center justify-center">
@@ -55,7 +57,7 @@ const ForgotPasswordPage = () => {
           </p>
 
           <div className="flex justify-between items-center mb-4">
-            <p>Send an email to {email_normal}</p>
+            <p>Send an email to {email_normal || emailSave}</p>
             <Radio name="accept-send" checked={true} size="small" />
           </div>
 
