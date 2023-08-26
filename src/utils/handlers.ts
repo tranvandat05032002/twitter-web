@@ -1,6 +1,4 @@
 import { formatISO, parse } from "date-fns";
-import { getEmailCookies } from "./auth/cookies";
-import React from "react";
 export function isObjectEmpty(obj: Object): boolean {
   if (Object.values(obj).every((value) => value !== "")) {
     return false;

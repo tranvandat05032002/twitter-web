@@ -1,87 +1,108 @@
 import Cookies from "js-cookie";
-const accessTokenKey = "twitter_access_token";
-const refreshTokenKey = "twitter_refresh_token";
-const otpTokenKey = "twitter_otp_token";
-const emailKey = "twitter_email";
+
 const objTokenCookies = {
   expires: 30,
-  domain: "localhost", // set env
+  domain: process.env.NEXT_PUBLIC_DOMAIN as string,
 };
+
 const objOTPCookies = {
   expires: 5,
-  domain: "localhost",
+  domain: process.env.NEXT_PUBLIC_DOMAIN as string,
 };
+
 interface IToken {
   access_token: string;
   refresh_token: string;
 }
+
 export const saveToken = ({ access_token, refresh_token }: IToken) => {
   if (access_token && refresh_token) {
-    Cookies.set(accessTokenKey, access_token, {
-      ...objTokenCookies,
-      // secure: true, --> set with device https
-    });
-    Cookies.set(refreshTokenKey, refresh_token, {
-      ...objTokenCookies,
-    });
+    Cookies.set(
+      process.env.NEXT_PUBLIC_ACCESS_TOKEN_KEY as string,
+      access_token,
+      {
+        ...objTokenCookies,
+        // secure: true, --> set with device https
+      }
+    );
+    Cookies.set(
+      process.env.NEXT_PUBLIC_REFRESH_TOKEN_KEY as string,
+      refresh_token,
+      {
+        ...objTokenCookies,
+      }
+    );
   } else {
-    Cookies.remove(accessTokenKey, {
+    Cookies.remove(process.env.NEXT_PUBLIC_ACCESS_TOKEN_KEY as string, {
       ...objTokenCookies,
-      path: "/",
-      domain: "localhost", // set env
+      path: process.env.NEXT_PUBLIC_TOKEN_PATH as string,
+      domain: process.env.NEXT_PUBLIC_DOMAIN as string,
     });
-    Cookies.remove(refreshTokenKey, {
+    Cookies.remove(process.env.NEXT_PUBLIC_REFRESH_TOKEN_KEY as string, {
       ...objTokenCookies,
-      path: "/",
-      domain: "localhost",
+      path: process.env.NEXT_PUBLIC_TOKEN_PATH as string,
+      domain: process.env.NEXT_PUBLIC_DOMAIN as string,
     });
   }
 };
+
 export const saveOTP = ({ otp_token }: { otp_token: string }) => {
   if (otp_token) {
-    Cookies.set(otpTokenKey, otp_token, {
+    Cookies.set(process.env.NEXT_PUBLIC_OTP_TOKEN_KEY as string, otp_token, {
       ...objOTPCookies,
     });
   } else {
-    Cookies.remove(otpTokenKey, {
+    Cookies.remove(process.env.NEXT_PUBLIC_OTP_TOKEN_KEY as string, {
       ...objOTPCookies,
-      path: "/",
-      domain: "localhost",
+      path: process.env.NEXT_PUBLIC_TOKEN_PATH as string,
+      domain: process.env.NEXT_PUBLIC_DOMAIN as string,
     });
   }
 };
+
 export const getToken = () => {
-  const access_token = Cookies.get(accessTokenKey);
-  const refresh_token = Cookies.get(refreshTokenKey);
+  const access_token = Cookies.get(
+    process.env.NEXT_PUBLIC_ACCESS_TOKEN_KEY as string
+  );
+  const refresh_token = Cookies.get(
+    process.env.NEXT_PUBLIC_REFRESH_TOKEN_KEY as string
+  );
   return {
     access_token,
     refresh_token,
   };
 };
+
 export const getOTPToken = () => {
-  const otp_token = Cookies.get(otpTokenKey);
+  const otp_token = Cookies.get(
+    process.env.NEXT_PUBLIC_OTP_TOKEN_KEY as string
+  );
   return {
     otp_token,
   };
 };
+
 export const removeOTPToken = () => {
-  Cookies.remove(otpTokenKey, {
-    path: "/",
-    domain: "localhost",
+  Cookies.remove(process.env.NEXT_PUBLIC_OTP_TOKEN_KEY as string, {
+    path: process.env.NEXT_PUBLIC_TOKEN_PATH as string,
+    domain: process.env.NEXT_PUBLIC_DOMAIN as string,
   });
 };
+
 export const logOutCookies = () => {
-  const access_token = Cookies.get(accessTokenKey);
+  const access_token = Cookies.get(
+    process.env.NEXT_PUBLIC_ACCESS_TOKEN_KEY as string
+  );
   if (access_token) {
-    Cookies.remove(accessTokenKey, {
+    Cookies.remove(process.env.NEXT_PUBLIC_ACCESS_TOKEN_KEY as string, {
       ...objTokenCookies,
-      path: "/",
-      domain: "localhost",
+      path: process.env.NEXT_PUBLIC_TOKEN_PATH as string,
+      domain: process.env.NEXT_PUBLIC_DOMAIN as string,
     });
-    Cookies.remove(refreshTokenKey, {
+    Cookies.remove(process.env.NEXT_PUBLIC_REFRESH_TOKEN_KEY as string, {
       ...objTokenCookies,
-      path: "/",
-      domain: "localhost",
+      path: process.env.NEXT_PUBLIC_TOKEN_PATH as string,
+      domain: process.env.NEXT_PUBLIC_DOMAIN as string,
     });
   }
 };
@@ -89,27 +110,29 @@ export const logOutCookies = () => {
 // handle Email
 export const saveEmailCookies = (email: string) => {
   if (email) {
-    Cookies.set(emailKey, email, {
-      path: "/users",
-      domain: "localhost",
+    Cookies.set(process.env.NEXT_PUBLIC_EMAIL_KEY as string, email, {
+      path: process.env.NEXT_PUBLIC_RESET_PASSWORD_PATH as string,
+      domain: process.env.NEXT_PUBLIC_DOMAIN as string,
     });
   } else {
-    Cookies.remove(emailKey, {
-      path: "/users",
-      domain: "localhost",
+    Cookies.remove(process.env.NEXT_PUBLIC_EMAIL_KEY as string, {
+      path: process.env.NEXT_PUBLIC_RESET_PASSWORD_PATH as string,
+      domain: process.env.NEXT_PUBLIC_DOMAIN as string,
     });
   }
 };
 
 export const removeEmailCookies = () => {
-  Cookies.remove(emailKey, {
-    path: "/users",
-    domain: "localhost",
+  Cookies.remove(process.env.NEXT_PUBLIC_EMAIL_KEY as string, {
+    path: process.env.NEXT_PUBLIC_RESET_PASSWORD_PATH as string,
+    domain: process.env.NEXT_PUBLIC_DOMAIN as string,
   });
 };
 
 export const getEmailCookies = () => {
-  const email_cookies = Cookies.get(emailKey);
+  const email_cookies = Cookies.get(
+    process.env.NEXT_PUBLIC_EMAIL_KEY as string
+  );
   return {
     email_cookies: email_cookies as string,
   };
