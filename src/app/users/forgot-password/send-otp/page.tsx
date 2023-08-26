@@ -11,6 +11,7 @@ import { getEmailCookies, getOTPToken, saveOTP } from "@/utils/auth/cookies";
 import dynamic from "next/dynamic";
 import { toast } from "react-toastify";
 import { BsArrowRightIcon } from "@/components/SingleUseComponents/Icon";
+import { Routers } from "@/utils/router/routers";
 const DynamicOtpInput = dynamic(() => import("react-otp-input"), {
   ssr: false,
 }); // render client
@@ -32,7 +33,7 @@ const FindEmail = () => {
       toast.success("Xác thực thành công. Vui lòng chờ trong gây lát", {
         pauseOnHover: false,
       });
-      router.push("/users/reset-password");
+      router.push(Routers.resetPasswordPage);
     }
   };
   const handleResendOTP = async () => {

@@ -21,6 +21,7 @@ import {
   removeOTPToken,
 } from "@/utils/auth/cookies";
 import { toast } from "react-toastify";
+import { Routers } from "@/utils/router/routers";
 export interface ResetPasswordForm {
   password: string;
   confirm_password: string;
@@ -64,7 +65,7 @@ const FindEmail = () => {
   const handleCancel = () => {
     removeEmailCookies();
     removeOTPToken();
-    router.push("/sign-in");
+    router.push(Routers.signInPage);
   };
   const handleResetPassword = async (values: ResetPasswordForm) => {
     const { otp_token } = getOTPToken();
@@ -79,7 +80,7 @@ const FindEmail = () => {
       toast.success("Đổi mật khẩu thành công!", {
         pauseOnHover: false,
       });
-      router.push("/sign-in");
+      router.push(Routers.signInPage);
     }
   };
   return (

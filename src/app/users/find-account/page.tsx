@@ -20,6 +20,7 @@ import {
   removeEmailCookies,
   saveEmailCookies,
 } from "@/utils/auth/cookies";
+import { Routers } from "@/utils/router/routers";
 export interface ForgotForm {
   email: string;
 }
@@ -54,14 +55,14 @@ const FindEmail = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canSubmit]);
   const handleCancel = () => {
-    router.push("/sign-in");
+    router.push(Routers.signInPage);
   };
   const handleFindEmail = async (values: ForgotForm) => {
     if (isObjectEmpty(values)) return;
     saveEmailCookies(values.email);
     const response = await findEmail(values);
     if (response?.status === 200) {
-      router.push("/users/forgot-password");
+      router.push(Routers.forgotPasswordPage);
     } else {
       removeEmailCookies();
     }

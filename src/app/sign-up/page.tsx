@@ -18,6 +18,7 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { RegisterForm } from "@/types/userTypes";
 import { isObjectEmpty, formatISO8601 } from "@/utils/handlers";
+import { Routers } from "@/utils/router/routers";
 
 const schemaValidator = yup.object().shape({
   name: yup.string().required(ERROR_FORM_MESSAGES.userNameRequired),
@@ -94,11 +95,10 @@ const SignUp: React.FC = () => {
   }, [canSubmit]);
   const handleRegister = async (values: RegisterForm) => {
     if (isObjectEmpty(values)) return;
-    console.log("isValid: ", isValid);
     try {
       const result = await register(values);
       if (result?.status === 200) {
-        router.push("/verify?token=");
+        router.push(Routers.signInPage);
       }
     } catch (error) {
       console.log(error);
@@ -162,7 +162,7 @@ const SignUp: React.FC = () => {
         </div>
         <div className="text-xs">
           <span>Bạn đã có tài khoản? </span>
-          <Link href="/sign-in" className="text-[#1d9bf0]">
+          <Link href={Routers.signInPage} className="text-[#1d9bf0]">
             Đăng nhập ngay
           </Link>
         </div>

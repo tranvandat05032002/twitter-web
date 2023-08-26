@@ -9,6 +9,7 @@ import {
   TermsAndPrivacyNotice,
   TwitterIcon,
 } from "@/components/SingleUseComponents";
+import { Routers } from "@/utils/router/routers";
 export default function Home() {
   return (
     <main>
@@ -73,7 +74,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <Link href="/sign-up" className="hover:no-underline">
+              <Link href={Routers.signUpPage} className="hover:no-underline">
                 <PrimaryButton className="w-80 h-11 text-base py-[2px] px-[10px]">
                   Tạo tài khoản
                 </PrimaryButton>
@@ -86,7 +87,7 @@ export default function Home() {
               <p className="text-[#1d9bf0] text-lg font-bold">
                 Đã có tài khoản?
               </p>
-              <Link href={"/sign-in"} className="hover:no-underline">
+              <Link href={Routers.signInPage} className="hover:no-underline">
                 <GhostButton className="w-80 h-11 rounded-full  py-[2px] px-[10px] text-base">
                   Đăng nhập
                 </GhostButton>

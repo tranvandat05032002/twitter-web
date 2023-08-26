@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import Link from "next/link";
 import { TwitterIcon } from "@/components/SingleUseComponents";
 import { LayoutAuth } from "@/components/common";
+import { Routers } from "@/utils/router/routers";
 const VerifyPage = () => {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
@@ -49,7 +50,7 @@ const VerifyPage = () => {
             active and you can start using our services.
           </p>
           <Link
-            href={"/sign-in"}
+            href={Routers.signInPage}
             className="block text-blue-500 hover:underline"
           >
             Go to sign in

@@ -14,6 +14,7 @@ import {
 import { normalizeEmail } from "@/utils/handlers";
 import { useForm } from "react-hook-form";
 import { Radio } from "@mui/material";
+import { Routers } from "@/utils/router/routers";
 
 export interface ForgotForm {
   email: string;
@@ -27,7 +28,7 @@ const Page = () => {
   });
   const handleCancelForgot = () => {
     removeEmailCookies();
-    router.push("/sign-in");
+    router.push(Routers.signInPage);
   };
   React.useEffect(() => {
     const { email_cookies } = getEmailCookies();
@@ -39,7 +40,7 @@ const Page = () => {
       saveOTP({
         otp_token: response.data?.jwtToken,
       });
-      router.push("/users/forgot-password/send-otp?token=");
+      router.push(Routers.sendOTPPage);
     }
   };
   const email_normal = normalizeEmail(emailCookies);

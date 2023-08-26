@@ -25,6 +25,7 @@ import { IUser, LoginForm } from "@/types/userTypes";
 import { isObjectEmpty } from "@/utils/handlers";
 import { useAuth } from "@/store";
 import { getToken } from "@/utils/auth/cookies";
+import { Routers } from "@/utils/router/routers";
 const schemaValidator = yup.object().shape({
   email: yup
     .string()
@@ -68,7 +69,7 @@ const SignIn: React.FC = () => {
     const user = await login(values);
     const { access_token } = getToken();
     if (user?.verify === 1 && user) {
-      router.push("/home");
+      router.push(Routers.homePage);
     }
   };
   return (

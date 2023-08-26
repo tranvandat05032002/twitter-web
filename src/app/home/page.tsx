@@ -1,6 +1,7 @@
 "use client";
 import { useAuth } from "@/store";
 import { getToken } from "@/utils/auth/cookies";
+import { Routers } from "@/utils/router/routers";
 import { useRouter } from "next/navigation";
 import React from "react";
 
@@ -17,7 +18,7 @@ const Home = () => {
       if (refresh_token) {
         getUserReload(refresh_token);
       } else {
-        router.push("/sign-in");
+        router.push(Routers.signInPage);
         updateUserAndToken({
           userData: null,
           token: "",
@@ -30,7 +31,7 @@ const Home = () => {
   const handleLogout = async () => {
     const response = await logout();
     if (response?.status === 200 || !userInfo) {
-      router.push("/sign-in");
+      router.push(Routers.signInPage);
     }
   };
   return (
