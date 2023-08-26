@@ -1,6 +1,8 @@
 import { IUser, LoginForm, RegisterForm } from "@/types/userTypes";
 import { apiInstance } from "@/utils/api";
 import Cookies from "js-cookie";
+import AxiosError from "axios";
+import createError from "http-errors";
 import {
   getOTPToken,
   getToken,
@@ -16,7 +18,7 @@ type IAuthStore = {
   userInfo: IUser | null;
   errorMessage: string;
   access_token: string | null;
-  login: (infoLogin: LoginForm) => Promise<IUser>;
+  login: (infoLogin: LoginForm) => Promise<IUser | AxiosResponse>;
   logout: () => Promise<AxiosResponse | undefined>;
   fetchMe: (token: string) => Promise<IUser>;
   getUserReload: (token: string) => void;
@@ -109,7 +111,9 @@ export const useAuth = create<IAuthStore>((set) => {
           return fetchedUser;
         }
       } catch (error) {
-        console.log(error);
+        if (AxiosError.isAxiosError(error) && error.response?.status === 422) {
+          console.log("Validation errors:", error.response?.data);
+        }
       }
     },
     logout: async () => {
