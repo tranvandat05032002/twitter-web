@@ -18,7 +18,7 @@ type IAuthStore = {
   userInfo: IUser | null;
   errorMessage: string;
   access_token: string | null;
-  login: (infoLogin: LoginForm) => Promise<IUser | AxiosResponse>;
+  login: (infoLogin: LoginForm) => Promise<IUser>;
   logout: () => Promise<AxiosResponse | undefined>;
   fetchMe: (token: string) => Promise<IUser>;
   getUserReload: (token: string) => void;
