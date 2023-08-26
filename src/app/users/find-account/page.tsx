@@ -1,6 +1,10 @@
 "use client";
 import { LayoutAuth } from "@/components/common";
-import FindAccountPage from "@/components/layouts/FindAccount";
+import LoadingPage from "@/components/common/Loading/LoadingPage";
+import dynamic from "next/dynamic";
+const DynamicFindAccount = dynamic(() => import("@/components/layouts/FindAccount"), {
+  loading: () => <LoadingPage></LoadingPage>,
+});
 export interface ForgotForm {
   email: string;
 }
@@ -8,7 +12,7 @@ const FindEmail = () => {
   return (
     <>
       <LayoutAuth>
-        <FindAccountPage></FindAccountPage>
+        <DynamicFindAccount></DynamicFindAccount>
       </LayoutAuth>
     </>
   );

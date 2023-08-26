@@ -1,8 +1,13 @@
 "use client";
-
 import { LayoutAuth } from "@/components/common";
-import ResetPasswordPage from "@/components/layouts/ResetPassword";
-
+import LoadingPage from "@/components/common/Loading/LoadingPage";
+import dynamic from "next/dynamic";
+const DynamicResetPassword = dynamic(
+  () => import("@/components/layouts/ResetPassword"),
+  {
+    loading: () => <LoadingPage></LoadingPage>,
+  }
+);
 export interface ResetPasswordForm {
   password: string;
   confirm_password: string;
@@ -11,7 +16,7 @@ const FindEmail = () => {
   return (
     <>
       <LayoutAuth>
-        <ResetPasswordPage></ResetPasswordPage>
+        <DynamicResetPassword></DynamicResetPassword>
       </LayoutAuth>
     </>
   );

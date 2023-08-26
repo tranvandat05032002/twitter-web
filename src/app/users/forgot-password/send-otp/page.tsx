@@ -1,7 +1,10 @@
 "use client";
-
 import { LayoutAuth } from "@/components/common";
-import SendOTPPage from "@/components/layouts/SendOTP";
+import LoadingPage from "@/components/common/Loading/LoadingPage";
+import dynamic from "next/dynamic";
+const DynamicSendOTP = dynamic(() => import("@/components/layouts/SendOTP"), {
+  loading: () => <LoadingPage></LoadingPage>,
+});
 export interface OTPForm {
   otp_auth: string;
 }
@@ -9,7 +12,7 @@ const FindEmail = () => {
   return (
     <>
       <LayoutAuth className="px-8 border border-[#536473]">
-        <SendOTPPage></SendOTPPage>
+        <DynamicSendOTP></DynamicSendOTP>
       </LayoutAuth>
     </>
   );

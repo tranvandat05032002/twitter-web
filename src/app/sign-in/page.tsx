@@ -1,12 +1,14 @@
 "use client";
-
 import { LayoutAuth } from "@/components/common";
-import SignInPage from "@/components/layouts/SignIn";
-
+import LoadingPage from "@/components/common/Loading/LoadingPage";
+import dynamic from "next/dynamic";
+const DynamicSignIn = dynamic(() => import("@/components/layouts/SignIn"), {
+  loading: () => <LoadingPage></LoadingPage>,
+});
 const SignIn: React.FC = () => {
   return (
     <LayoutAuth>
-      <SignInPage></SignInPage>
+      <DynamicSignIn></DynamicSignIn>
     </LayoutAuth>
   );
 };

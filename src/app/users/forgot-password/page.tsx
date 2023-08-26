@@ -1,14 +1,17 @@
 "use client";
 import { LayoutAuth } from "@/components/common";
-import ForgotPasswordPage from "@/components/layouts/ForgotPassword";
-
+import LoadingPage from "@/components/common/Loading/LoadingPage";
+import dynamic from "next/dynamic";
+const DynamicForgotPassword = dynamic(() => import("@/components/layouts/ForgotPassword"), {
+  loading: () => <LoadingPage></LoadingPage>,
+});
 export interface ForgotForm {
   email: string;
 }
 const Page = () => {
   return (
     <LayoutAuth>
-      <ForgotPasswordPage></ForgotPasswordPage>
+      <DynamicForgotPassword></DynamicForgotPassword>
     </LayoutAuth>
   );
 };

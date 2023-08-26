@@ -1,11 +1,13 @@
 "use client";
-
-import MainPage from "@/components/layouts/MainPage";
-
+import LoadingPage from "@/components/common/Loading/LoadingPage";
+import dynamic from "next/dynamic";
+const DynamicHome = dynamic(() => import("@/components/layouts/MainPage"), {
+  loading: () => <LoadingPage></LoadingPage>,
+});
 export default function Home() {
   return (
     <main>
-      <MainPage></MainPage>
+      <DynamicHome></DynamicHome>
     </main>
   );
 }
