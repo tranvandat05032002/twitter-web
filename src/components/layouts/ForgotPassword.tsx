@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { GhostButton, PrimaryButton } from "@/components/common";
@@ -15,33 +15,30 @@ import { useForm } from "react-hook-form";
 import { Radio } from "@mui/material";
 import { Routers } from "@/utils/router/routers";
 const ForgotPasswordPage = () => {
-    const router = useRouter();
-    const [emailCookies, setEmailCookies] = React.useState<string>("");
-    const { forgotPasswordToken } = useAuth((state) => state);
-    const { control } = useForm({
-      mode: "onChange",
-    });
-    const handleCancelForgot = () => {
-      removeEmailCookies();
-      router.push(Routers.signInPage);
-    };
-    React.useEffect(() => {
-      const { email_cookies } = getEmailCookies();
-      setEmailCookies(email_cookies);
-    }, [emailCookies]);
-    const handleSendToken = async () => {
-      const response = await forgotPasswordToken(emailCookies as string);
-      if (response?.status === 200) {
-        saveOTP({
-          otp_token: response.data?.jwtToken,
-        });
-        router.push(Routers.sendOTPPage);
-      }
-    };
-    const email_normal = normalizeEmail(emailCookies);
-    return (
-        <React.Fragment>
-             <div className="flex items-center justify-center">
+  const router = useRouter();
+  const [emailCookies, setEmailCookies] = React.useState<string>("");
+  const { forgotPasswordToken } = useAuth((state) => state);
+  const handleCancelForgot = () => {
+    removeEmailCookies();
+    router.push(Routers.signInPage);
+  };
+  React.useEffect(() => {
+    const { email_cookies } = getEmailCookies();
+    setEmailCookies(email_cookies);
+  }, [emailCookies]);
+  const handleSendToken = async () => {
+    const response = await forgotPasswordToken(emailCookies as string);
+    if (response?.status === 200) {
+      saveOTP({
+        otp_token: response.data?.jwtToken,
+      });
+      router.push(Routers.sendOTPPage);
+    }
+  };
+  const email_normal = normalizeEmail(emailCookies);
+  return (
+    <React.Fragment>
+      <div className="flex items-center justify-center">
         <TwitterIcon size="small"></TwitterIcon>
       </div>
       <div>
@@ -92,8 +89,8 @@ const ForgotPasswordPage = () => {
           </GhostButton>
         </div>
       </div>
-        </React.Fragment>
-    );
+    </React.Fragment>
+  );
 };
 
 export default ForgotPasswordPage;

@@ -11,9 +11,6 @@ import { Routers } from "@/utils/router/routers";
 const DynamicOtpInput = dynamic(() => import("react-otp-input"), {
   ssr: false,
 }); // render client
-export interface OTPForm {
-  otp_auth: string;
-}
 const SendOTPPage = () => {
   const [otp, setOtp] = React.useState<string>("");
   const router = useRouter();
