@@ -53,11 +53,11 @@ const SendOTPPage = () => {
       <div>
         <div className="text-base font-medium">
           <p className="text-white">Chúng tôi đã gửi mã OTP tới </p>
-          <p className="text-[#1d9bf0] mb-4 font-light">{email_cookies}</p>
+          <p className="text-textBlue mb-4 font-light">{email_cookies}</p>
 
           <div className="flex items-center">
             <BsArrowRightIcon />
-            <span className="text-[#ea4aaa] ml-2">Enter code*</span>
+            <span className="text-textPink ml-2">Enter code*</span>
           </div>
         </div>
         <div className="py-4 w-full ">
@@ -66,7 +66,7 @@ const SendOTPPage = () => {
             onChange={(otp) => handleSetOTP(otp)}
             numInputs={6}
             inputStyle={
-              "bg-transparent mx-[5px] flex-1 !w-[52px] otp-input h-[58px] border border-[#536473] focus:outline-none focus:border focus:border-[#66b3ff]"
+              "bg-transparent mx-[5px] flex-1 !w-[52px] otp-input h-[58px] border border-borderGraySecond focus:outline-none focus:border focus:border-borderBlue"
             }
             renderInput={(props) => <input {...props} />}
           />
@@ -76,11 +76,11 @@ const SendOTPPage = () => {
         value={otp}
         handleRequest={handleVerifyOTP}
       ></ConditionalButton>
-      <div className="text-xs text-[#71767b] min-w-0 break-words">
+      <div className="text-xs text-textGray min-w-0 break-words">
         <span> Bạn không nhận được OTP? </span>
         <button
           onClick={handleResendOTP}
-          className="text-[#1d9bf0] hover:underline"
+          className="text-textBlue hover:underline"
         >
           Gửi lại mã
         </button>

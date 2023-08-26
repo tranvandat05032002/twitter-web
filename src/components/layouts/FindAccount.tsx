@@ -75,7 +75,7 @@ const FindAccountPage = () => {
             <h1 className="text-3xl font-bold pb-2 text-center">
               Tìm tài khoản Twitter của bạn
             </h1>
-            <p className="text-base text-[#71767B] font-light">
+            <p className="text-base text-textGray font-light">
               Nhập email được liên kết với tài khoản của bạn để thực hiện thay
               đổi mật khẩu
             </p>

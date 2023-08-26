@@ -46,11 +46,11 @@ const ForgotPasswordPage = () => {
           <h1 className="text-3xl font-semibold mb-2">
             Chúng tôi nên gửi mã xác nhận ở đâu?
           </h1>
-          <p className="text-base text-[#71767B] font-light mb-4">
+          <p className="text-base text-textGray font-light mb-4">
             Trước khi bạn có thể thay đổi mật khẩu của mình, chúng tôi cần đảm
             bảo rằng đó thực sự là bạn.
           </p>
-          <p className="text-base text-[#71767B] font-light mb-4">
+          <p className="text-base text-textGray font-light mb-4">
             Bắt đầu bằng cách chọn nơi gửi mã xác nhận.
           </p>
 

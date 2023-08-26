@@ -157,7 +157,7 @@ const SignUpPage = () => {
       </div>
       <div className="text-xs">
         <span>Bạn đã có tài khoản? </span>
-        <Link href={Routers.signInPage} className="text-[#1d9bf0]">
+        <Link href={Routers.signInPage} className="text-textBlue">
           Đăng nhập ngay
         </Link>
       </div>

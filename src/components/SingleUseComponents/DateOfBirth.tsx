@@ -48,7 +48,7 @@ const DateOfBirth: React.FC<IDateOfBirth> = (props) => {
     <>
       <div>
         <h4 className="text-base font-normal">Ngày sinh</h4>
-        <p className="text-[#71767b] text-sm">
+        <p className="text-textGray text-sm">
           Điều này sẽ không được hiển thị công khai. Xác nhận tuổi của bạn, ngay
           cả khi tài khoản này dành cho doanh nghiệp, thú cưng hoặc thứ gì khác.
         </p>
@@ -57,7 +57,7 @@ const DateOfBirth: React.FC<IDateOfBirth> = (props) => {
         <FormControl sx={{ minWidth: 200, marginRight: 1.5 }}>
           <InputLabel
             id="demo-simple-select-helper-label"
-            className="text-[#71767b]"
+            className="text-textGray"
           >
             Tháng
           </InputLabel>
@@ -79,7 +79,7 @@ const DateOfBirth: React.FC<IDateOfBirth> = (props) => {
         <FormControl sx={{ minWidth: 90, marginRight: 1.5 }}>
           <InputLabel
             id="demo-simple-select-helper-label"
-            className="text-[#71767b]"
+            className="text-textGray"
           >
             Ngày
           </InputLabel>
@@ -101,7 +101,7 @@ const DateOfBirth: React.FC<IDateOfBirth> = (props) => {
         <FormControl sx={{ minWidth: 110 }}>
           <InputLabel
             id="demo-simple-select-helper-label"
-            className="text-[#71767b]"
+            className="text-textGray"
           >
             Năm
           </InputLabel>

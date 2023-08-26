@@ -103,20 +103,20 @@ const SignInPage = () => {
           <div className="text-xs flex justify-between items-center">
             <div>
               <span>Bạn chưa có tài khoản? </span>
-              <Link href="/sign-up" className="text-[#1d9bf0]">
+              <Link href="/sign-up" className="text-textBlue">
                 Đăng ký ngay
               </Link>
             </div>
-            <Link href={"/users/find-account"} className="text-[#1d9bf0]">
+            <Link href={"/users/find-account"} className="text-textBlue">
               Quên mật khẩu?
             </Link>
           </div>
         </div>
         <div className="py-[13px]">
           <div className="flex items-center w-full justify-center">
-            <div className="flex-1 border-t border-[#2f3336]"></div>
-            <div className="mx-2 font-light text-[#71767b]">hoặc</div>
-            <div className="flex-1 border-t border-[#2f3336]"></div>
+            <div className="flex-1 border-t border-textGrayLine"></div>
+            <div className="mx-2 font-light text-textGray">hoặc</div>
+            <div className="flex-1 border-t border-textGrayLine"></div>
           </div>
         </div>
         <div className="pb-[13px]">

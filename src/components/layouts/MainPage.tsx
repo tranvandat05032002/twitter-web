@@ -21,13 +21,13 @@ const MainPage = () => {
 
         <div className="p-9">
           <div className=" mb-12">
-            <h1 className=" text-[64px] inline font-bold text-[#1d9bf0]">
+            <h1 className=" text-[64px] inline font-bold text-textBlue">
               Đang diễn ra ngay bây giờ
             </h1>
           </div>
-          <p className="text-3xl font-bold mb-7 text-[#1d9bf0]">Join today.</p>
+          <p className="text-3xl font-bold mb-7 text-textBlue">Join today.</p>
           <div className="flex flex-col gap-y-3 max-w-[320px] mb-7">
-            <button className="w-80 h-11 rounded-full bg-white text-[#202124] transition-all hover:bg-[#e0e0e0] py-[2px] px-[10px] relative">
+            <button className="w-80 h-11 rounded-full bg-white text-textBlack transition-all hover:bg-bgHoverWhite py-[2px] px-[10px] relative">
               <div className="flex items-center">
                 <div className="w-6 h-6 rounded-full overflow-hidden ml-[-4px] mr-2">
                   <img
@@ -37,11 +37,11 @@ const MainPage = () => {
                   />
                 </div>
                 <div className="text-xs text-start">
-                  <span className="text-[#3c4043] font-medium">
+                  <span className="text-textBlackBtn font-medium">
                     Đăng nhập với tên trần văn đạt
                   </span>
                   <div className="flex items-center">
-                    <span className="text-[#5f6368] opacity-75">
+                    <span className="text-textGrayBtn opacity-75">
                       tranvandatevondev0503@gmail.com
                     </span>
                     <BsChevronDown style={{ margin: "0px 0px 0px 8px" }} />
@@ -51,10 +51,10 @@ const MainPage = () => {
               </div>
             </button>
 
-            <button className="w-80 h-11 rounded-full bg-white text-[#202124] transition-all hover:bg-[#e0e0e0                                                                                                                                  ] py-[2px] px-[10px]">
+            <button className="w-80 h-11 rounded-full bg-white text-textBlack transition-all hover:bg-bgHoverWhite                                                                                                                               ] py-[2px] px-[10px]">
               <div className="flex items-center justify-center">
                 <AppleIcon></AppleIcon>
-                <span className="text-[#3c4043] text-base font-bold">
+                <span className="text-textBlackBtn text-base font-bold">
                   Đăng ký bằng Apple
                 </span>
               </div>
@@ -62,11 +62,11 @@ const MainPage = () => {
 
             <div className="flex items-center">
               <div>
-                <div className="w-[133px] h-[1px] bg-[#2f3336]"></div>
+                <div className="w-[133px] h-[1px] bg-textGrayLine"></div>
               </div>
               <div className="mx-2 text-gray-300">hoặc</div>
               <div>
-                <div className="w-[133px] h-[1px] bg-[#2f3336]"></div>
+                <div className="w-[133px] h-[1px] bg-textGrayLine"></div>
               </div>
             </div>
 
@@ -80,7 +80,7 @@ const MainPage = () => {
           </div>
 
           <div className="flex flex-col gap-y-3 max-w-[320px]">
-            <p className="text-[#1d9bf0] text-lg font-bold">Đã có tài khoản?</p>
+            <p className="text-textBlue text-lg font-bold">Đã có tài khoản?</p>
             <Link href={Routers.signInPage} className="hover:no-underline">
               <GhostButton className="w-80 h-11 rounded-full  py-[2px] px-[10px] text-base">
                 Đăng nhập
@@ -89,7 +89,7 @@ const MainPage = () => {
           </div>
         </div>
       </div>
-      <footer className="px-4 py-3 text-[#71767b] text-sm text-center">
+      <footer className="px-4 py-3 text-textGray text-sm text-center">
         <span>&copy; 2023 Twitter. </span>
         <span>Contact: tranvandatevondev0503@gmail.com</span>
       </footer>
