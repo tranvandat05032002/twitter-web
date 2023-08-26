@@ -94,10 +94,11 @@ const SignUp: React.FC = () => {
   }, [canSubmit]);
   const handleRegister = async (values: RegisterForm) => {
     if (isObjectEmpty(values)) return;
+    console.log("isValid: ", isValid);
     try {
       const result = await register(values);
       if (result?.status === 200) {
-        router.push('/verify?token=');
+        router.push("/verify?token=");
       }
     } catch (error) {
       console.log(error);
