@@ -137,3 +137,18 @@ export const getEmailCookies = () => {
     email_cookies: email_cookies as string,
   };
 };
+
+
+// status verify
+export const saveStatusVerify = (status: string) => {
+    Cookies.set( "status_verify", status, {
+      path: "/",
+      domain: process.env.NEXT_PUBLIC_DOMAIN as string,
+    })
+};
+export const getStatusVerify = () => {
+    const status_verify = Cookies.get( "status_verify");
+    return {
+      status_verify
+    }
+};

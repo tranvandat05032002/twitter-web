@@ -10,14 +10,15 @@ import { Routers } from "@/utils/router/routers";
 const VerifyPage = () => {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
-  const [statusVerify, setStatusVerify] = React.useState<number | null>(null);
-  const router = useRouter();
+  const [statusVerify, setStatusVerify] = React.useState<Boolean>(false);
   const { verifyEmailToken, resendEmailToken } = useAuth((state) => state);
   React.useEffect(() => {
     async function getResultVerify() {
       if (!token) return;
       const result = await verifyEmailToken(token);
-      setStatusVerify(result?.status as number);
+      if(result?.status === 200) {
+        setStatusVerify(true)
+      }
     }
     getResultVerify();
   }, [token, statusVerify]);
@@ -29,7 +30,7 @@ const VerifyPage = () => {
   };
   return (
     <div className="absolute top-0 bottom-0 left-0 right-0 bg-[rgba(71,74,77,0.3)] flex items-center justify-center">
-      {statusVerify === 200 ? (
+      {statusVerify ? (
         <div className="bg-black p-6 rounded-lg shadow-md max-w-sm w-full text-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
