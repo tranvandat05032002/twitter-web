@@ -1,5 +1,17 @@
 import { FcGoogle } from "react-icons/fc";
-import { BsApple, BsTwitter, BsArrowRight } from "react-icons/bs";
+import {
+  BsApple,
+  BsTwitter,
+  BsArrowRight,
+  BsPerson,
+  BsThreeDots,
+} from "react-icons/bs";
+import { BiHomeHeart, BiSearch } from "react-icons/bi";
+import { PiBellRinging } from "react-icons/pi";
+import { HiOutlineMail, HiOutlineDotsCircleHorizontal } from "react-icons/hi";
+import { RiFileListLine } from "react-icons/ri";
+import { LiaUserFriendsSolid } from "react-icons/lia";
+import { RxTwitterLogo } from "react-icons/rx";
 import { FaFacebookF, FaGithub } from "react-icons/fa";
 export const GoogleIcon = () => {
   return (
@@ -64,6 +76,139 @@ export const TwitterIcon = ({ size }: { size: "big" | "small" }) => {
         width: "70px",
         height: "90px",
         color: "#1d9bf0",
+      }}
+    />
+  );
+};
+
+export const TwitterIconVerySmall = () => {
+  return (
+    <BsTwitter
+      style={{
+        width: "55px",
+        height: "42px",
+        color: "#1d9bf0",
+      }}
+    />
+  );
+};
+
+export const HomeIcon = () => {
+  return (
+    <BiHomeHeart
+      style={{
+        width: "45px",
+        height: "33px",
+        marginRight: "12px",
+        fontWeight: 300,
+      }}
+    />
+  );
+};
+export const SearchIcon = () => {
+  return (
+    <BiSearch
+      style={{
+        width: "45px",
+        height: "33px",
+        marginRight: "12px",
+        fontWeight: 300,
+      }}
+    />
+  );
+};
+export const NotificationIcon = () => {
+  return (
+    <PiBellRinging
+      style={{
+        width: "45px",
+        height: "33px",
+        marginRight: "12px",
+        fontWeight: 300,
+      }}
+    />
+  );
+};
+export const MessageIcon = () => {
+  return (
+    <HiOutlineMail
+      style={{
+        width: "45px",
+        height: "33px",
+        marginRight: "12px",
+        fontWeight: 300,
+      }}
+    />
+  );
+};
+export const ListIcon = () => {
+  return (
+    <RiFileListLine
+      style={{
+        width: "45px",
+        height: "33px",
+        marginRight: "12px",
+        fontWeight: 300,
+      }}
+    />
+  );
+};
+export const CommunityIcon = () => {
+  return (
+    <LiaUserFriendsSolid
+      style={{
+        width: "45px",
+        height: "33px",
+        marginRight: "12px",
+        fontWeight: 300,
+      }}
+    />
+  );
+};
+export const VerifiedIcon = () => {
+  return (
+    <RxTwitterLogo
+      style={{
+        width: "45px",
+        height: "33px",
+        marginRight: "12px",
+        fontWeight: 300,
+      }}
+    />
+  );
+};
+export const ProfileIcon = () => {
+  return (
+    <BsPerson
+      style={{
+        width: "45px",
+        height: "33px",
+        marginRight: "12px",
+        fontWeight: 300,
+      }}
+    />
+  );
+};
+
+export const MoreIcon = () => {
+  return (
+    <HiOutlineDotsCircleHorizontal
+      style={{
+        width: "45px",
+        height: "33px",
+        marginRight: "12px",
+        fontWeight: 300,
+      }}
+    />
+  );
+};
+export const DotsIcon = () => {
+  return (
+    <BsThreeDots
+      style={{
+        width: "19px",
+        height: "19px",
+        fontWeight: 300,
       }}
     />
   );

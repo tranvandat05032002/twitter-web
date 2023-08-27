@@ -1,4 +1,5 @@
 "use client";
+import DashboardPage from "@/components/layouts/Dashboard";
 import { useAuth } from "@/store";
 import { getToken } from "@/utils/auth/cookies";
 import { Routers } from "@/utils/router/routers";
@@ -36,10 +37,10 @@ const Home = () => {
   };
   return (
     <div>
-      <p>This is home page</p>
-      <button type="button" onClick={handleLogout}>
+      <DashboardPage></DashboardPage>
+      {/* <button type="button" onClick={handleLogout}>
         Logout
-      </button>
+      </button> */}
     </div>
   );
 };
