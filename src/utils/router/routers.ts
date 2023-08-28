@@ -7,5 +7,6 @@ export const Routers = {
     forgotPasswordPage: "/users/forgot-password",
     resetPasswordPage: "/users/reset-password",
     sendOTPPage: "/users/forgot-password/send-otp?token=",
-    verifyPage: "/verify?token="
+    verifyPage: "/verify?token=",
+    profile: "/profile"
 }
