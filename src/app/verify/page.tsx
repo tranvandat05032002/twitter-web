@@ -3,11 +3,11 @@ import React from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useAuth } from "@/store";
 import { toast } from "react-toastify";
-import Link from "next/link";
 import { TwitterIcon } from "@/components/SingleUseComponents";
-import { LayoutAuth } from "@/components/common";
 import { Routers } from "@/utils/router/routers";
+import { logOutCookies } from "@/utils/auth/cookies";
 const VerifyPage = () => {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
   const [statusVerify, setStatusVerify] = React.useState<Boolean>(false);
@@ -16,8 +16,8 @@ const VerifyPage = () => {
     async function getResultVerify() {
       if (!token) return;
       const result = await verifyEmailToken(token);
-      if(result?.status === 200) {
-        setStatusVerify(true)
+      if (result?.status === 200) {
+        setStatusVerify(true);
       }
     }
     getResultVerify();
@@ -28,10 +28,14 @@ const VerifyPage = () => {
       ? toast.success("Email resent success!")
       : toast.error("Email resent error!");
   };
+  const handleComeSignIn = () => {
+    logOutCookies();
+    router.push(Routers.signInPage);
+  };
   return (
     <div className="absolute top-0 bottom-0 left-0 right-0 bg-[rgba(71,74,77,0.3)] flex items-center justify-center">
       {statusVerify ? (
-        <div className="bg-black p-6 rounded-lg shadow-md max-w-sm w-full text-center">
+        <div className="bg-black p-6 rounded-lg shadow-md max-w-sm w-full text-center flex flex-col justify-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -50,12 +54,13 @@ const VerifyPage = () => {
             Thank you for verifying your email address. Your account is now
             active and you can start using our services.
           </p>
-          <Link
-            href={Routers.signInPage}
-            className="block text-blue-500 hover:underline"
+          <button
+            onClick={handleComeSignIn}
+            type="button"
+            className="block text-textBlue border-none outline-none"
           >
             Go to sign in
-          </Link>
+          </button>
         </div>
       ) : (
         <div className="bg-black p-6 rounded-lg shadow-md max-w-sm w-full">
