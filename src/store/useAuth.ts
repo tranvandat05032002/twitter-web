@@ -1,10 +1,7 @@
 import { IUser, LoginForm, RegisterForm } from "@/types/userTypes";
 import { apiInstance } from "@/utils/api";
-import Cookies from "js-cookie";
 import AxiosError from "axios";
-import createError from "http-errors";
 import {
-  getOTPToken,
   getToken,
   logOutCookies,
   saveToken,
@@ -12,22 +9,19 @@ import {
 import { AxiosResponse } from "axios";
 import { create } from "zustand";
 import { ForgotForm } from "@/app/users/find-account/page";
-import { OTPForm } from "@/app/users/forgot-password/send-otp/page";
 import { ResetPasswordForm } from "@/app/users/reset-password/page";
 type IAuthStore = {
   userInfo: IUser | null;
   errorMessage: string;
   access_token: string | null;
-  login: (infoLogin: LoginForm) => Promise<IUser>;
+  login: (infoLogin: LoginForm) => Promise<AxiosResponse | undefined>;
   logout: () => Promise<AxiosResponse | undefined>;
-  fetchMe: (token: string) => Promise<IUser>;
-  getUserReload: (token: string) => void;
+  fetchMe: () => Promise<IUser>;
+  getUserReload: (token: string) => Promise<AxiosResponse | undefined>;
   updateUserAndToken: ({
     userData,
-    token,
   }: {
-    userData: IUser | null;
-    token: string;
+    userData: IUser;
   }) => void;
   registerErrorMessage: string;
   register: (data: RegisterForm) => Promise<AxiosResponse | undefined>;
@@ -71,7 +65,8 @@ export const useAuth = create<IAuthStore>((set) => {
         console.log(error);
       }
     },
-    fetchMe: async (access_token: string) => {
+    fetchMe: async () => {
+      const { access_token } = getToken();
       if (!access_token) return;
       try {
         const response = await apiInstance.get("/users/me", {
@@ -88,28 +83,15 @@ export const useAuth = create<IAuthStore>((set) => {
     errorMessage: "",
     updateUserAndToken: ({
       userData,
-      token,
     }: {
-      userData: IUser | null;
-      token: string;
-    }) => set({ userInfo: userData, access_token: token }),
+      userData: IUser;
+    }) => set({ userInfo: userData }),
     login: async (user: LoginForm) => {
       try {
         const response = await apiInstance.post("/users/login", {
           ...user,
         });
-        const access_token = response?.data?.result?.access_token as string;
-        const refresh_token = response?.data?.result?.refresh_token as string;
-        if (access_token && refresh_token) {
-          saveToken({ access_token, refresh_token });
-          // fetch data /me here
-          const fetchedUser = await authFunctions.fetchMe(access_token);
-          useAuth.getState().updateUserAndToken({
-            userData: fetchedUser as IUser,
-            token: access_token,
-          });
-          return fetchedUser;
-        }
+        return response;
       } catch (error) {
         if (AxiosError.isAxiosError(error) && error.response?.status === 422) {
           console.log("Validation errors:", error.response?.data);
@@ -154,16 +136,10 @@ export const useAuth = create<IAuthStore>((set) => {
           },
         }
       );
-      if (response.status === 200) {
-        const access_token = response?.data?.result?.access_token;
-        const refresh_token = response?.data?.result?.refresh_token;
-        saveToken({ access_token, refresh_token });
-        const user = await useAuth.getState().fetchMe(access_token);
-        useAuth.getState().updateUserAndToken({
-          userData: user as IUser,
-          token: access_token,
-        });
-      }
+      const new_access_token = response?.data?.result?.access_token as string;
+      const new_refresh_token = response?.data?.result?.refresh_token as string;
+      saveToken({ access_token: new_access_token, refresh_token: new_refresh_token });
+      return response
     },
     verifyEmailToken: async (token: string) => {
       try {

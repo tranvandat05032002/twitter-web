@@ -22,7 +22,7 @@ import * as yup from "yup";
 import { LoginForm } from "@/types/userTypes";
 import { isObjectEmpty } from "@/utils/handlers";
 import { useAuth } from "@/store";
-import { getToken } from "@/utils/auth/cookies";
+import { saveToken } from "@/utils/auth/cookies";
 import { Routers } from "@/utils/router/routers";
 const schemaValidator = yup.object().shape({
   email: yup
@@ -36,9 +36,8 @@ const schemaValidator = yup.object().shape({
 });
 const SignInPage = () => {
   const [canSubmit, setCanSubmit] = React.useState<boolean>(true);
-  const { login, updateUserAndToken, access_token, userInfo } = useAuth(
-    (state) => state
-  );
+  const { login, fetchMe } =
+    useAuth((state) => state);
   const router = useRouter();
   const {
     control,
@@ -64,9 +63,16 @@ const SignInPage = () => {
   }, [canSubmit]);
   const handleLogin = async (values: LoginForm) => {
     if (isObjectEmpty(values)) return;
-    const user = await login(values);
-    const { access_token } = getToken();
-    if (user?.verify === 1 && user) {
+    const response = await login(values);
+    if (response?.status === 200) {
+      const access_token = response?.data?.result?.access_token as string;
+      const refresh_token = response?.data?.result?.refresh_token as string;
+      saveToken({ access_token, refresh_token });
+    } else {
+      return null;
+    }
+    const user = await fetchMe();
+    if (user && user.verify === 1) {
       router.push(Routers.homePage);
     }
   };

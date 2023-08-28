@@ -81,15 +81,17 @@ export const TwitterIcon = ({ size }: { size: "big" | "small" }) => {
   );
 };
 
-export const TwitterIconVerySmall = () => {
+export const TwitterIconVerySmall = ({onClick}: {onClick?: () => void}) => {
   return (
-    <BsTwitter
-      style={{
-        width: "55px",
-        height: "42px",
-        color: "#1d9bf0",
-      }}
-    />
+   <div onClick={onClick}>
+      <BsTwitter
+        style={{
+          width: "55px",
+          height: "42px",
+          color: "#1d9bf0",
+        }}
+      />
+   </div>
   );
 };
 
