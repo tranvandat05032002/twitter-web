@@ -36,8 +36,7 @@ const schemaValidator = yup.object().shape({
 });
 const SignInPage = () => {
   const [canSubmit, setCanSubmit] = React.useState<boolean>(true);
-  const { login, fetchMe } =
-    useAuth((state) => state);
+  const { login, fetchMe } = useAuth((state) => state);
   const router = useRouter();
   const {
     control,

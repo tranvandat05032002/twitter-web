@@ -16,6 +16,7 @@ type IAuthStore = {
   access_token: string | null;
   login: (infoLogin: LoginForm) => Promise<AxiosResponse | undefined>;
   logout: () => Promise<AxiosResponse | undefined>;
+  isLoggedIn: () => Boolean;
   fetchMe: () => Promise<IUser>;
   getUserReload: (token: string) => Promise<AxiosResponse | undefined>;
   updateUserAndToken: ({
@@ -97,6 +98,13 @@ export const useAuth = create<IAuthStore>((set) => {
           console.log("Validation errors:", error.response?.data);
         }
       }
+    },
+    isLoggedIn: () => {
+      const {access_token, refresh_token} = getToken()
+      if(access_token && refresh_token) {
+        return true;
+      }
+      return false;
     },
     logout: async () => {
       const { access_token, refresh_token } = getToken();
