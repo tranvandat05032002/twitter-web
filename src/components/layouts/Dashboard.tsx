@@ -67,7 +67,7 @@ const DashboardPage: React.FC<IDashboard> = (props) => {
   };
   return (
     <div className="grid grid-cols-[1fr,2.5fr,1.5fr]">
-      <div className="border-r border-borderGrayPrimary px-1 py-2">
+      <div className="border-r border-borderGrayPrimary px-1 py-2 col-start-1 col-end-2 h-screen">
         <div className="px-1">
           <div className="mb-1 px-2">
             <TwitterIconVerySmall
@@ -201,10 +201,10 @@ const DashboardPage: React.FC<IDashboard> = (props) => {
       </div>
 
       {/*change*/}
-      <div className="h-[1780px] relative flex-1 border border-blue-500 w-[]">
+      <div className="border border-blue-500 col-start-2 col-end-3 w-[640px]">
         {children}
       </div>
-      <div className="border border-red-500">Search</div>
+      <div className="border border-red-500 z-10">Search</div>
     </div>
   );
 };

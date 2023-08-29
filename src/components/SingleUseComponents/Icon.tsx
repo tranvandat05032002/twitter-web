@@ -10,7 +10,7 @@ import { BiHomeHeart, BiSearch } from "react-icons/bi";
 import { PiBellRinging } from "react-icons/pi";
 import { HiOutlineMail, HiOutlineDotsCircleHorizontal } from "react-icons/hi";
 import { RiFileListLine } from "react-icons/ri";
-import { LiaUserFriendsSolid } from "react-icons/lia";
+import { LiaUserFriendsSolid, LiaCalendarSolid } from "react-icons/lia";
 import { RxTwitterLogo } from "react-icons/rx";
 import { FaFacebookF, FaGithub } from "react-icons/fa";
 export const GoogleIcon = () => {
@@ -81,9 +81,9 @@ export const TwitterIcon = ({ size }: { size: "big" | "small" }) => {
   );
 };
 
-export const TwitterIconVerySmall = ({onClick}: {onClick?: () => void}) => {
+export const TwitterIconVerySmall = ({ onClick }: { onClick?: () => void }) => {
   return (
-   <div onClick={onClick}>
+    <div onClick={onClick}>
       <BsTwitter
         style={{
           width: "55px",
@@ -91,7 +91,7 @@ export const TwitterIconVerySmall = ({onClick}: {onClick?: () => void}) => {
           color: "#1d9bf0",
         }}
       />
-   </div>
+    </div>
   );
 };
 
@@ -211,6 +211,18 @@ export const DotsIcon = () => {
         width: "19px",
         height: "19px",
         fontWeight: 300,
+      }}
+    />
+  );
+};
+export const CalendarIcon = () => {
+  return (
+    <LiaCalendarSolid
+      style={{
+        width: "18px",
+        height: "18px",
+        fontWeight: 300,
+        marginRight: "5px"
       }}
     />
   );

@@ -22,8 +22,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={roboto.className} suppressHydrationWarning={true}>
-        {children}
-        <ToastContainer />
+          {children}
+          <ToastContainer />
       </body>
     </html>
   );
