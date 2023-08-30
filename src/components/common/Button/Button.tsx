@@ -13,7 +13,7 @@ export interface ButtonProps
 function getButtonClass(typeButton: string): string {
   switch (typeButton) {
     case "primary":
-      return `rounded-full bg-[#1d9bf0]  hover:no-underline no-underline hover:no-underline transition-all flex items-center justify-center text-white`;
+      return `rounded-full bg-[#1d9bf0] hover:bg-opacity-80 transition text-center duration-200  hover:no-underline no-underline hover:no-underline transition-all flex items-center justify-center text-white`;
     case "ghost":
       return "bg-transparent border font-semibold transition-all hover:no-underline hover:bg-[rgba(29,155,240,0.1)] flex items-center justify-center border-[#536472] text-[#1d9bf0]";
     case "OAuth":
@@ -32,7 +32,7 @@ const createButton = (props: ButtonProps, typeButton: string): JSX.Element => {
     <button
       disabled={disabledForm}
       type={type}
-      onClick = {onClick}
+      onClick={onClick}
       className={`${className || ""} ${buttonClass} ${
         disabledForm ? "opacity-60" : ""
       }`}

@@ -23,11 +23,11 @@ const config: Config = {
         textGrayBtn: "#5f6368",
 
         bgHoverWhite: "#e0e0e0",
-        bgHoverBlue: 'rgba(29,155,240,0.1)',
+        bgHoverBlue: "rgba(29,155,240,0.1)",
 
         borderGrayPrimary: "#333639",
         borderGraySecond: "#536473",
-        borderBlue: "#66b3ff"
+        borderBlue: "#66b3ff",
       },
     },
   },

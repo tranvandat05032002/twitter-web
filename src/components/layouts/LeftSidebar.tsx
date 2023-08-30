@@ -1,0 +1,125 @@
+import React from "react";
+import {
+  DotsIcon,
+  MoreIcon,
+  ProfileIcon,
+  TwitterIconVerySmall,
+} from "../SingleUseComponents/Icon";
+import { NAVIGATION_ITEMS } from "@/utils/constant/constants";
+import Link from "next/link";
+import { PrimaryButton } from "../common";
+import { Routers } from "@/utils/router/routers";
+import Tippy from "@tippyjs/react/headless";
+import { IUser } from "@/types/userTypes";
+import { usePathname, useRouter } from "next/navigation";
+import { useAuth } from "@/store";
+import { toast } from "react-toastify";
+
+interface ILeftSidebar {
+  userInfo: IUser | null;
+}
+const LeftSidebar: React.FC<ILeftSidebar> = (props) => {
+  const { userInfo } = props;
+  const router = useRouter();
+  const pathname = usePathname();
+  const { logout } = useAuth((state) => state);
+  const isActive = (path: string) => {
+    return pathname === path
+      ? "bg-[rgba(29,155,240,0.2)] hover:bg-[rgba(29,155,240,0.2)] font-bold"
+      : "";
+  };
+  const handleLogout = async () => {
+    const response = await logout();
+    if (response?.status === 200) {
+      toast.success("Logout successfully!", {
+        pauseOnHover: false,
+      });
+    }
+    router.push(Routers.mainLayoutPage);
+  };
+  return (
+    <section className="border-r w-72 fixed border-borderGrayPrimary px-1 py-2">
+      <div className="px-1">
+        <div className="mb-1 px-2">
+          <TwitterIconVerySmall
+            onClick={() => router.push(Routers.signInPage)}
+          ></TwitterIconVerySmall>
+        </div>
+        {NAVIGATION_ITEMS.map((item) => (
+          <Link
+            key={item.title}
+            href={item.href}
+            className={`hover:no-underline text-white flex items-center text-xl py-[10px] my-[2px] px-2 hover:bg-bgHoverBlue rounded-full transition-all ${isActive(
+              item.href
+            )}`}
+          >
+            <item.icon />
+            <p>{item.title}</p>
+          </Link>
+        ))}
+        <Link
+          href={`${Routers.profile}/${userInfo?.username}`}
+          className={`hover:no-underline text-white flex items-center text-xl py-[10px] my-[2px] px-2 hover:bg-bgHoverBlue rounded-full transition-all ${isActive(
+            Routers.profile + "/" + userInfo?.username
+          )}`}
+        >
+          <ProfileIcon></ProfileIcon>
+          <p>Profile</p>
+        </Link>
+        <div className="hover:no-underline text-white flex items-center text-xl py-[10px] my-[2px] px-2 hover:bg-bgHoverBlue rounded-full transition-all ">
+          <MoreIcon></MoreIcon>
+          <p>More</p>
+        </div>
+        <div className="mt-1 mb-6">
+          <PrimaryButton className="px-2 w-full py-3">Post</PrimaryButton>
+        </div>
+        <Tippy
+          interactive
+          // placement="top"
+          trigger="click"
+          offset={[20, 12]}
+          render={(attrs) => (
+            <div
+              className="w-[280px] h-[112px] bg-[#1d1c1c] py-2 border-borderGraySecond rounded-2xl text-white flex flex-col items-start"
+              tabIndex={-1}
+              {...attrs}
+            >
+              <Link
+                href={"/sign-in"}
+                className="no-underline hover:no-underline text-white w-full py-3 px-4 hover:bg-bgHoverBlue"
+              >
+                Add an existing account
+              </Link>
+              <button
+                className="py-3 hover:bg-bgHoverBlue w-full text-start px-4"
+                onClick={handleLogout}
+              >
+                Log out {userInfo?.username}
+              </button>
+            </div>
+          )}
+        >
+          <div className="flex items-center cursor-pointer select-none justify-between text-sm py-[10px] my-[2px] px-2 hover:bg-bgHoverBlue rounded-full">
+            <div className="flex items-center gap-x-2">
+              <div className="w-10 h-10 overflow-hidden rounded-full">
+                <img
+                  src="/image/avatar.jpg"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div>
+                <p>{userInfo?.name}</p>
+                <p className="text-textGray">{userInfo?.username}</p>
+              </div>
+            </div>
+            <div>
+              <DotsIcon></DotsIcon>
+            </div>
+          </div>
+        </Tippy>
+      </div>
+    </section>
+  );
+};
+
+export default LeftSidebar;
