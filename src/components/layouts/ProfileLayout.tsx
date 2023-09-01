@@ -3,6 +3,8 @@ import { GhostButton, StickyNav } from "../common";
 import { BackIcon, CalendarIcon } from "../SingleUseComponents/Icon";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useProfileStore } from "@/store/useProfile";
+import { formatMonthYear } from "@/utils/handlers";
 type TParams = {
   username: string;
 };
@@ -10,12 +12,17 @@ interface IProfile {
   children?: React.ReactNode;
   params: TParams;
 }
-const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
-  const router = useRouter();
-  const decodedURL = decodeURIComponent(params.username);
-  const username = decodedURL.startsWith("@")
+function decodedUsername(username: string) {
+  const decodedURL = decodeURIComponent(username);
+  const usernameDecoded = decodedURL.startsWith("@")
     ? `/${decodedURL}`
     : `/@${decodedURL}`;
+  return usernameDecoded;
+}
+const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
+  const router = useRouter();
+  const username = decodedUsername(params.username);
+  const { getUserProfile, userProfile } = useProfileStore((state) => state);
   const handleBackHome = React.useCallback(() => {
     router.back();
   }, [router]);
@@ -25,6 +32,9 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
       ? "text-white py-4 px-2 border-b-[3px] border-textBlue transition"
       : "";
   };
+  React.useEffect(() => {
+    getUserProfile(username);
+  }, []);
   return (
     <React.Fragment>
       <StickyNav>
@@ -36,7 +46,7 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
             ></BackIcon>
           </div>
           <div>
-            <h2 className="text-xl font-bold">tranvandat</h2>
+            <h2 className="text-xl font-bold">{userProfile?.name}</h2>
             <p className="text-textGray text-sm font-light">0 posts</p>
           </div>
         </div>
@@ -67,13 +77,17 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
             </div>
             <div className="flex flex-col items-start text-sm gap-y-4">
               <div>
-                <h2 className="text-base font-bold">Trần Văn Đạt</h2>
-                <span className="text-textGray">@Twittername13b916</span>
+                <h2 className="text-base font-bold">{userProfile?.name}</h2>
+                <span className="text-textGray">{userProfile?.username}</span>
               </div>
-              <p className="font-light">datdev0503</p>
               <div className="flex text-textGray">
                 <CalendarIcon />
-                <span>Joined August 2023</span>
+                <span>
+                  Joined{" "}
+                  {formatMonthYear(
+                    userProfile?.created_at?.toString() as string
+                  )}
+                </span>
               </div>
               <div className="flex">
                 <div className="mr-4 flex items-center gap-x-[2px]">

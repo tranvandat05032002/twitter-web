@@ -1,4 +1,4 @@
-import { formatISO, parse } from "date-fns";
+import { format, formatISO, parse } from "date-fns";
 export function isObjectEmpty(obj: Object): boolean {
   if (Object.values(obj).every((value) => value !== "")) {
     return false;
@@ -17,7 +17,13 @@ export function formatISO8601(
   const isoDate = formatISO(parsedDate);
   return isoDate;
 }
-
+export function formatMonthYear(date: string) {
+  if (!date) return;
+  const inputDate = new Date(date);
+  const formattedDate = format(inputDate, "MMMM/yyyy");
+  const formattedDateResults = formattedDate.replace("/", " ");
+  return formattedDateResults;
+}
 export function normalizeEmail(email: string) {
   if (!email) return;
   let excludedPart = email.substring(0, 2);
