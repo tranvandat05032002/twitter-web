@@ -17,7 +17,7 @@ const CustomSelect = styled(Select)`
   }
   &
     .css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
-    color: #ffff;
+    color: #e7e9ea;
   }
 `;
 

@@ -5,14 +5,22 @@ import {
   BsArrowRight,
   BsPerson,
   BsThreeDots,
+  BsDot,
 } from "react-icons/bs";
-import { BiHomeHeart, BiSearch } from "react-icons/bi";
+import { BiHomeHeart, BiSearch, BiHeart } from "react-icons/bi";
+import { TbMessageCircle } from "react-icons/tb";
 import { PiBellRinging } from "react-icons/pi";
-import { HiOutlineMail, HiOutlineDotsCircleHorizontal } from "react-icons/hi";
+import { IoIosStats } from "react-icons/io";
+import { LuShare } from "react-icons/lu";
+import {
+  HiOutlineMail,
+  HiOutlineDotsCircleHorizontal,
+  HiArrowUp,
+} from "react-icons/hi";
 import { RiFileListLine } from "react-icons/ri";
 import { LiaUserFriendsSolid, LiaCalendarSolid } from "react-icons/lia";
 import { RxTwitterLogo } from "react-icons/rx";
-import { FaFacebookF, FaGithub } from "react-icons/fa";
+import { FaFacebookF, FaGithub, FaRetweet } from "react-icons/fa";
 export const GoogleIcon = () => {
   return (
     <FcGoogle
@@ -204,16 +212,8 @@ export const MoreIcon = () => {
     />
   );
 };
-export const DotsIcon = () => {
-  return (
-    <BsThreeDots
-      style={{
-        width: "19px",
-        height: "19px",
-        fontWeight: 300,
-      }}
-    />
-  );
+export const DotsIcon = ({ className }: { className?: string }) => {
+  return <BsThreeDots className={`w-[19px] h-[19px] ${className}`} />;
 };
 export const CalendarIcon = () => {
   return (
@@ -222,8 +222,37 @@ export const CalendarIcon = () => {
         width: "18px",
         height: "18px",
         fontWeight: 300,
-        marginRight: "5px"
+        marginRight: "5px",
       }}
     />
   );
+};
+
+export const DotIcon = ({ style }: { style?: Object }) => {
+  return (
+    <BsDot
+      style={{
+        width: "10px",
+        height: "10px",
+        fontWeight: 300,
+        ...style,
+      }}
+    />
+  );
+};
+
+export const CommentIcon = ({ className }: { className?: string }) => {
+  return <TbMessageCircle className={`w-[19px] h-[19px] ${className}`} />;
+};
+export const HeartIcon = ({ className }: { className?: string }) => {
+  return <BiHeart className={`w-[19px] h-[19px] ${className}`} />;
+};
+export const RetWeetIcon = ({ className }: { className?: string }) => {
+  return <FaRetweet className={`w-[19px] h-[19px] ${className}`} />;
+};
+export const StatsIcon = ({ className }: { className?: string }) => {
+  return <IoIosStats className={`w-[19px] h-[19px] ${className}`} />;
+};
+export const ShareIcon = ({ className }: { className?: string }) => {
+  return <LuShare className={`w-[19px] h-[19px] ${className}`} />;
 };

@@ -40,14 +40,14 @@ const DashboardPage: React.FC<IDashboard> = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refresh_token]);
   return (
-    <div className="relative items-center w-full h-full flex">
+    <div className="relative flex items-center w-full h-full">
       <div className="max-w-screen-xl w-full h-full flex relative">
         <LeftSidebar userInfo={userInfo}></LeftSidebar>
         {/*change*/}
-        <main className="border border-blue-500 col-start-2 col-end-3 w-[640px]">
+        <main className="ml-[288px] w-[600px] flex flex-col h-full min-h-screen border-r-[0.5px] border-borderGrayPrimary">
           {children}
         </main>
-        <section className="border border-red-500 z-10">Search</section>
+        <section className="">Search</section>
       </div>
     </div>
   );
