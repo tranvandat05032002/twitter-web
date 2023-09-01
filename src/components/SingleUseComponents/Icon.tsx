@@ -6,6 +6,7 @@ import {
   BsPerson,
   BsThreeDots,
   BsDot,
+  BsArrowLeft,
 } from "react-icons/bs";
 import { BiHomeHeart, BiSearch, BiHeart } from "react-icons/bi";
 import { TbMessageCircle } from "react-icons/tb";
@@ -21,7 +22,13 @@ import { RiFileListLine } from "react-icons/ri";
 import { LiaUserFriendsSolid, LiaCalendarSolid } from "react-icons/lia";
 import { RxTwitterLogo } from "react-icons/rx";
 import { FaFacebookF, FaGithub, FaRetweet } from "react-icons/fa";
-export const GoogleIcon = () => {
+interface IIcon {
+  size?: "big" | "small";
+  className?: string;
+  style?: Object;
+  onClick?: () => void;
+}
+export const GoogleIcon: React.FC<IIcon> = () => {
   return (
     <FcGoogle
       style={{
@@ -34,7 +41,7 @@ export const GoogleIcon = () => {
   );
 };
 
-export const BsArrowRightIcon = () => {
+export const BsArrowRightIcon: React.FC<IIcon> = () => {
   return (
     <BsArrowRight
       style={{
@@ -45,7 +52,7 @@ export const BsArrowRightIcon = () => {
   );
 };
 
-export const AppleIcon = () => {
+export const AppleIcon: React.FC<IIcon> = () => {
   return (
     <BsApple
       style={{
@@ -57,19 +64,20 @@ export const AppleIcon = () => {
   );
 };
 
-export const GithubIcon = () => {
+export const GithubIcon: React.FC<IIcon> = () => {
   return <FaGithub style={{ height: "25px", width: "25px", color: "white" }} />;
 };
-export const FacebookIcon = () => {
+export const FacebookIcon: React.FC<IIcon> = () => {
   return (
     <FaFacebookF style={{ height: "25px", width: "25px", color: "#1774eb" }} />
   );
 };
-export const GoogleIconSignIn = () => {
+export const GoogleIconSignIn: React.FC<IIcon> = () => {
   return <FcGoogle style={{ height: "25px", width: "25px" }} />;
 };
 
-export const TwitterIcon = ({ size }: { size: "big" | "small" }) => {
+export const TwitterIcon: React.FC<IIcon> = (props) => {
+  const { size } = props;
   return size === "big" ? (
     <BsTwitter
       style={{
@@ -89,7 +97,8 @@ export const TwitterIcon = ({ size }: { size: "big" | "small" }) => {
   );
 };
 
-export const TwitterIconVerySmall = ({ onClick }: { onClick?: () => void }) => {
+export const TwitterIconVerySmall: React.FC<IIcon> = (props) => {
+  const { onClick } = props;
   return (
     <div onClick={onClick}>
       <BsTwitter
@@ -103,7 +112,7 @@ export const TwitterIconVerySmall = ({ onClick }: { onClick?: () => void }) => {
   );
 };
 
-export const HomeIcon = () => {
+export const HomeIcon: React.FC<IIcon> = () => {
   return (
     <BiHomeHeart
       style={{
@@ -115,7 +124,7 @@ export const HomeIcon = () => {
     />
   );
 };
-export const SearchIcon = () => {
+export const SearchIcon: React.FC<IIcon> = () => {
   return (
     <BiSearch
       style={{
@@ -127,7 +136,7 @@ export const SearchIcon = () => {
     />
   );
 };
-export const NotificationIcon = () => {
+export const NotificationIcon: React.FC<IIcon> = () => {
   return (
     <PiBellRinging
       style={{
@@ -139,7 +148,7 @@ export const NotificationIcon = () => {
     />
   );
 };
-export const MessageIcon = () => {
+export const MessageIcon: React.FC<IIcon> = () => {
   return (
     <HiOutlineMail
       style={{
@@ -151,7 +160,7 @@ export const MessageIcon = () => {
     />
   );
 };
-export const ListIcon = () => {
+export const ListIcon: React.FC<IIcon> = () => {
   return (
     <RiFileListLine
       style={{
@@ -163,7 +172,7 @@ export const ListIcon = () => {
     />
   );
 };
-export const CommunityIcon = () => {
+export const CommunityIcon: React.FC<IIcon> = () => {
   return (
     <LiaUserFriendsSolid
       style={{
@@ -175,7 +184,7 @@ export const CommunityIcon = () => {
     />
   );
 };
-export const VerifiedIcon = () => {
+export const VerifiedIcon: React.FC<IIcon> = () => {
   return (
     <RxTwitterLogo
       style={{
@@ -187,7 +196,7 @@ export const VerifiedIcon = () => {
     />
   );
 };
-export const ProfileIcon = () => {
+export const ProfileIcon: React.FC<IIcon> = () => {
   return (
     <BsPerson
       style={{
@@ -200,7 +209,7 @@ export const ProfileIcon = () => {
   );
 };
 
-export const MoreIcon = () => {
+export const MoreIcon: React.FC<IIcon> = () => {
   return (
     <HiOutlineDotsCircleHorizontal
       style={{
@@ -212,10 +221,11 @@ export const MoreIcon = () => {
     />
   );
 };
-export const DotsIcon = ({ className }: { className?: string }) => {
+export const DotsIcon: React.FC<IIcon> = (props) => {
+  const { className } = props;
   return <BsThreeDots className={`w-[19px] h-[19px] ${className}`} />;
 };
-export const CalendarIcon = () => {
+export const CalendarIcon: React.FC<IIcon> = () => {
   return (
     <LiaCalendarSolid
       style={{
@@ -228,7 +238,8 @@ export const CalendarIcon = () => {
   );
 };
 
-export const DotIcon = ({ style }: { style?: Object }) => {
+export const DotIcon: React.FC<IIcon> = (props) => {
+  const { style } = props;
   return (
     <BsDot
       style={{
@@ -241,18 +252,33 @@ export const DotIcon = ({ style }: { style?: Object }) => {
   );
 };
 
-export const CommentIcon = ({ className }: { className?: string }) => {
+export const CommentIcon: React.FC<IIcon> = (props) => {
+  const { className } = props;
   return <TbMessageCircle className={`w-[19px] h-[19px] ${className}`} />;
 };
-export const HeartIcon = ({ className }: { className?: string }) => {
+export const HeartIcon: React.FC<IIcon> = (props) => {
+  const { className } = props;
   return <BiHeart className={`w-[19px] h-[19px] ${className}`} />;
 };
-export const RetWeetIcon = ({ className }: { className?: string }) => {
+export const RetWeetIcon: React.FC<IIcon> = (props) => {
+  const { className } = props;
   return <FaRetweet className={`w-[19px] h-[19px] ${className}`} />;
 };
-export const StatsIcon = ({ className }: { className?: string }) => {
+export const StatsIcon: React.FC<IIcon> = (props) => {
+  const { className } = props;
   return <IoIosStats className={`w-[19px] h-[19px] ${className}`} />;
 };
-export const ShareIcon = ({ className }: { className?: string }) => {
+export const ShareIcon: React.FC<IIcon> = (props) => {
+  const { className } = props;
   return <LuShare className={`w-[19px] h-[19px] ${className}`} />;
+};
+
+export const BackIcon: React.FC<IIcon> = (props) => {
+  const { className, onClick } = props;
+  return (
+    <BsArrowLeft
+      onClick={onClick}
+      className={`w-[19px] h-[19px] ${className}`}
+    />
+  );
 };
