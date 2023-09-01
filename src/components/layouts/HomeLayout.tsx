@@ -14,7 +14,9 @@ const HomeLayout = () => {
   return (
     <React.Fragment>
       <StickyNav>
-        <h1 className="text-xl font-bold">Home</h1>
+        <div className="p-4">
+          <h1 className="text-xl font-bold">Home</h1>
+        </div>
       </StickyNav>
       <div className="relative border-t-[0.5px] border-b-[0.5px] p-4 flex items-stretch space-x-2 border-borderGrayPrimary h-[120px]">
         <div className="w-10 h-10 rounded-full overflow-hidden flex-none">
