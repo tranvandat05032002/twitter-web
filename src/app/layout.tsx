@@ -7,6 +7,7 @@ import { Roboto } from "next/font/google";
 const roboto = Roboto({
   weight: ["100", "300", "400", "500", "700"],
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -22,8 +23,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={roboto.className} suppressHydrationWarning={true}>
-          {children}
-          <ToastContainer />
+        {/* <div id="modal" /> */}
+        {children}
+        <ToastContainer />
       </body>
     </html>
   );
