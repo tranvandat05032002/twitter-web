@@ -44,6 +44,16 @@ const GhostButton = ({ children, className, type, onClick }: ButtonProp) => {
   const GhostButton = createButton(propsGhost, "ghost");
   return GhostButton;
 };
+const SecondaryButton = ({ children, className, type, onClick }: ButtonProp) => {
+  const propSecondary: ButtonProps = {
+    children,
+    className,
+    onClick,
+    type,
+  };
+  const SecondaryButton = createButton(propSecondary, "secondary");
+  return SecondaryButton;
+};
 
 const AuthButtonGoogle = ({ children }: ButtonProp) => {
   const propsGoogle: ButtonProps = {
@@ -95,4 +105,5 @@ export {
   AuthButtonGoogle,
   AuthButtonSignOut,
   GhostButton,
+  SecondaryButton
 };

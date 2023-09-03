@@ -24,6 +24,13 @@ export function formatMonthYear(date: string) {
   const formattedDateResults = formattedDate.replace("/", " ");
   return formattedDateResults;
 }
+export function formatMonthDayYear(date: string) {
+  if (!date) return;
+  const inputDate = new Date(date);
+  const formattedDate = format(inputDate, "MMMM/d, yyyy");
+  const formattedDateResults = formattedDate.replace("/", " ");
+  return formattedDateResults;
+}
 export function normalizeEmail(email: string) {
   if (!email) return;
   let excludedPart = email.substring(0, 2);

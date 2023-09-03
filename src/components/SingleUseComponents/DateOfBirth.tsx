@@ -28,6 +28,7 @@ interface IDateOfBirth {
   dayItem: React.JSX.Element[] | [];
   monthItem: React.JSX.Element[] | [];
   yearItem: React.JSX.Element[] | [];
+  quote?: Boolean | true;
   handleChangeDay: (event: SelectChangeEvent<unknown>) => void;
   handleChangeYear: (event: SelectChangeEvent<unknown>) => void;
   handleChangeMonth: (event: SelectChangeEvent<unknown>) => void;
@@ -41,18 +42,22 @@ const DateOfBirth: React.FC<IDateOfBirth> = (props) => {
     handleChangeDay,
     handleChangeMonth,
     handleChangeYear,
+    quote,
     monthItem,
     yearItem,
   } = props;
   return (
     <>
-      <div>
-        <h4 className="text-base font-normal">Ngày sinh</h4>
-        <p className="text-textGray text-sm">
-          Điều này sẽ không được hiển thị công khai. Xác nhận tuổi của bạn, ngay
-          cả khi tài khoản này dành cho doanh nghiệp, thú cưng hoặc thứ gì khác.
-        </p>
-      </div>
+      {quote && (
+        <div>
+          <h4 className="text-base font-normal">Ngày sinh</h4>
+          <p className="text-textGray text-sm">
+            Điều này sẽ không được hiển thị công khai. Xác nhận tuổi của bạn,
+            ngay cả khi tài khoản này dành cho doanh nghiệp, thú cưng hoặc thứ
+            gì khác.
+          </p>
+        </div>
+      )}
       <div className="my-4">
         <FormControl sx={{ minWidth: 200, marginRight: 1.5 }}>
           <InputLabel

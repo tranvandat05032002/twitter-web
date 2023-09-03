@@ -5,6 +5,7 @@ import { useAuth } from "@/store";
 import { Routers } from "@/utils/router/routers";
 import { getToken } from "@/utils/auth/cookies";
 import LeftSidebar from "./LeftSidebar";
+import { useEvent } from "@/store/useEven";
 
 interface IDashboard {
   children: React.ReactNode;
@@ -15,6 +16,7 @@ const DashboardPage: React.FC<IDashboard> = (props) => {
 
   const { fetchMe, logout, updateUserAndToken, userInfo, getUserReload } =
     useAuth((state) => state);
+  const {showModal} = useEvent((state) => state)
   const { refresh_token } = getToken();
   React.useEffect(() => {
     const getUser = async () => {
@@ -40,7 +42,7 @@ const DashboardPage: React.FC<IDashboard> = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refresh_token]);
   return (
-    <div className="relative flex items-center w-full h-full">
+    <div className={`relative flex items-center w-full ${showModal ? "h-screen" : "h-full"}`}>
       <div className="max-w-screen-xl w-full h-full flex relative">
         <LeftSidebar userInfo={userInfo}></LeftSidebar>
         {/*change*/}

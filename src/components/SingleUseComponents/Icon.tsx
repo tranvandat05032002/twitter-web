@@ -9,10 +9,11 @@ import {
   BsArrowLeft,
 } from "react-icons/bs";
 import { BiHomeHeart, BiSearch, BiHeart } from "react-icons/bi";
-import { TbMessageCircle } from "react-icons/tb";
+import { TbCameraPlus, TbMessageCircle } from "react-icons/tb";
 import { PiBellRinging } from "react-icons/pi";
 import { IoIosStats } from "react-icons/io";
 import { LuShare } from "react-icons/lu";
+import { MdClose } from "react-icons/md";
 import {
   HiOutlineMail,
   HiOutlineDotsCircleHorizontal,
@@ -22,6 +23,7 @@ import { RiFileListLine } from "react-icons/ri";
 import { LiaUserFriendsSolid, LiaCalendarSolid } from "react-icons/lia";
 import { RxTwitterLogo } from "react-icons/rx";
 import { FaFacebookF, FaGithub, FaRetweet } from "react-icons/fa";
+import { useEvent } from "@/store/useEven";
 interface IIcon {
   size?: "big" | "small";
   className?: string;
@@ -280,5 +282,24 @@ export const BackIcon: React.FC<IIcon> = (props) => {
       onClick={onClick}
       className={`w-[19px] h-[19px] ${className}`}
     />
+  );
+};
+export const CloseIcon: React.FC<IIcon> = (props) => {
+  const { setShowModal } = useEvent((state) => state);
+  const handleClose = () => {
+    setShowModal(false);
+  };
+  const { className } = props;
+  return (
+    <MdClose
+      onClick={handleClose}
+      className={`w-[19px] h-[19px] ${className}`}
+    ></MdClose>
+  );
+};
+export const CameraPlusIcon: React.FC<IIcon> = (props) => {
+  const { className } = props;
+  return (
+    <TbCameraPlus className={`w-[19px] h-[19px] ${className}`}></TbCameraPlus>
   );
 };

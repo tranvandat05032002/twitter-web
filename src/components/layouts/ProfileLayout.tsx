@@ -5,6 +5,8 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useProfileStore } from "@/store/useProfile";
 import { formatMonthYear } from "@/utils/handlers";
+import { useEvent } from "@/store/useEven";
+import ModalEditProfile from "../common/portal/ModalEditProfile";
 type TParams = {
   username: string;
 };
@@ -23,6 +25,7 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
   const router = useRouter();
   const username = decodedUsername(params.username);
   const { getUserProfile, userProfile } = useProfileStore((state) => state);
+  const { showModal, setShowModal } = useEvent((state) => state);
   const handleBackHome = React.useCallback(() => {
     router.back();
   }, [router]);
@@ -32,6 +35,9 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
       ? "text-white py-4 px-2 border-b-[3px] border-textBlue transition"
       : "";
   };
+  const handleOpenModal = React.useCallback(() => {
+    setShowModal(true);
+  }, [showModal]);
   React.useEffect(() => {
     getUserProfile(username);
   }, []);
@@ -71,7 +77,10 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
         <div className="w-full px-4">
           <div className="w-full pt-3 mb-4">
             <div className="pb-[10px] flex flex-col w-full items-end mb-4">
-              <GhostButton className="px-4 py-2 text-white rounded-full w-max">
+              <GhostButton
+                className="px-4 py-2 text-white rounded-full w-max"
+                onClick={handleOpenModal}
+              >
                 Edit profile
               </GhostButton>
             </div>
@@ -80,6 +89,7 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
                 <h2 className="text-base font-bold">{userProfile?.name}</h2>
                 <span className="text-textGray">{userProfile?.username}</span>
               </div>
+              <div>{userProfile?.bio}</div>
               <div className="flex text-textGray">
                 <CalendarIcon />
                 <span>
@@ -160,6 +170,7 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
           </div>
         </div>
       </div>
+      <ModalEditProfile></ModalEditProfile>
     </React.Fragment>
   );
 };

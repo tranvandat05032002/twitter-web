@@ -16,11 +16,6 @@
     text-decoration: underline;
   }
 }
-/* @layer base {
-  .css-1yk1gt9-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root {
-    border: 1px solid red;
-  }
-} */
 @layer base {
   body,
   h1,
