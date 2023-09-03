@@ -32,3 +32,12 @@ export interface IUser {
   avatar?: string;
   cover_photo?: string;
 }
+
+export interface IUpdateUser {
+  name?: string;
+  avatar?: string;
+  bio?: string;
+  website?: string;
+  location?: string;
+  date_of_birth?: string;
+}

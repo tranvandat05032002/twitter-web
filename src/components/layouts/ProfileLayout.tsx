@@ -1,6 +1,11 @@
 import React from "react";
 import { GhostButton, StickyNav } from "../common";
-import { BackIcon, CalendarIcon } from "../SingleUseComponents/Icon";
+import {
+  BackIcon,
+  CalendarIcon,
+  LinkIcon,
+  LocationIcon,
+} from "../SingleUseComponents/Icon";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useProfileStore } from "@/store/useProfile";
@@ -24,7 +29,7 @@ function decodedUsername(username: string) {
 const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
   const router = useRouter();
   const username = decodedUsername(params.username);
-  const { getUserProfile, userProfile } = useProfileStore((state) => state);
+  const { getUserProfile, userProfile, statusUpdate } = useProfileStore((state) => state);
   const { showModal, setShowModal } = useEvent((state) => state);
   const handleBackHome = React.useCallback(() => {
     router.back();
@@ -40,6 +45,7 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
   }, [showModal]);
   React.useEffect(() => {
     getUserProfile(username);
+    setShowModal(!statusUpdate)
   }, []);
   return (
     <React.Fragment>
@@ -90,14 +96,30 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
                 <span className="text-textGray">{userProfile?.username}</span>
               </div>
               <div>{userProfile?.bio}</div>
-              <div className="flex text-textGray">
-                <CalendarIcon />
-                <span>
-                  Joined{" "}
-                  {formatMonthYear(
-                    userProfile?.created_at?.toString() as string
-                  )}
-                </span>
+              <div className="flex items-center gap-x-4">
+                {userProfile?.location && (
+                  <div className="flex text-textGray">
+                    <LocationIcon />
+                    <span>{userProfile?.location}</span>
+                  </div>
+                )}
+                {userProfile?.website && (
+                  <div className="flex text-textGray">
+                    <LinkIcon />
+                    <a href={userProfile?.website}>
+                      {userProfile?.website.slice(0, 33) + "..."}
+                    </a>
+                  </div>
+                )}
+                <div className="flex text-textGray">
+                  <CalendarIcon />
+                  <span>
+                    Joined{" "}
+                    {formatMonthYear(
+                      userProfile?.created_at?.toString() as string
+                    )}
+                  </span>
+                </div>
               </div>
               <div className="flex">
                 <div className="mr-4 flex items-center gap-x-[2px]">
