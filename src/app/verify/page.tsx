@@ -1,33 +1,34 @@
 "use client";
 import React from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useAuth } from "@/store";
-import { toast } from "react-toastify";
 import { TwitterIcon } from "@/components/SingleUseComponents";
 import { Routers } from "@/utils/router/routers";
 import { logOutCookies } from "@/utils/auth/cookies";
+import { useResendEmailToken, useVerifyEmail } from "@/hooks/users/useMutation";
+import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 const VerifyPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const token = searchParams.get("token");
   const [statusVerify, setStatusVerify] = React.useState<Boolean>(false);
-  const { verifyEmailToken, resendEmailToken } = useAuth((state) => state);
+  const { mutate: verifyEmail, isSuccess } = useVerifyEmail();
+  const { mutate: mutateResendEmail } = useResendEmailToken();
   React.useEffect(() => {
     async function getResultVerify() {
-      if (!token) return;
-      const result = await verifyEmailToken(token);
-      if (result?.status === 200) {
-        setStatusVerify(true);
-      }
+      const email_token = searchParams.get("token");
+      if (!email_token) return;
+      verifyEmail(email_token);
     }
     getResultVerify();
-  }, [token, statusVerify]);
-  const handleResendVerify = async () => {
-    const response = await resendEmailToken();
-    response?.status === 200
-      ? toast.success("Email resent success!")
-      : toast.error("Email resent error!");
-  };
+  }, [searchParams]);
+  React.useEffect(() => {
+    if (isSuccess) {
+      console.log("calll susscess");
+      setStatusVerify(true);
+    }
+  }, [statusVerify, isSuccess]);
+  const handleResendVerify = React.useCallback(async () => {
+    mutateResendEmail();
+  }, []);
   const handleComeSignIn = () => {
     logOutCookies();
     router.push(Routers.signInPage);

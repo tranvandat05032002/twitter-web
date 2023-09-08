@@ -3,41 +3,39 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { GhostButton, PrimaryButton } from "@/components/common";
 import { TwitterIcon } from "@/components/SingleUseComponents";
-import { useAuth } from "@/store";
 import {
   getEmailCookies,
   removeEmailCookies,
-  removeOTPToken,
-  saveOTP,
 } from "@/utils/auth/cookies";
 import { normalizeEmail } from "@/utils/handlers";
-import { useForm } from "react-hook-form";
 import { Radio } from "@mui/material";
 import { Routers } from "@/utils/router/routers";
-import { useEmail } from "@/store/useEmail";
+import { useFindAccount } from "@/store/useFindAccount";
+import { useSendOTP } from "@/hooks/users/useMutation";
 const ForgotPasswordPage = () => {
   const router = useRouter();
   const [emailCookies, setEmailCookies] = React.useState<string>("");
-  const { forgotPasswordToken } = useAuth((state) => state);
-  const { emailSave } = useEmail((state) => state);
+  const { accountFind } = useFindAccount((state) => state);
+  const { mutate: mutateSendOTP, isSuccess, isLoading } = useSendOTP();
   const handleCancelForgot = () => {
     removeEmailCookies();
     router.push(Routers.signInPage);
   };
+  const { email_cookies } = getEmailCookies();
   React.useEffect(() => {
-    const { email_cookies } = getEmailCookies();
     setEmailCookies(email_cookies);
   }, [emailCookies]);
-  const handleSendToken = async () => {
-    const response = await forgotPasswordToken(emailCookies as string || emailSave);
-    if (response?.status === 200) {
-      saveOTP({
-        otp_token: response.data?.jwtToken,
-      });
+  const handleSendToken = React.useCallback(async () => {
+    mutateSendOTP((accountFind?.email as string) || email_cookies);
+  }, []);
+  React.useEffect(() => {
+    if (isSuccess) {
       router.push(Routers.sendOTPPage);
     }
-  };
-  const email_normal = normalizeEmail(emailCookies || emailSave);
+  }, [isSuccess]);
+  const email_normal = normalizeEmail(
+    (accountFind?.email as string) || emailCookies
+  );
   return (
     <React.Fragment>
       <div className="flex items-center justify-center">
@@ -57,7 +55,7 @@ const ForgotPasswordPage = () => {
           </p>
 
           <div className="flex justify-between items-center mb-4">
-            <p>Send an email to {email_normal || emailSave}</p>
+            <p>Send an email to {email_normal}</p>
             <Radio name="accept-send" checked={true} size="small" />
           </div>
 
@@ -77,6 +75,8 @@ const ForgotPasswordPage = () => {
           <PrimaryButton
             className={`w-[440px] h-[52px] text-base  my-6 px-8`}
             type="submit"
+            isLoading={isLoading}
+            disabled={isLoading}
             onClick={handleSendToken}
           >
             Tiếp theo

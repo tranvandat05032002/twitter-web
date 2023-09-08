@@ -7,16 +7,9 @@ export type RegisterForm = {
   email: string;
   password: string;
   confirm_password: string;
-  date_of_birth?: string;
+  date_of_birth: string;
 };
 
-// export interface IUser {
-//   userName: string;
-//   email: string;
-//   image: string;
-//   accessToken: string;
-//   id: string;
-// }
 export interface IUser {
   _id?: string;
   name: string;
@@ -40,4 +33,28 @@ export interface IUpdateUser {
   website?: string;
   location?: string;
   date_of_birth?: string;
+}
+
+export interface IToken {
+  access_token: string;
+  refresh_token: string;
+}
+export interface IOTP {
+  jwtToken?: string
+  otp?: string
+}
+export type TRequestToken<T> = {
+  result: T;
+};
+type User<T> = {
+  user: T;
+};
+export type TRequestUser<P> = {
+  result: User<P>;
+  user: IUser;
+
+};
+
+export type TRequestProfile<P> = {
+  result: P;
 }

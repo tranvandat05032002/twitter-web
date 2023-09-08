@@ -12,6 +12,7 @@ import { useProfileStore } from "@/store/useProfile";
 import { formatMonthYear } from "@/utils/handlers";
 import { useEvent } from "@/store/useEven";
 import ModalEditProfile from "../common/portal/ModalEditProfile";
+import { useGetProfile } from "@/hooks/users/useQuery";
 type TParams = {
   username: string;
 };
@@ -29,7 +30,10 @@ function decodedUsername(username: string) {
 const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
   const router = useRouter();
   const username = decodedUsername(params.username);
-  const { getUserProfile, userProfile, statusUpdate } = useProfileStore((state) => state);
+  const { userProfile, statusUpdate, setUserProfile } = useProfileStore(
+    (state) => state
+  );
+  const { data: dataUserProfile, isSuccess } = useGetProfile(username);
   const { showModal, setShowModal } = useEvent((state) => state);
   const handleBackHome = React.useCallback(() => {
     router.back();
@@ -43,10 +47,16 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
   const handleOpenModal = React.useCallback(() => {
     setShowModal(true);
   }, [showModal]);
+
   React.useEffect(() => {
-    getUserProfile(username);
-    setShowModal(!statusUpdate)
-  }, []);
+    // getUserProfile(username);
+    // setShowModal(!statusUpdate)
+    if (isSuccess) {
+      if (!dataUserProfile) return;
+      setUserProfile(dataUserProfile);
+    }
+  }, [isSuccess]);
+
   return (
     <React.Fragment>
       <StickyNav>
@@ -58,7 +68,7 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
             ></BackIcon>
           </div>
           <div>
-            <h2 className="text-xl font-bold">{userProfile?.name}</h2>
+            <h2 className="text-xl font-bold">{dataUserProfile?.name}</h2>
             <p className="text-textGray text-sm font-light">0 posts</p>
           </div>
         </div>
@@ -92,22 +102,24 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
             </div>
             <div className="flex flex-col items-start text-sm gap-y-4">
               <div>
-                <h2 className="text-base font-bold">{userProfile?.name}</h2>
-                <span className="text-textGray">{userProfile?.username}</span>
+                <h2 className="text-base font-bold">{dataUserProfile?.name}</h2>
+                <span className="text-textGray">
+                  {dataUserProfile?.username}
+                </span>
               </div>
-              <div>{userProfile?.bio}</div>
+              <div>{dataUserProfile?.bio}</div>
               <div className="flex items-center gap-x-4">
-                {userProfile?.location && (
+                {dataUserProfile?.location && (
                   <div className="flex text-textGray">
                     <LocationIcon />
-                    <span>{userProfile?.location}</span>
+                    <span>{dataUserProfile?.location}</span>
                   </div>
                 )}
-                {userProfile?.website && (
+                {dataUserProfile?.website && (
                   <div className="flex text-textGray">
                     <LinkIcon />
-                    <a href={userProfile?.website}>
-                      {userProfile?.website.slice(0, 33) + "..."}
+                    <a href={dataUserProfile?.website}>
+                      {dataUserProfile?.website.slice(0, 33) + "..."}
                     </a>
                   </div>
                 )}
@@ -116,7 +128,7 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
                   <span>
                     Joined{" "}
                     {formatMonthYear(
-                      userProfile?.created_at?.toString() as string
+                      dataUserProfile?.created_at?.toString() as string
                     )}
                   </span>
                 </div>

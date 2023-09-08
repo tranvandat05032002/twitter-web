@@ -14,10 +14,11 @@ import { PiBellRinging } from "react-icons/pi";
 import { IoIosStats } from "react-icons/io";
 import { LuShare } from "react-icons/lu";
 import { MdClose } from "react-icons/md";
+import { AiOutlineLink } from "react-icons/ai";
 import {
   HiOutlineMail,
   HiOutlineDotsCircleHorizontal,
-  HiArrowUp,
+  HiOutlineLocationMarker,
 } from "react-icons/hi";
 import { RiFileListLine } from "react-icons/ri";
 import { LiaUserFriendsSolid, LiaCalendarSolid } from "react-icons/lia";
@@ -301,5 +302,17 @@ export const CameraPlusIcon: React.FC<IIcon> = (props) => {
   const { className } = props;
   return (
     <TbCameraPlus className={`w-[19px] h-[19px] ${className}`}></TbCameraPlus>
+  );
+};
+export const LocationIcon: React.FC<IIcon> = (props) => {
+  const { className } = props;
+  return (
+    <HiOutlineLocationMarker className={`w-[19px] h-[19px] ${className}`}></HiOutlineLocationMarker>
+  );
+};
+export const LinkIcon: React.FC<IIcon> = (props) => {
+  const { className } = props;
+  return (
+    <AiOutlineLink className={`w-[19px] h-[19px] ${className}`}></AiOutlineLink>
   );
 };

@@ -12,8 +12,7 @@ import { Routers } from "@/utils/router/routers";
 import Tippy from "@tippyjs/react/headless";
 import { IUser } from "@/types/userTypes";
 import { usePathname, useRouter } from "next/navigation";
-import { useAuth } from "@/store";
-import { toast } from "react-toastify";
+import { useLogoutUser } from "@/hooks/users/useMutation";
 
 interface ILeftSidebar {
   userInfo: IUser | null;
@@ -22,19 +21,14 @@ const LeftSidebar: React.FC<ILeftSidebar> = (props) => {
   const { userInfo } = props;
   const router = useRouter();
   const pathname = usePathname();
-  const { logout } = useAuth((state) => state);
+  const { mutate: mutateLogout } = useLogoutUser();
   const isActive = (path: string) => {
     return pathname === path
       ? "bg-[rgba(29,155,240,0.2)] hover:bg-[rgba(29,155,240,0.2)] font-bold"
       : "";
   };
   const handleLogout = async () => {
-    const response = await logout();
-    if (response?.status === 200) {
-      toast.success("Logout successfully!", {
-        pauseOnHover: false,
-      });
-    }
+    mutateLogout();
     router.push(Routers.mainLayoutPage);
   };
   return (

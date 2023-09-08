@@ -1,11 +1,13 @@
 "use client";
 import React from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/store";
 import { Routers } from "@/utils/router/routers";
 import { getToken } from "@/utils/auth/cookies";
 import LeftSidebar from "./LeftSidebar";
 import { useEvent } from "@/store/useEven";
+import { useFetchMe } from "@/hooks/users/useQuery";
+import { useUserInfo } from "@/store/useUserInfo";
+import { useGetUserReload, useLogoutUser } from "@/hooks/users/useMutation";
 
 interface IDashboard {
   children: React.ReactNode;
@@ -13,36 +15,31 @@ interface IDashboard {
 const DashboardPage: React.FC<IDashboard> = (props) => {
   const { children } = props;
   const router = useRouter();
-
-  const { fetchMe, logout, updateUserAndToken, userInfo, getUserReload } =
-    useAuth((state) => state);
-  const {showModal} = useEvent((state) => state)
-  const { refresh_token } = getToken();
+  const { showModal } = useEvent((state) => state);
+  const { data: user } = useFetchMe();
+  const { mutate: mutateGetUserReload } = useGetUserReload();
+  const { mutate: mutateLogout } = useLogoutUser();
+  const { userInfo } = useUserInfo();
   React.useEffect(() => {
-    const getUser = async () => {
-      const user = await fetchMe();
-      if (user && user._id) {
-        updateUserAndToken({ userData: user });
+    if (!user) {
+      const { access_token, refresh_token } = getToken();
+      if (refresh_token) {
+        mutateGetUserReload({
+          access_token: access_token as string,
+          refresh_token,
+        });
       } else {
-        if (refresh_token) {
-          const response = await getUserReload(refresh_token);
-          if (response?.status === 200) {
-            const user = await fetchMe();
-            updateUserAndToken({
-              userData: user,
-            });
-          }
-        } else {
-          router.push(Routers.signInPage);
-          logout();
-        }
+        router.push(Routers.signInPage);
+        mutateLogout();
       }
-    };
-    getUser();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [refresh_token]);
+    }
+  }, [user]);
   return (
-    <div className={`relative flex items-center w-full ${showModal ? "h-screen" : "h-full"}`}>
+    <div
+      className={`relative flex items-center w-full ${
+        showModal ? "h-screen" : "h-full"
+      }`}
+    >
       <div className="max-w-screen-xl w-full h-full flex relative">
         <LeftSidebar userInfo={userInfo}></LeftSidebar>
         {/*change*/}

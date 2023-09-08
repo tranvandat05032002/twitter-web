@@ -10,13 +10,14 @@ import {
   PrimaryButton,
 } from "@/components/common";
 import { DateOfBirth } from "@/components/SingleUseComponents";
-import { useDateStore, useAuth } from "@/store";
+import { useDateStore } from "@/store";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { RegisterForm } from "@/types/userTypes";
 import { isObjectEmpty, formatISO8601 } from "@/utils/handlers";
 import { Routers } from "@/utils/router/routers";
+import { useRegister } from "@/hooks/users/useMutation";
 const schemaValidator = yup.object().shape({
   name: yup.string().required(ERROR_FORM_MESSAGES.userNameRequired),
   email: yup
@@ -32,6 +33,7 @@ const schemaValidator = yup.object().shape({
     .required(ERROR_FORM_MESSAGES.passwordRequired)
     .min(6, ERROR_FORM_MESSAGES.minPasswordLength)
     .oneOf([yup.ref("password")], ERROR_FORM_MESSAGES.passwordMatch),
+  date_of_birth: yup.string().required(ERROR_FORM_MESSAGES.dateOfBirthRequired),
 });
 const SignUpPage = () => {
   const date = new Date();
@@ -45,9 +47,10 @@ const SignUpPage = () => {
   });
   const [canSubmit, setCanSubmit] = React.useState<boolean>(true);
   const router = useRouter();
-  const { day, month, year, setDay, setMonth, setYear, setISO8601 } =
-    useDateStore((state) => state);
-  const { register } = useAuth((state) => state);
+  const { day, month, year, setDay, setMonth, setYear } = useDateStore(
+    (state) => state
+  );
+  const { mutate, isLoading, isSuccess } = useRegister();
   const handleChangeMonth = (event: SelectChangeEvent<unknown>) => {
     setMonth(event.target.value as string | number);
   };
@@ -62,7 +65,7 @@ const SignUpPage = () => {
     handleSubmit,
     getValues,
     setValue,
-    formState: { errors, isValid, isSubmitting },
+    formState: { errors },
   } = useForm<RegisterForm>({
     resolver: yupResolver(schemaValidator),
     mode: "onSubmit",
@@ -89,18 +92,17 @@ const SignUpPage = () => {
     setCanSubmit(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canSubmit]);
-  const handleRegister = async (values: RegisterForm) => {
+  const handleRegister = React.useCallback(async (values: RegisterForm) => {
     if (isObjectEmpty(values)) return;
-    try {
-      const result = await register(values);
-      if (result?.status === 200) {
-        router.push(Routers.verifyPage);
-      }
-    } catch (error) {
-      console.log(error);
+    mutate(values as RegisterForm);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  React.useEffect(() => {
+    if (isSuccess) {
+      router.push(Routers.verifyPage);
     }
-    // reset form
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccess]);
   return (
     <form onSubmit={handleSubmit(handleRegister)} autoComplete="off">
       <h1 className="text-3xl font-bold pb-5">Tạo tài khoản của bạn</h1>
@@ -165,7 +167,7 @@ const SignUpPage = () => {
       <PrimaryButton
         className="w-[440px] h-[52px] text-base  my-6 px-8"
         type="submit"
-        isLoading={isSubmitting}
+        isLoading={isLoading}
         disabledForm={canSubmit}
       >
         Tạo tài khoản

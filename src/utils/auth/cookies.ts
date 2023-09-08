@@ -1,3 +1,4 @@
+import { IOTP } from "@/types/userTypes";
 import Cookies from "js-cookie";
 
 const objTokenCookies = {
@@ -46,9 +47,9 @@ export const saveToken = ({ access_token, refresh_token }: IToken) => {
   }
 };
 
-export const saveOTP = ({ otp_token }: { otp_token: string }) => {
-  if (otp_token) {
-    Cookies.set(process.env.NEXT_PUBLIC_OTP_TOKEN_KEY as string, otp_token, {
+export const saveOTP = ({ jwtToken }: IOTP) => {
+  if (jwtToken) {
+    Cookies.set(process.env.NEXT_PUBLIC_OTP_TOKEN_KEY as string, jwtToken, {
       ...objOTPCookies,
     });
   } else {

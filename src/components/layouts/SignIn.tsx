@@ -21,9 +21,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { LoginForm } from "@/types/userTypes";
 import { isObjectEmpty } from "@/utils/handlers";
-import { useAuth } from "@/store";
-import { saveToken } from "@/utils/auth/cookies";
 import { Routers } from "@/utils/router/routers";
+import { useLogin } from "@/hooks/users/useMutation";
+import { useUserInfo } from "@/store/useUserInfo";
+import { useFetchMe } from "@/hooks/users/useQuery";
 const schemaValidator = yup.object().shape({
   email: yup
     .string()
@@ -36,14 +37,15 @@ const schemaValidator = yup.object().shape({
 });
 const SignInPage = () => {
   const [canSubmit, setCanSubmit] = React.useState<boolean>(true);
-  const { login, fetchMe } = useAuth((state) => state);
+  const { mutate: mutateLogin, isLoading, isSuccess } = useLogin();
+  const { data: user } = useFetchMe();
   const router = useRouter();
   const {
     control,
     handleSubmit,
     getValues,
     reset,
-    formState: { errors, isValid, isSubmitting },
+    formState: { errors },
   } = useForm<LoginForm>({
     resolver: yupResolver(schemaValidator),
     mode: "onSubmit",
@@ -60,21 +62,18 @@ const SignInPage = () => {
     setCanSubmit(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canSubmit]);
-  const handleLogin = async (values: LoginForm) => {
+  const handleLogin = React.useCallback(async (values: LoginForm) => {
     if (isObjectEmpty(values)) return;
-    const response = await login(values);
-    if (response?.status === 200) {
-      const access_token = response?.data?.result?.access_token as string;
-      const refresh_token = response?.data?.result?.refresh_token as string;
-      saveToken({ access_token, refresh_token });
-    } else {
-      return null;
-    }
-    const user = await fetchMe();
-    if (user && user.verify === 1) {
+    mutateLogin(values);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const { setUserInfo } = useUserInfo();
+  React.useEffect(() => {
+    if (isSuccess && user?.verify === 1) {
+      setUserInfo(user);
       router.push(Routers.homePage);
     }
-  };
+  }, [isSuccess, router]);
   return (
     <React.Fragment>
       <div className="flex items-center justify-center">
@@ -147,8 +146,8 @@ const SignInPage = () => {
             canSubmit ? "hover:bg-none" : ""
           }`}
           type="submit"
-          isLoading={isSubmitting}
-          disabledForm={canSubmit}
+          isLoading={isLoading}
+          disabledForm={canSubmit || isLoading}
         >
           Đăng nhập
         </PrimaryButton>

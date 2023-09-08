@@ -1,6 +1,7 @@
 export const ERROR_FORM_MESSAGES = {
     userNameRequired: 'Vui lòng nhập tên của bạn',
     emailRequired: 'Vui lòng nhập địa chỉ email của bạn',
+    dateOfBirthRequired: "Không để trống ngày tháng năm sinh",
     isEmail: 'Vui lòng nhập đúng địa chỉ email',
     passwordRequired: 'Vui lòng nhập mật khẩu',
     minPasswordLength: 'Mật khẩu của bạn phải có ít nhất 6 ký tự',

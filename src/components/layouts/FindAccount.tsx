@@ -12,31 +12,34 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { isObjectEmpty } from "@/utils/handlers";
-import { useAuth } from "@/store";
 import {
-  getEmailCookies,
-  removeEmailCookies,
   saveEmailCookies,
 } from "@/utils/auth/cookies";
 import { Routers } from "@/utils/router/routers";
 import { ForgotForm } from "@/app/users/find-account/page";
-import { useEmail } from "@/store/useEmail";
+import { useFindAccount } from "@/store/useFindAccount";
+import { useFindAccountByEmail } from "@/hooks/users/useMutation";
+const schemaValidator = yup.object().shape({
+  email: yup
+    .string()
+    .required(ERROR_FORM_MESSAGES.emailRequired)
+    .email(ERROR_FORM_MESSAGES.isEmail),
+});
 const FindAccountPage = () => {
   const [canSubmit, setCanSubmit] = React.useState<boolean>(true);
   const router = useRouter();
-  const { findEmail } = useAuth((state) => state);
-  const {setSaveEmail} = useEmail((state) => state)
-  const schemaValidator = yup.object().shape({
-    email: yup
-      .string()
-      .required(ERROR_FORM_MESSAGES.emailRequired)
-      .email(ERROR_FORM_MESSAGES.isEmail),
-  });
+  const {
+    mutate: mutateFindAccount,
+    data: dataFindAccount,
+    isSuccess,
+    isLoading,
+  } = useFindAccountByEmail();
+  const { setAccountFind } = useFindAccount((state) => state);
   const {
     control,
     handleSubmit,
     getValues,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<ForgotForm>({
     resolver: yupResolver(schemaValidator),
     mode: "onSubmit",
@@ -55,17 +58,18 @@ const FindAccountPage = () => {
   const handleCancel = () => {
     router.push(Routers.signInPage);
   };
-  const handleFindEmail = async (values: ForgotForm) => {
+  const handleFindEmail = React.useCallback(async (values: ForgotForm) => {
     if (isObjectEmpty(values)) return;
-    saveEmailCookies(values.email);
-    const response = await findEmail(values);
-    if (response?.status === 200) {
-      setSaveEmail(values.email)
+    await mutateFindAccount(values);
+  }, []);
+  React.useEffect(() => {
+    if (isSuccess) {
+      if (!dataFindAccount) return;
+      setAccountFind(dataFindAccount);
+      saveEmailCookies(dataFindAccount?.email as string);
       router.push(Routers.forgotPasswordPage);
-    } else {
-      removeEmailCookies();
     }
-  };
+  }, [isSuccess]);
   return (
     <React.Fragment>
       <div className="flex items-center justify-center">
@@ -98,7 +102,8 @@ const FindAccountPage = () => {
             canSubmit ? "hover:bg-none" : ""
           }`}
           type="submit"
-          isLoading={isSubmitting}
+          isLoading={isLoading}
+          disabled={isLoading}
           disabledForm={canSubmit}
         >
           Tiếp theo

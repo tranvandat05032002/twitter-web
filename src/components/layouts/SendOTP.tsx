@@ -2,52 +2,34 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ConditionalButton } from "@/components/common";
-import { useAuth } from "@/store";
-import { getEmailCookies, getOTPToken, saveOTP } from "@/utils/auth/cookies";
+import { getEmailCookies } from "@/utils/auth/cookies";
 import dynamic from "next/dynamic";
-import { toast } from "react-toastify";
 import { BsArrowRightIcon } from "@/components/SingleUseComponents/Icon";
 import { Routers } from "@/utils/router/routers";
+import { useCheckOTP, useResendOTP } from "@/hooks/users/useMutation";
 const DynamicOtpInput = dynamic(() => import("react-otp-input"), {
   ssr: false,
 }); // render client
 const SendOTPPage = () => {
   const [otp, setOtp] = React.useState<string>("");
+  const { mutate: mutateCheckOTP, isSuccess } = useCheckOTP();
+  const { mutate: mutateResendOTP } = useResendOTP();
   const router = useRouter();
-  const { checkOTP, resendOTP } = useAuth((state) => state);
   const { email_cookies } = getEmailCookies();
-  const handleVerifyOTP = async () => {
-    const { otp_token } = getOTPToken();
-    const response = await checkOTP({
-      otp,
-      otpToken: otp_token as string,
-    });
-    if (response?.status === 200) {
-      toast.success("Xác thực thành công. Vui lòng chờ trong gây lát", {
-        pauseOnHover: false,
-      });
-      router.push(Routers.resetPasswordPage);
-    }
-  };
-  const handleResendOTP = async () => {
-    const { otp_token } = getOTPToken();
-    const response = await resendOTP(otp_token as string);
-    if (response?.status === 200) {
-      toast.success("Chúng tôi đã gửi lại mã OTP mới đến bạn", {
-        pauseOnHover: false,
-      });
-      saveOTP({
-        otp_token: response.data.jwtToken,
-      });
-    } else {
-      toast.error("Đã xảy ra lỗi", {
-        pauseOnHover: false,
-      });
-    }
-  };
+  const handleVerifyOTP = React.useCallback(async () => {
+    mutateCheckOTP(otp);
+  }, [otp]);
   const handleSetOTP = (value: string) => {
     setOtp(value);
   };
+  React.useEffect(() => {
+    if (isSuccess) {
+      router.push(Routers.resetPasswordPage);
+    }
+  }, [isSuccess, router]);
+  const handleResendOTP = React.useCallback(async () => {
+    mutateResendOTP();
+  }, []);
   return (
     <div className="py-8">
       <div>

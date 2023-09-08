@@ -12,35 +12,35 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { isObjectEmpty } from "@/utils/handlers";
-import { useAuth } from "@/store";
-import {
-  getOTPToken,
-  removeEmailCookies,
-  removeOTPToken,
-} from "@/utils/auth/cookies";
+import { removeEmailCookies, removeOTPToken } from "@/utils/auth/cookies";
 import { toast } from "react-toastify";
 import { Routers } from "@/utils/router/routers";
 import { ResetPasswordForm } from "@/app/users/reset-password/page";
+import { useResetPassword } from "@/hooks/users/useMutation";
+const schemaValidator = yup.object().shape({
+  password: yup
+    .string()
+    .required(ERROR_FORM_MESSAGES.passwordRequired)
+    .min(6, ERROR_FORM_MESSAGES.minPasswordLength),
+  confirm_password: yup
+    .string()
+    .required(ERROR_FORM_MESSAGES.passwordRequired)
+    .min(6, ERROR_FORM_MESSAGES.minPasswordLength)
+    .oneOf([yup.ref("password")], ERROR_FORM_MESSAGES.passwordMatch),
+});
 const ResetPasswordPage = () => {
   const [canSubmit, setCanSubmit] = React.useState<boolean>(true);
   const router = useRouter();
-  const { resetPassword } = useAuth((state) => state);
-  const schemaValidator = yup.object().shape({
-    password: yup
-      .string()
-      .required(ERROR_FORM_MESSAGES.passwordRequired)
-      .min(6, ERROR_FORM_MESSAGES.minPasswordLength),
-    confirm_password: yup
-      .string()
-      .required(ERROR_FORM_MESSAGES.passwordRequired)
-      .min(6, ERROR_FORM_MESSAGES.minPasswordLength)
-      .oneOf([yup.ref("password")], ERROR_FORM_MESSAGES.passwordMatch),
-  });
+  const {
+    mutate: mutateResetPassword,
+    isSuccess,
+    isLoading,
+  } = useResetPassword();
   const {
     control,
     handleSubmit,
     getValues,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<ResetPasswordForm>({
     resolver: yupResolver(schemaValidator),
     mode: "onSubmit",
@@ -62,14 +62,15 @@ const ResetPasswordPage = () => {
     removeOTPToken();
     router.push(Routers.signInPage);
   };
-  const handleResetPassword = async (values: ResetPasswordForm) => {
-    const { otp_token } = getOTPToken();
-    if (isObjectEmpty(values)) return;
-    const response = await resetPassword({
-      resetForm: values,
-      otpToken: otp_token as string,
-    });
-    if (response?.status === 200) {
+  const handleResetPassword = React.useCallback(
+    async (values: ResetPasswordForm) => {
+      if (isObjectEmpty(values)) return;
+      mutateResetPassword(values);
+    },
+    []
+  );
+  React.useEffect(() => {
+    if (isSuccess) {
       removeEmailCookies();
       removeOTPToken();
       toast.success("Đổi mật khẩu thành công!", {
@@ -77,7 +78,7 @@ const ResetPasswordPage = () => {
       });
       router.push(Routers.signInPage);
     }
-  };
+  }, [isSuccess]);
   return (
     <React.Fragment>
       <div className="flex items-center justify-center">
@@ -120,7 +121,8 @@ const ResetPasswordPage = () => {
             canSubmit ? "hover:bg-none" : ""
           }`}
           type="submit"
-          isLoading={isSubmitting}
+          isLoading={isLoading}
+          disabled={isLoading}
           disabledForm={canSubmit}
         >
           Tiếp theo

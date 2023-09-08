@@ -14,7 +14,7 @@ import { MenuItem, SelectChangeEvent } from "@mui/material";
 import { useDateStore } from "@/store";
 import { useEvent } from "@/store/useEven";
 import { IUpdateUser } from "@/types/userTypes";
-import { useProfileStore } from "@/store/useProfile";
+import { useUpdateUser } from "@/hooks/users/useMutation";
 const EditProfile = () => {
   const {
     control,
@@ -25,27 +25,22 @@ const EditProfile = () => {
     mode: "onSubmit",
     defaultValues: {
       name: "",
-      avatar: "",
       bio: "",
       location: "",
       website: "",
       date_of_birth: "",
+      avatar: "https://photo-cms-tpo.epicdn.me/w890/Uploaded/2023/zatmzz/2015_11_12/1_NBBR.jpg",
     },
   });
   const { day, month, year, setDay, setMonth, setYear, setISO8601 } =
     useDateStore((state) => state);
-  const { updateUserProfile } = useProfileStore((state) => state);
+  const { mutate: mutateUpdateUser, isSuccess } = useUpdateUser();
   React.useEffect(() => {
     if (day && month && year) {
       const isoDate = formatISO8601(month, day, year);
       setValue("date_of_birth", isoDate as string);
     }
-  }, []);
-  const handleUpdateUser = (values: IUpdateUser) => {
-    if (!isValid) return;
-    console.log("Called");
-    updateUserProfile(values);
-  };
+  }, [day, month, year]);
   const { showEdit, setShowEdit } = useEvent((state) => state);
   const date = new Date();
   const lastYear = date.getFullYear();
@@ -77,6 +72,10 @@ const EditProfile = () => {
   const handleShowEditDate = React.useCallback(() => {
     setShowEdit(!showEdit);
   }, [showEdit]);
+  const handleUpdateUser = (values: IUpdateUser) => {
+    if (!isValid) return;
+    mutateUpdateUser(values);
+  };
   return (
     <div className="absolute w-full h-screen left-0 top-0 bottom-0 right-0 z-[1000] flex justify-center items-center bg-[rgba(91,112,131,0.4)]">
       <form onSubmit={handleSubmit(handleUpdateUser)} autoComplete="off">
