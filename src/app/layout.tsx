@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/ReactToastify.css";
 import { Roboto } from "next/font/google";
+import QueryClientLayoutProvider from "./QueryClientProvider";
 
 const roboto = Roboto({
   weight: ["100", "300", "400", "500", "700"],
@@ -23,9 +24,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={roboto.className} suppressHydrationWarning={true}>
-        {/* <div id="modal" /> */}
-        {children}
-        <ToastContainer />
+        <QueryClientLayoutProvider>
+          {children}
+          <ToastContainer />
+        </QueryClientLayoutProvider>
       </body>
     </html>
   );
