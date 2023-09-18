@@ -3,9 +3,7 @@ import React from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { TwitterIcon } from "@/components/SingleUseComponents";
 import { Routers } from "@/utils/router/routers";
-import { logOutCookies } from "@/utils/auth/cookies";
 import { useResendEmailToken, useVerifyEmail } from "@/hooks/users/useMutation";
-import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 const VerifyPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -22,16 +20,14 @@ const VerifyPage = () => {
   }, [searchParams]);
   React.useEffect(() => {
     if (isSuccess) {
-      console.log("calll susscess");
       setStatusVerify(true);
     }
   }, [statusVerify, isSuccess]);
   const handleResendVerify = React.useCallback(async () => {
     mutateResendEmail();
   }, []);
-  const handleComeSignIn = () => {
-    logOutCookies();
-    router.push(Routers.signInPage);
+  const handleComeHome = () => {
+    router.push(Routers.homePage);
   };
   return (
     <div className="absolute top-0 bottom-0 left-0 right-0 bg-[rgba(71,74,77,0.3)] flex items-center justify-center">
@@ -56,11 +52,11 @@ const VerifyPage = () => {
             active and you can start using our services.
           </p>
           <button
-            onClick={handleComeSignIn}
+            onClick={handleComeHome}
             type="button"
             className="block text-textBlue border-none outline-none"
           >
-            Go to sign in
+            Go to home
           </button>
         </div>
       ) : (

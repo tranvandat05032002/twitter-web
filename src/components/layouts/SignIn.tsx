@@ -15,7 +15,7 @@ import {
   ERROR_FORM_MESSAGES,
 } from "../common";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -25,6 +25,7 @@ import { Routers } from "@/utils/router/routers";
 import { useLogin } from "@/hooks/users/useMutation";
 import { useUserInfo } from "@/store/useUserInfo";
 import { useFetchMe } from "@/hooks/users/useQuery";
+import { saveToken } from "@/utils/auth/cookies";
 const schemaValidator = yup.object().shape({
   email: yup
     .string()
@@ -38,8 +39,8 @@ const schemaValidator = yup.object().shape({
 const SignInPage = () => {
   const [canSubmit, setCanSubmit] = React.useState<boolean>(true);
   const { mutate: mutateLogin, isLoading, isSuccess } = useLogin();
-  const { data: user } = useFetchMe();
   const router = useRouter();
+  const { data: user } = useFetchMe();
   const {
     control,
     handleSubmit,

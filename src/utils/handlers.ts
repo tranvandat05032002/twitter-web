@@ -1,3 +1,4 @@
+import { IOAuthGoogle } from "@/types/userTypes";
 import { format, formatISO, parse } from "date-fns";
 export function isObjectEmpty(obj: Object): boolean {
   if (Object.values(obj).every((value) => value !== "")) {
@@ -39,3 +40,25 @@ export function normalizeEmail(email: string) {
   let finalOutput = excludedPart + outputString;
   return finalOutput;
 }
+export const getGoogleAuthUrl = () => {
+  const query: IOAuthGoogle = {
+    client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string,
+    redirect_uri: process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI as string,
+    response_type: "code",
+    scope: [
+      "https://www.googleapis.com/auth/userinfo.profile",
+      "https://www.googleapis.com/auth/userinfo.email",
+    ].join(" ") as string,
+    prompt: "consent",
+    access_type: "offline",
+  };
+  const queryString = new URLSearchParams();
+  queryString.append("client_id", query.client_id);
+  queryString.append("redirect_uri", query.redirect_uri);
+  queryString.append("response_type", query.response_type);
+  queryString.append("scope", query.scope);
+  queryString.append("prompt", query.prompt);
+  queryString.append("access_type", query.access_type);
+
+  return `${process.env.NEXT_PUBLIC_GOOGLE_URL}?${queryString.toString()}`;
+};

@@ -2,6 +2,7 @@ import { useRouter } from "next/navigation";
 import type React from "react";
 
 import { ButtonProps, Type, createButton } from "./Button";
+import { getGoogleAuthUrl } from "@/utils/handlers";
 interface ButtonProp
   extends React.DetailedHTMLProps<
     React.ButtonHTMLAttributes<HTMLButtonElement>,
@@ -44,7 +45,12 @@ const GhostButton = ({ children, className, type, onClick }: ButtonProp) => {
   const GhostButton = createButton(propsGhost, "ghost");
   return GhostButton;
 };
-const SecondaryButton = ({ children, className, type, onClick }: ButtonProp) => {
+const SecondaryButton = ({
+  children,
+  className,
+  type,
+  onClick,
+}: ButtonProp) => {
   const propSecondary: ButtonProps = {
     children,
     className,
@@ -58,7 +64,8 @@ const SecondaryButton = ({ children, className, type, onClick }: ButtonProp) => 
 const AuthButtonGoogle = ({ children }: ButtonProp) => {
   const propsGoogle: ButtonProps = {
     type: "button",
-    // onClick: () => console.log("buttonAuth"),
+    link: true,
+    href: getGoogleAuthUrl() as string,
     children,
   };
   const GoogleButton = createButton(propsGoogle, "OAuth");
@@ -67,7 +74,9 @@ const AuthButtonGoogle = ({ children }: ButtonProp) => {
 const AuthButtonFacebook = ({ children }: ButtonProp) => {
   const propsFacebook: ButtonProps = {
     type: "button",
-    // onClick: () => console.log("buttonAuth"),
+    // onClick: () => {
+    //   console.log("Call Google Auth")
+    // },
     children,
   };
   const FacebookButton = createButton(propsFacebook, "OAuth");
@@ -105,5 +114,5 @@ export {
   AuthButtonGoogle,
   AuthButtonSignOut,
   GhostButton,
-  SecondaryButton
+  SecondaryButton,
 };

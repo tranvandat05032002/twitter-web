@@ -1,4 +1,6 @@
+import Link from "next/link";
 import { LoadingSniper } from "../Loading/LoadingSniper";
+import { UrlObject } from "url";
 
 export type Type = "submit" | "reset" | "button";
 export interface ButtonProps
@@ -8,6 +10,8 @@ export interface ButtonProps
   children: React.ReactNode;
   className?: string;
   isLoading?: boolean;
+  link?: boolean;
+  href?: string | UrlObject;
   disabledForm?: boolean;
 }
 function getButtonClass(typeButton: string): string {
@@ -27,20 +31,34 @@ function getButtonClass(typeButton: string): string {
   }
 }
 const createButton = (props: ButtonProps, typeButton: string): JSX.Element => {
-  const { children, type, className, disabledForm, onClick } = props;
+  const { children, type, className, disabledForm, onClick, link, href } =
+    props;
   const buttonClass = getButtonClass(typeButton);
   const child = props.isLoading ? <LoadingSniper /> : children;
-  return (
-    <button
-      disabled={disabledForm}
-      type={type}
-      onClick={onClick}
-      className={`${className || ""} ${buttonClass} ${
-        disabledForm ? "opacity-60" : ""
-      }`}
-    >
-      {child}
-    </button>
-  );
+  if (link && href) {
+    return (
+      <Link
+        href={href as string}
+        className={`${className || ""} ${buttonClass} ${
+          disabledForm ? "opacity-60" : ""
+        }`}
+      >
+        {child}
+      </Link>
+    );
+  } else {
+    return (
+      <button
+        disabled={disabledForm}
+        type={type}
+        onClick={onClick}
+        className={`${className || ""} ${buttonClass} ${
+          disabledForm ? "opacity-60" : ""
+        }`}
+      >
+        {child}
+      </button>
+    );
+  }
 };
 export { createButton };

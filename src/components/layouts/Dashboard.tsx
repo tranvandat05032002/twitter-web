@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Routers } from "@/utils/router/routers";
-import { getToken } from "@/utils/auth/cookies";
+import { getToken, saveToken } from "@/utils/auth/cookies";
 import LeftSidebar from "./LeftSidebar";
 import { useEvent } from "@/store/useEven";
 import { useFetchMe } from "@/hooks/users/useQuery";
@@ -20,6 +20,21 @@ const DashboardPage: React.FC<IDashboard> = (props) => {
   const { mutate: mutateGetUserReload } = useGetUserReload();
   const { mutate: mutateLogout } = useLogoutUser();
   const { userInfo } = useUserInfo();
+  const searchParams = useSearchParams();
+  React.useEffect(() => {
+    const access_token = searchParams.get("access_token");
+    const refresh_token = searchParams.get("refresh_token");
+    const verify = searchParams.get("verify");
+    if (access_token && refresh_token) {
+      saveToken({
+        access_token,
+        refresh_token,
+      });
+    }
+    if (verify === "0" && !access_token) {
+      router.push(Routers.signInPage);
+    }
+  }, [searchParams, router]);
   React.useEffect(() => {
     if (!user) {
       const { access_token, refresh_token } = getToken();

@@ -58,3 +58,12 @@ export type TRequestUser<P> = {
 export type TRequestProfile<P> = {
   result: P;
 }
+
+export interface IOAuthGoogle {
+  client_id: string;
+  redirect_uri: string;
+  response_type: string;
+  scope: string;
+  prompt: string;
+  access_type: string
+}
