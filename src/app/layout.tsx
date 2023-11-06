@@ -23,6 +23,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin"></meta>
       <body className={roboto.className} suppressHydrationWarning={true}>
         <QueryClientLayoutProvider>
           {children}

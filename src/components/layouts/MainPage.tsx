@@ -9,6 +9,15 @@ import {
   TwitterIcon,
 } from "@/components/SingleUseComponents";
 import { Routers } from "@/utils/router/routers";
+import "vidstack/styles/defaults.css";
+import "vidstack/styles/community-skin/video.css";
+import {
+  MediaCommunitySkin,
+  MediaOutlet,
+  MediaPlayer,
+  MediaPoster,
+} from "@vidstack/react";
+
 const MainPage = () => {
   return (
     <div className="relative text-white">
@@ -59,6 +68,40 @@ const MainPage = () => {
                 </span>
               </div>
             </button>
+            <h5>straeming Video</h5>
+            <video controls>
+              <source
+                src="https://twitter-s3-ap-southeast-1.s3.ap-southeast-1.amazonaws.com/videos/VZxxlakgyd8CgYgQosLGc.mp4"
+                type="video/mp4"
+              />
+            </video>
+            <h5>HLS EnCode</h5>
+            <MediaPlayer
+              title="Sprite Fight"
+              src="http://localhost:4000/static/video-hls/czSU817F5GkyM3-KXa5g5/master.m3u8"
+              // poster="https://image.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/thumbnail.webp?time=268&width=980"
+              // thumbnails="https://media-files.vidstack.io/sprite-fight/thumbnails.vtt"
+              aspectRatio={16 / 9}
+              crossorigin=""
+            >
+              <MediaOutlet>
+                <MediaPoster alt="Girl walks into sprite gnomes around her friend on a campfire in danger!" />
+                <track
+                  src="https://media-files.vidstack.io/sprite-fight/subs/english.vtt"
+                  label="English"
+                  srcLang="en-US"
+                  kind="subtitles"
+                  default
+                />
+                <track
+                  src="https://media-files.vidstack.io/sprite-fight/chapters.vtt"
+                  srcLang="en-US"
+                  kind="chapters"
+                  default
+                />
+              </MediaOutlet>
+              <MediaCommunitySkin />
+            </MediaPlayer>
 
             <div className="flex items-center">
               <div>
