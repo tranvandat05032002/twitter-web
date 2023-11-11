@@ -2,12 +2,13 @@
 import React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Routers } from "@/utils/router/routers";
-import { getToken, saveToken } from "@/utils/auth/cookies";
+import { getToken, saveProfileMe, saveToken } from "@/utils/auth/cookies";
 import LeftSidebar from "./LeftSidebar";
 import { useEvent } from "@/store/useEven";
 import { useFetchMe } from "@/hooks/users/useQuery";
 import { useUserInfo } from "@/store/useUserInfo";
 import { useGetUserReload, useLogoutUser } from "@/hooks/users/useMutation";
+import { IUser } from "@/types/userTypes";
 
 interface IDashboard {
   children: React.ReactNode;

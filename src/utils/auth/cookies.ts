@@ -1,4 +1,4 @@
-import { IOTP } from "@/types/userTypes";
+import { IOTP, IUser } from "@/types/userTypes";
 import Cookies from "js-cookie";
 
 const objTokenCookies = {
@@ -139,17 +139,29 @@ export const getEmailCookies = () => {
   };
 };
 
-
 // status verify
 export const saveStatusVerify = (status: string) => {
-    Cookies.set( "status_verify", status, {
-      path: "/",
-      domain: process.env.NEXT_PUBLIC_DOMAIN as string,
-    })
+  Cookies.set("status_verify", status, {
+    path: "/",
+    domain: process.env.NEXT_PUBLIC_DOMAIN as string,
+  });
 };
 export const getStatusVerify = () => {
-    const status_verify = Cookies.get( "status_verify");
-    return {
-      status_verify
-    }
+  const status_verify = Cookies.get("status_verify");
+  return {
+    status_verify,
+  };
+};
+// save User
+export const saveProfileMe = (user: IUser) => {
+  if (!user) return;
+  Cookies.set(
+    process.env.NEXT_PUBLIC_PROFILE_KEY as string,
+    JSON.stringify(user)
+  );
+};
+
+export const getProfileMe = () => {
+  const user = Cookies.get(process.env.NEXT_PUBLIC_PROFILE_KEY as string);
+  return user;
 };
