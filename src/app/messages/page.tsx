@@ -43,19 +43,18 @@ const Messages = () => {
       }
     }
   }, []);
-  const handleReceivePrivateMessage = React.useCallback((data: any) => {
-    const newMessage = data.content;
-    setMessage((message: any) => [
-      ...message,
-      { content: newMessage, isSend: false },
-    ]);
-  }, []);
   React.useEffect(() => {
     socket.connect();
     socket.auth = {
       _id: userInfo?._id,
     };
-    socket.on("receive private message", handleReceivePrivateMessage);
+    socket.on("receive private message", (data: any) => {
+      const newMessage = data.content;
+      setMessage((message: any) => [
+        ...message,
+        { content: newMessage, isSend: false },
+      ]);
+    });
     return () => {
       socket.off("receive private message", (data) => {
         const newMessage = data.content;
@@ -63,7 +62,7 @@ const Messages = () => {
       });
       socket.disconnect();
     };
-  }, [userInfo?._id, handleReceivePrivateMessage]);
+  }, []);
   const getProfile = async (username: string) => {
     const result = await axios.get(`/users/${username}`, {
       baseURL: process.env.NEXT_PUBLIC_PORT_SERVER,
@@ -79,6 +78,7 @@ const Messages = () => {
     socket.emit("private message", {
       content: value,
       to: receive,
+      from: userInfo?._id,
     });
     setMessage((message: any) => [
       ...message,
