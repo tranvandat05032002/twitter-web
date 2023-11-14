@@ -22,16 +22,16 @@ const Messages = () => {
   const { userInfo, setUserInfo } = useUserInfo();
   const { mutate: mutateGetUserReload } = useGetUserReload();
   const [value, setValue] = React.useState("");
-  const [messages, setMessage] = React.useState<any>([]);
+  const [conversations, setConversations] = React.useState<any>([]);
   const { mutate: mutateLogout } = useLogoutUser();
-  const [receive, setReceive] = React.useState("");
+  const [receiver, setReceiver] = React.useState("");
   const router = useRouter();
+  const { access_token, refresh_token } = getToken();
   React.useEffect(() => {
     if (user) {
       setUserInfo(user);
       saveProfileMe(user);
     } else {
-      const { access_token, refresh_token } = getToken();
       if (refresh_token) {
         mutateGetUserReload({
           access_token: access_token as string,
@@ -48,43 +48,57 @@ const Messages = () => {
     socket.auth = {
       _id: userInfo?._id,
     };
-    socket.on("receive private message", (data: any) => {
-      const newMessage = data.content;
-      setMessage((message: any) => [
-        ...message,
-        { content: newMessage, isSend: false },
-      ]);
+    socket.on("receiver_message", (data: any) => {
+      const { payload } = data;
+      setConversations((message: any) => [...message, payload]);
     });
     return () => {
-      socket.off("receive private message", (data) => {
-        const newMessage = data.content;
-        setMessage((message: any) => [...message, newMessage]);
-      });
       socket.disconnect();
     };
   }, []);
+  React.useEffect(() => {
+    if (!receiver) return;
+    axios
+      .get(`/conversation/receivers/${receiver}`, {
+        baseURL: process.env.NEXT_PUBLIC_PORT_SERVER,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${access_token}`,
+        },
+        params: {
+          page: 1,
+          limit: 10,
+        },
+      })
+      .then((result) => {
+        setConversations(result.data.result.conversation);
+      });
+  }, [receiver]);
   const getProfile = async (username: string) => {
     const result = await axios.get(`/users/${username}`, {
       baseURL: process.env.NEXT_PUBLIC_PORT_SERVER,
     });
     if (result.status === 200) {
       const _id = result.data?.result?._id;
-      setReceive(_id);
+      setReceiver(_id);
     }
   };
   const handleSendMessage = (e: any) => {
     e.preventDefault();
     setValue("");
-    socket.emit("private message", {
+    const conversation = {
       content: value,
-      to: receive,
-      from: userInfo?._id,
+      sender_id: userInfo?._id,
+      receiver_id: receiver,
+    };
+    socket.emit("send_message", {
+      payload: conversation,
     });
-    setMessage((message: any) => [
+    setConversations((message: any) => [
       ...message,
       {
-        content: value,
-        isSend: true,
+        ...conversation,
+        _id: uuidV4(),
       },
     ]);
   };
@@ -94,11 +108,11 @@ const Messages = () => {
       <div className="grid grid-cols-2">
         <div className="flex justify-center items-center flex-col">
           <div className="flex flex-col border border-gray-500 max-h-[200px] h-[300px] overflow-scroll w-[250px]">
-            {messages.map((message: any) => (
+            {conversations.map((message: any) => (
               <div
-                key={uuidV4()}
+                key={message?._id}
                 className={`max-w-[70%] text-left py-1 px-2 rounded-md mb-1 ${
-                  message.isSend
+                  message.sender_id === userInfo?._id
                     ? "ml-auto  bg-blue-500 text-white"
                     : "bg-gray-200 text-black"
                 }`}
