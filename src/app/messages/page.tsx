@@ -1,4 +1,5 @@
 "use client";
+import { LoadingSniper } from "@/components/common/Loading/LoadingSniper";
 import { useGetUserReload, useLogoutUser } from "@/hooks/users/useMutation";
 import { useFetchMe } from "@/hooks/users/useQuery";
 import { useUserInfo } from "@/store/useUserInfo";
@@ -9,6 +10,7 @@ import socket from "@/utils/socket";
 import axios from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 import { v4 as uuidV4 } from "uuid";
 const username = [
   {
@@ -23,6 +25,12 @@ const Messages = () => {
   const { mutate: mutateGetUserReload } = useGetUserReload();
   const [value, setValue] = React.useState("");
   const [conversations, setConversations] = React.useState<any>([]);
+  const PAGE = 1;
+  const LIMIT = 10;
+  const [pagination, setPagination] = React.useState({
+    page: PAGE,
+    total_page: 0,
+  });
   const { mutate: mutateLogout } = useLogoutUser();
   const [receiver, setReceiver] = React.useState("");
   const router = useRouter();
@@ -55,7 +63,7 @@ const Messages = () => {
     return () => {
       socket.disconnect();
     };
-  }, []);
+  }, [userInfo?._id]);
   React.useEffect(() => {
     if (!receiver) return;
     axios
@@ -66,14 +74,46 @@ const Messages = () => {
           Authorization: `Bearer ${access_token}`,
         },
         params: {
-          page: 1,
-          limit: 10,
+          page: PAGE,
+          limit: LIMIT,
         },
       })
       .then((result) => {
-        setConversations(result.data.result.conversation);
+        const { conversations, page, total_page } = result.data.result;
+        setConversations(conversations);
+        setPagination({
+          page,
+          total_page,
+        });
       });
   }, [receiver]);
+  const fetchMoreConversation = () => {
+    if (!receiver && pagination.page < pagination.total_page) return;
+    axios
+      .get(`/conversation/receivers/${receiver}`, {
+        baseURL: process.env.NEXT_PUBLIC_PORT_SERVER,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${access_token}`,
+        },
+        params: {
+          page: pagination.page + 1,
+          limit: LIMIT,
+        },
+      })
+      .then((result) => {
+        const { conversations, page, total_page } = result.data.result;
+        console.log(total_page);
+        setConversations((prevConversation: any) => [
+          ...prevConversation,
+          ...conversations,
+        ]);
+        setPagination({
+          page,
+          total_page,
+        });
+      });
+  };
   const getProfile = async (username: string) => {
     const result = await axios.get(`/users/${username}`, {
       baseURL: process.env.NEXT_PUBLIC_PORT_SERVER,
@@ -94,12 +134,12 @@ const Messages = () => {
     socket.emit("send_message", {
       payload: conversation,
     });
-    setConversations((message: any) => [
-      ...message,
+    setConversations((conversations: any) => [
       {
         ...conversation,
         _id: uuidV4(),
       },
+      ...conversations,
     ]);
   };
   return (
@@ -108,18 +148,41 @@ const Messages = () => {
       <div className="grid grid-cols-2">
         <div className="flex justify-center items-center flex-col">
           <div className="flex flex-col border border-gray-500 max-h-[200px] h-[300px] overflow-scroll w-[250px]">
-            {conversations.map((message: any) => (
-              <div
-                key={message?._id}
-                className={`max-w-[70%] text-left py-1 px-2 rounded-md mb-1 ${
-                  message.sender_id === userInfo?._id
-                    ? "ml-auto  bg-blue-500 text-white"
-                    : "bg-gray-200 text-black"
-                }`}
+            <div
+              id="scrollableDiv"
+              style={{
+                height: 300,
+                overflow: "auto",
+                display: "flex",
+                flexDirection: "column-reverse",
+              }}
+            >
+              {/*Put the scroll bar always on the bottom*/}
+              <InfiniteScroll
+                dataLength={conversations.length}
+                next={fetchMoreConversation}
+                style={{ display: "flex", flexDirection: "column-reverse" }} //To put endMessage and loader to the top.
+                inverse={true} //
+                hasMore={pagination.page < pagination.total_page}
+                loader={
+                  <LoadingSniper className="border-blue-300 mx-auto h-6 w-6" />
+                }
+                scrollableTarget="scrollableDiv"
               >
-                <p className="">{message.content}</p>
-              </div>
-            ))}
+                {conversations.map((message: any) => (
+                  <div
+                    key={message?._id}
+                    className={`max-w-[70%] text-left py-1 px-2 rounded-md mb-1 ${
+                      message.sender_id === userInfo?._id
+                        ? "ml-auto  bg-blue-500 text-white"
+                        : "bg-gray-200 text-black"
+                    }`}
+                  >
+                    <p className="">{message.content}</p>
+                  </div>
+                ))}
+              </InfiniteScroll>
+            </div>
           </div>
         </div>
         <div className="flex justify-center items-center h-full w-full flex-col">
