@@ -52,18 +52,17 @@ const Messages = () => {
     }
   }, []);
   React.useEffect(() => {
-    socket.connect();
-    socket.auth = {
-      _id: userInfo?._id,
-    };
     socket.on("receiver_message", (data: any) => {
       const { payload } = data;
-      setConversations((message: any) => [...message, payload]);
+      setConversations((conversations: any) => [payload, ...conversations]);
+    });
+    socket.on("connect_error", (err: any) => {
+      console.log(err);
     });
     return () => {
       socket.disconnect();
     };
-  }, [userInfo?._id]);
+  }, []);
   React.useEffect(() => {
     if (!receiver) return;
     axios
@@ -88,31 +87,31 @@ const Messages = () => {
       });
   }, [receiver]);
   const fetchMoreConversation = () => {
-    if (!receiver && pagination.page < pagination.total_page) return;
-    axios
-      .get(`/conversation/receivers/${receiver}`, {
-        baseURL: process.env.NEXT_PUBLIC_PORT_SERVER,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${access_token}`,
-        },
-        params: {
-          page: pagination.page + 1,
-          limit: LIMIT,
-        },
-      })
-      .then((result) => {
-        const { conversations, page, total_page } = result.data.result;
-        console.log(total_page);
-        setConversations((prevConversation: any) => [
-          ...prevConversation,
-          ...conversations,
-        ]);
-        setPagination({
-          page,
-          total_page,
+    if (receiver && pagination.page < pagination.total_page) {
+      axios
+        .get(`/conversation/receivers/${receiver}`, {
+          baseURL: process.env.NEXT_PUBLIC_PORT_SERVER,
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access_token}`,
+          },
+          params: {
+            page: pagination.page + 1,
+            limit: LIMIT,
+          },
+        })
+        .then((result) => {
+          const { conversations, page, total_page } = result.data.result;
+          setConversations((prevConversation: any) => [
+            ...prevConversation,
+            ...conversations,
+          ]);
+          setPagination({
+            page,
+            total_page,
+          });
         });
-      });
+    }
   };
   const getProfile = async (username: string) => {
     const result = await axios.get(`/users/${username}`, {
@@ -126,6 +125,7 @@ const Messages = () => {
   const handleSendMessage = (e: any) => {
     e.preventDefault();
     setValue("");
+    if (!value) return;
     const conversation = {
       content: value,
       sender_id: userInfo?._id,
@@ -169,18 +169,20 @@ const Messages = () => {
                 }
                 scrollableTarget="scrollableDiv"
               >
-                {conversations.map((message: any) => (
-                  <div
-                    key={message?._id}
-                    className={`max-w-[70%] text-left py-1 px-2 rounded-md mb-1 ${
-                      message.sender_id === userInfo?._id
-                        ? "ml-auto  bg-blue-500 text-white"
-                        : "bg-gray-200 text-black"
-                    }`}
-                  >
-                    <p className="">{message.content}</p>
-                  </div>
-                ))}
+                {receiver &&
+                  receiver !== userInfo?._id &&
+                  conversations.map((message: any) => (
+                    <div
+                      key={uuidV4()}
+                      className={`max-w-[70%] text-left py-1 px-2 rounded-md mb-1 ${
+                        message.sender_id === userInfo?._id
+                          ? "ml-auto  bg-blue-500 text-white"
+                          : "bg-gray-200 text-black"
+                      }`}
+                    >
+                      <p className="">{message.content}</p>
+                    </div>
+                  ))}
               </InfiniteScroll>
             </div>
           </div>
