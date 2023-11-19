@@ -4,7 +4,7 @@ import { useGetUserReload, useLogoutUser } from "@/hooks/users/useMutation";
 import { useFetchMe } from "@/hooks/users/useQuery";
 import { useUserInfo } from "@/store/useUserInfo";
 import { IUser } from "@/types/userTypes";
-import { getToken, saveProfileMe, saveToken } from "@/utils/auth/cookies";
+import { getToken, logOutCookies, saveProfileMe, saveToken } from "@/utils/auth/cookies";
 import { Routers } from "@/utils/router/routers";
 import socket from "@/utils/socket";
 import axios from "axios";
@@ -58,6 +58,12 @@ const Messages = () => {
     });
     socket.on("connect_error", (err: any) => {
       console.log(err);
+    });
+    socket.on("disconnect", (reason) => {
+      if(reason) {
+        logOutCookies()
+        router.push(Routers.signInPage);
+      }
     });
     return () => {
       socket.disconnect();
