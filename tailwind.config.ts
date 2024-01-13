@@ -27,6 +27,7 @@ const config: Config = {
 
         bgHoverWhite: "#e0e0e0",
         bgHoverBlue: "rgba(29,155,240,0.1)",
+        bgMain: "rgba(71,74,77,0.3)",
         bgBtnSecondary: "#eff3f4",
 
         borderGrayPrimary: "#333639",

@@ -2,7 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/ReactToastify.css";
-import { Roboto } from "next/font/google";
+import { Roboto } from "@next/font/google";
 import QueryClientLayoutProvider from "./QueryClientProvider";
 
 const roboto = Roboto({
