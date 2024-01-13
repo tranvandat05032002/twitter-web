@@ -1,5 +1,6 @@
 import { IOTP, IUser } from "@/types/userTypes";
 import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
 
 const objTokenCookies = {
   expires: 30,
@@ -46,7 +47,18 @@ export const saveToken = ({ access_token, refresh_token }: IToken) => {
     });
   }
 };
-
+export const removeToken = () => {
+  Cookies.remove(process.env.NEXT_PUBLIC_ACCESS_TOKEN_KEY as string, {
+    ...objTokenCookies,
+    path: process.env.NEXT_PUBLIC_TOKEN_PATH as string,
+    domain: process.env.NEXT_PUBLIC_DOMAIN as string,
+  });
+  Cookies.remove(process.env.NEXT_PUBLIC_REFRESH_TOKEN_KEY as string, {
+    ...objTokenCookies,
+    path: process.env.NEXT_PUBLIC_TOKEN_PATH as string,
+    domain: process.env.NEXT_PUBLIC_DOMAIN as string,
+  });
+}
 export const saveOTP = ({ jwtToken }: IOTP) => {
   if (jwtToken) {
     Cookies.set(process.env.NEXT_PUBLIC_OTP_TOKEN_KEY as string, jwtToken, {
@@ -106,6 +118,15 @@ export const logOutCookies = () => {
       domain: process.env.NEXT_PUBLIC_DOMAIN as string,
     });
   }
+};
+// check expired token
+export const isTokenExpired = (token: string): boolean => {
+  if (!token) {
+    return true;
+  }
+  const decodedToken = jwtDecode(token).exp as number;
+  const currentTime = Date.now() / 1000;
+  return decodedToken < currentTime;
 };
 
 // handle Email

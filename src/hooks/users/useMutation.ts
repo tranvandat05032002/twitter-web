@@ -21,6 +21,7 @@ import {
   requestResendOTP,
   requestResetPassword,
   requestUpdateUserProfile,
+  requestGetToken,
 } from "@/utils/api/request";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosInstance } from "axios";
@@ -42,9 +43,20 @@ export const useLogin = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (signinInfo: LoginForm) => requestLogIn(signinInfo),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["me"],
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["getMe"],
+      });
+    },
+  });
+};
+export const useGetToken = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({access_token, refresh_token}: {access_token: string, refresh_token: string}) => requestGetToken({access_token, refresh_token}),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["getMe"],
       });
     },
   });
@@ -94,4 +106,4 @@ export const useUpdateUser = () => {
   return useMutation({
     mutationFn: (userInfo: IUpdateUser) => requestUpdateUserProfile(userInfo),
   });
-}
+};

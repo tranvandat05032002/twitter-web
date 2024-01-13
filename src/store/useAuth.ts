@@ -5,7 +5,6 @@ type IAuthStore = {
   userInfo: IUser | null;
   errorMessage: string;
   access_token: string | null;
-  isLoggedIn: () => Boolean;
   updateUserAndToken: ({
     userData,
     access_token,
@@ -26,13 +25,6 @@ export const useAuth = create<IAuthStore>((set) => {
       access_token?: string;
     }) => set({ userInfo: userData, access_token: access_token }),
     errorMessage: "",
-    isLoggedIn: () => {
-      const { access_token, refresh_token } = getToken();
-      if (access_token && refresh_token) {
-        return true;
-      }
-      return false;
-    },
   };
 
   return {

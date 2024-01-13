@@ -1,4 +1,4 @@
-export const Routers = {
+export const routers = {
     signInPage: "/sign-in",
     signUpPage: "sign-up",
     mainLayoutPage: "/",

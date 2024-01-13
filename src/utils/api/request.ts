@@ -14,6 +14,7 @@ import {
   getOTPToken,
   getToken,
   logOutCookies,
+  removeToken,
   saveOTP,
   saveToken,
 } from "../auth/cookies";
@@ -81,7 +82,6 @@ export const requestResendEmailToken = async () => {
 export const requestFetchMe = async () => {
   const { access_token } = getToken();
   if (!access_token) return;
-  try {
     const response = await apiInstance.get<TRequestUser<IUser>>("/users/me", {
       headers: {
         "Content-Type": "application/json",
@@ -91,25 +91,59 @@ export const requestFetchMe = async () => {
     if (response.status === 200) {
       const { data } = response;
       useUserInfo.getState().setUserInfo(data.result.user);
-      return data.result.user;
+      return data.result.user as IUser;
     }
-    return null;
-  } catch (error) {
-    console.log(error);
-  }
 };
 export const requestLogIn = async (signInInfo: LoginForm) => {
   try {
-    const { data } = await apiInstance.post<TRequestToken<IToken>>(
+    const response = await apiInstance.post<TRequestToken<IToken>>(
       "/users/login",
       {
         ...signInInfo,
       }
     );
-    saveToken({
-      access_token: data.result.access_token,
-      refresh_token: data.result.refresh_token,
-    });
+    if (response.status === 200) {
+      const { data } = response;
+      saveToken({
+        access_token: data.result.access_token,
+        refresh_token: data.result.refresh_token,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const requestGetToken = async ({
+  access_token,
+  refresh_token,
+}: {
+  access_token: string;
+  refresh_token: string;
+}) => {
+  if (!access_token && !refresh_token) return;
+  try {
+    const response = await apiInstance.post(
+      "/users/refresh-token",
+      {
+        refresh_token: refresh_token,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${access_token}`,
+        },
+      }
+    );
+    if (response?.status === 200) {
+      const { access_token, refresh_token } = response.data.result;
+      saveToken({
+        access_token,
+        refresh_token,
+      });
+    } else {
+      removeToken();
+    }
   } catch (error) {
     console.log(error);
   }
@@ -295,28 +329,28 @@ export const requestGetUserProfile = async (username: string) => {
 };
 export const requestUpdateUserProfile = async (userInfo: IUpdateUser) => {
   const { access_token } = getToken();
-    try {
-      const response = await apiInstance.patch(
-        "/users/me",
-        {
-          ...userInfo,
+  try {
+    const response = await apiInstance.patch(
+      "/users/me",
+      {
+        ...userInfo,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${access_token}`,
         },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${access_token}`,
-          },
-        }
-      );
-      if (response.status === 200) {
-        toast.success("Update success!", {
-          pauseOnHover: false,
-        });
       }
-    } catch (error) {
-      toast.error("Update failed", {
+    );
+    if (response.status === 200) {
+      toast.success("Update success!", {
         pauseOnHover: false,
       });
-      console.log(error);
     }
-}
+  } catch (error) {
+    toast.error("Update failed", {
+      pauseOnHover: false,
+    });
+    console.log(error);
+  }
+};
