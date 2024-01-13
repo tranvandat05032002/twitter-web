@@ -8,7 +8,7 @@ import {
 import { NAVIGATION_ITEMS } from "@/utils/constant/constants";
 import Link from "next/link";
 import { PrimaryButton } from "../common";
-import { Routers } from "@/utils/router/routers";
+import { routers } from "@/utils/router/routers";
 import Tippy from "@tippyjs/react/headless";
 import { IUser } from "@/types/userTypes";
 import { usePathname, useRouter } from "next/navigation";
@@ -29,14 +29,14 @@ const LeftSidebar: React.FC<ILeftSidebar> = (props) => {
   };
   const handleLogout = async () => {
     mutateLogout();
-    router.push(Routers.mainLayoutPage);
+    router.push(routers.mainLayoutPage);
   };
   return (
     <section className="border-r-[0.5px] w-72 h-full fixed border-borderGrayPrimary px-2 py-2">
       <div className="px-1">
         <div className="mb-2 px-2">
           <TwitterIconVerySmall
-            onClick={() => router.push(Routers.signInPage)}
+            onClick={() => router.push(routers.signInPage)}
           ></TwitterIconVerySmall>
         </div>
         {NAVIGATION_ITEMS.map((item) => (
@@ -52,9 +52,9 @@ const LeftSidebar: React.FC<ILeftSidebar> = (props) => {
           </Link>
         ))}
         <Link
-          href={`${Routers.profile}/${userInfo?.username}`}
+          href={`${routers.profile}/${userInfo?.username}`}
           className={`hover:no-underline text-white flex items-center text-xl py-[10px] my-[2px] px-2 hover:bg-bgHoverBlue rounded-full transition-all ${isActive(
-            Routers.profile + "/" + userInfo?.username
+            routers.profile + "/" + userInfo?.username
           )}`}
         >
           <ProfileIcon></ProfileIcon>

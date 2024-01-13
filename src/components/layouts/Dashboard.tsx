@@ -1,13 +1,21 @@
 "use client";
 import React from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Routers } from "@/utils/router/routers";
-import { getToken, saveProfileMe, saveToken } from "@/utils/auth/cookies";
 import LeftSidebar from "./LeftSidebar";
 import { useEvent } from "@/store/useEven";
 import { useFetchMe } from "@/hooks/users/useQuery";
 import { useUserInfo } from "@/store/useUserInfo";
-import { useGetUserReload, useLogoutUser } from "@/hooks/users/useMutation";
+import { useRouter } from "next/navigation";
+import { routers } from "@/utils/router/routers";
+import {
+  getToken,
+  isTokenExpired,
+  logOutCookies,
+  removeToken,
+} from "@/utils/auth/cookies";
+import { jwtDecode } from "jwt-decode";
+import { useGetToken, useLogoutUser } from "@/hooks/users/useMutation";
+import BackSignInModal from "../common/Modal/BackSignInModal";
+import { GhostButton } from "../common";
 import { IUser } from "@/types/userTypes";
 
 interface IDashboard {
@@ -15,56 +23,80 @@ interface IDashboard {
 }
 const DashboardPage: React.FC<IDashboard> = (props) => {
   const { children } = props;
-  const router = useRouter();
   const { showModal } = useEvent((state) => state);
-  const { data: user } = useFetchMe();
-  const { mutate: mutateGetUserReload } = useGetUserReload();
-  const { mutate: mutateLogout } = useLogoutUser();
+  const { access_token, refresh_token } = getToken();
   const { userInfo } = useUserInfo();
-  const searchParams = useSearchParams();
+  const router = useRouter();
+  const { mutate: mutateGetToken } = useGetToken();
+  const { data: user } = useFetchMe();
+  const memoizedUser = React.useMemo(() => user, [user]) as IUser;
+  const [showModalBackLogin, setShowModalBackLogin] =
+    React.useState<boolean>(false);
   React.useEffect(() => {
-    const access_token = searchParams.get("access_token");
-    const refresh_token = searchParams.get("refresh_token");
-    const verify = searchParams.get("verify");
+    if(!memoizedUser) return;
     if (access_token && refresh_token) {
-      saveToken({
-        access_token,
-        refresh_token,
-      });
-    }
-    if (verify === "0" && !access_token) {
-      router.push(Routers.signInPage);
-    }
-  }, [searchParams, router]);
-  React.useEffect(() => {
-    if (!user) {
-      const { access_token, refresh_token } = getToken();
-      if (refresh_token) {
-        mutateGetUserReload({
-          access_token: access_token as string,
-          refresh_token,
-        });
-      } else {
-        router.push(Routers.signInPage);
-        mutateLogout();
+      if (memoizedUser.verify !== 1) {
+        removeToken();
+        // return verify page
+        router.push(routers.verifyPage);
       }
     }
-  }, [user]);
+  }, [memoizedUser, router]);
+  const handleBackSignIn = () => {
+    removeToken();
+    router.push(routers.signInPage);
+  };
+  const checkTokenExpiration = () => {
+    const { access_token, refresh_token } = getToken();
+    if (
+      isTokenExpired(access_token as string) &&
+      !isTokenExpired(refresh_token as string)
+    ) {
+      mutateGetToken({
+        access_token: access_token as string,
+        refresh_token: refresh_token as string,
+      });
+    } else if (isTokenExpired(refresh_token as string)) {
+      setShowModalBackLogin(true);
+    }
+  };
+  React.useEffect(() => {
+    checkTokenExpiration();
+  }, [router]);
   return (
-    <div
-      className={`relative flex items-center w-full ${
-        showModal ? "h-screen" : "h-full"
-      }`}
-    >
-      <div className="max-w-screen-xl w-full h-full flex relative">
-        <LeftSidebar userInfo={userInfo}></LeftSidebar>
-        {/*change*/}
-        <main className="ml-[288px] w-[600px] flex flex-col h-full min-h-screen border-r-[0.5px] border-borderGrayPrimary">
-          {children}
-        </main>
-        <section className="">Search</section>
-      </div>
-    </div>
+    <React.Fragment>
+      {!showModalBackLogin ? (
+        <div
+          className={`relative flex items-center w-full ${
+            showModal ? "h-screen" : "h-full"
+          }`}
+        >
+          <div className="max-w-screen-xl w-full h-full flex relative">
+            <LeftSidebar userInfo={userInfo}></LeftSidebar>
+            {/*change*/}
+            <main className="ml-[288px] w-[600px] flex flex-col h-full min-h-screen border-r-[0.5px] border-borderGrayPrimary">
+              {children}
+            </main>
+            <section className="">Search layout</section>
+          </div>
+        </div>
+      ) : (
+        <div className="absolute w-full h-screen left-0 top-0 bottom-0 right-0 z-[1000] flex justify-center items-center bg-bgMain">
+          <div className="max-w-[300px] max-h-[150px] w-[300px] h-[150px] bg-black rounded-md py-[20px] px-[20px]">
+            <div className="relative w-full h-full">
+              <p className="mb-[10px]">Phiên đã hết hạn</p>
+              <p className="text-textGray mb-[10px]">Vui lòng đăng nhập lại.</p>
+              <GhostButton
+                className="absolute bottom-0 right-0 px-4 py-1 text-white rounded-full w-max"
+                onClick={handleBackSignIn}
+              >
+                Đồng ý
+              </GhostButton>
+            </div>
+          </div>
+        </div>
+      )}
+    </React.Fragment>
   );
 };
 

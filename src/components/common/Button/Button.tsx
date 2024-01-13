@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { LoadingSniper } from "../Loading/LoadingSniper";
 import { UrlObject } from "url";
+import { FormEventHandler } from "react";
 
 export type Type = "submit" | "reset" | "button";
 export interface ButtonProps
@@ -31,8 +32,16 @@ function getButtonClass(typeButton: string): string {
   }
 }
 const createButton = (props: ButtonProps, typeButton: string): JSX.Element => {
-  const { children, type, className, disabledForm, onClick, link, href } =
-    props;
+  const {
+    children,
+    type,
+    className,
+    disabledForm,
+    onClick,
+    link,
+    href,
+    onSubmit,
+  } = props;
   const buttonClass = getButtonClass(typeButton);
   const child = props.isLoading ? <LoadingSniper /> : children;
   if (link && href) {
