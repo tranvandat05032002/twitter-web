@@ -15,37 +15,22 @@ import {
   ERROR_FORM_MESSAGES,
 } from "../common";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { LoginForm } from "@/types/userTypes";
 import { isObjectEmpty } from "@/utils/handlers";
-import { Routers } from "@/utils/router/routers";
+import { routers } from "@/utils/router/routers";
 import { useLogin } from "@/hooks/users/useMutation";
-import { useUserInfo } from "@/store/useUserInfo";
-import { useFetchMe } from "@/hooks/users/useQuery";
-import { saveToken } from "@/utils/auth/cookies";
-const schemaValidator = yup.object().shape({
-  email: yup
-    .string()
-    .required(ERROR_FORM_MESSAGES.emailRequired)
-    .email(ERROR_FORM_MESSAGES.isEmail),
-  password: yup
-    .string()
-    .required(ERROR_FORM_MESSAGES.passwordRequired)
-    .min(6, ERROR_FORM_MESSAGES.minPasswordLength),
-});
+import { getToken } from "@/utils/auth/cookies";
 const SignInPage = () => {
-  const [canSubmit, setCanSubmit] = React.useState<boolean>(true);
-  const { mutate: mutateLogin, isLoading, isSuccess } = useLogin();
+  const { mutate: mutateLogin, isLoading } = useLogin();
+  const { access_token, refresh_token } = getToken();
   const router = useRouter();
-  const { data: user } = useFetchMe();
   const {
     control,
     handleSubmit,
-    getValues,
-    reset,
     formState: { errors },
   } = useForm<LoginForm>({
     resolver: yupResolver(schemaValidator),
@@ -54,27 +39,18 @@ const SignInPage = () => {
       email: "",
       password: "",
     },
-    context: { canSubmit },
   });
-  React.useEffect(() => {
-    if (isObjectEmpty(getValues())) {
-      setCanSubmit(true);
-    }
-    setCanSubmit(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [canSubmit]);
-  const handleLogin = React.useCallback(async (values: LoginForm) => {
+  const handleLogin = async (values: LoginForm) => {
     if (isObjectEmpty(values)) return;
     mutateLogin(values);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  const { setUserInfo } = useUserInfo();
+  };
   React.useEffect(() => {
-    if (isSuccess && user?.verify === 1) {
-      setUserInfo(user);
-      router.push(Routers.homePage);
+    if (access_token && refresh_token) {
+      router.push(routers.homePage);
     }
-  }, [isSuccess, router]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [access_token, refresh_token]);
   return (
     <React.Fragment>
       <div className="flex items-center justify-center">
@@ -143,12 +119,10 @@ const SignInPage = () => {
           </div>
         </div>
         <PrimaryButton
-          className={`w-[440px] h-[52px] text-base  my-6 px-8 ${
-            canSubmit ? "hover:bg-none" : ""
-          }`}
+          className={`w-[440px] h-[52px] text-base  my-6 px-8`}
           type="submit"
           isLoading={isLoading}
-          disabledForm={canSubmit || isLoading}
+          disabledForm={isLoading}
         >
           Đăng nhập
         </PrimaryButton>
@@ -158,3 +132,16 @@ const SignInPage = () => {
 };
 
 export default SignInPage;
+
+const schemaValidator = yup.object().shape({
+  email: yup
+    .string()
+    .required(ERROR_FORM_MESSAGES.emailRequired)
+    .email(ERROR_FORM_MESSAGES.isEmail),
+  password: yup
+    .string()
+    .required(ERROR_FORM_MESSAGES.passwordRequired)
+    .min(6, ERROR_FORM_MESSAGES.minPasswordLength),
+});
+
+
