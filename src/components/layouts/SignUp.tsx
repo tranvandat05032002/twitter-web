@@ -16,7 +16,7 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { RegisterForm } from "@/types/userTypes";
 import { isObjectEmpty, formatISO8601 } from "@/utils/handlers";
-import { Routers } from "@/utils/router/routers";
+import { routers } from "@/utils/router/routers";
 import { useRegister } from "@/hooks/users/useMutation";
 const schemaValidator = yup.object().shape({
   name: yup.string().required(ERROR_FORM_MESSAGES.userNameRequired),
@@ -45,12 +45,11 @@ const SignUpPage = () => {
     end: lastYear,
     ascending: false,
   });
-  const [canSubmit, setCanSubmit] = React.useState<boolean>(true);
   const router = useRouter();
+  const { mutate: mutateRegister, data, isLoading, isSuccess } = useRegister();
   const { day, month, year, setDay, setMonth, setYear } = useDateStore(
     (state) => state
   );
-  const { mutate, isLoading, isSuccess } = useRegister();
   const handleChangeMonth = (event: SelectChangeEvent<unknown>) => {
     setMonth(event.target.value as string | number);
   };
@@ -63,7 +62,6 @@ const SignUpPage = () => {
   const {
     control,
     handleSubmit,
-    getValues,
     setValue,
     formState: { errors },
   } = useForm<RegisterForm>({
@@ -76,7 +74,6 @@ const SignUpPage = () => {
       name: "",
       date_of_birth: "",
     },
-    context: { canSubmit },
   });
   React.useEffect(() => {
     if (day && month && year) {
@@ -85,27 +82,20 @@ const SignUpPage = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [day, month, year]);
-  React.useEffect(() => {
-    if (isObjectEmpty(getValues())) {
-      setCanSubmit(true);
-    }
-    setCanSubmit(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [canSubmit]);
   const handleRegister = React.useCallback(async (values: RegisterForm) => {
     if (isObjectEmpty(values)) return;
-    mutate(values as RegisterForm);
+    mutateRegister(values as RegisterForm);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   React.useEffect(() => {
     if (isSuccess) {
-      router.push(Routers.verifyPage);
+      router.push(routers.verifyPage);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess]);
   return (
     <form onSubmit={handleSubmit(handleRegister)} autoComplete="off">
-      <h1 className="text-3xl font-bold pb-5">Tạo tài khoản của bạn</h1>
+      <h1 className="text-3xl font-bold pb-5">Đăng Ký Tài Khoản</h1>
       <div className="py-[13px]">
         <Input
           placeholder="Tên"
@@ -159,7 +149,7 @@ const SignUpPage = () => {
       </div>
       <div className="text-xs">
         <span>Bạn đã có tài khoản? </span>
-        <Link href={Routers.signInPage} className="text-textBlue">
+        <Link href={routers.signInPage} className="text-textBlue">
           Đăng nhập ngay
         </Link>
       </div>
@@ -168,7 +158,7 @@ const SignUpPage = () => {
         className="w-[440px] h-[52px] text-base  my-6 px-8"
         type="submit"
         isLoading={isLoading}
-        disabledForm={canSubmit}
+        disabledForm={isLoading}
       >
         Tạo tài khoản
       </PrimaryButton>

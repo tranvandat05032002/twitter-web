@@ -2,13 +2,14 @@
 import React from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { TwitterIcon } from "@/components/SingleUseComponents";
-import { Routers } from "@/utils/router/routers";
+import { routers } from "@/utils/router/routers";
 import { useResendEmailToken, useVerifyEmail } from "@/hooks/users/useMutation";
+import { saveToken } from "@/utils/auth/cookies";
 const VerifyPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [statusVerify, setStatusVerify] = React.useState<Boolean>(false);
-  const { mutate: verifyEmail, isSuccess } = useVerifyEmail();
+  const { mutate: verifyEmail, data, isSuccess } = useVerifyEmail();
   const { mutate: mutateResendEmail } = useResendEmailToken();
   React.useEffect(() => {
     async function getResultVerify() {
@@ -27,7 +28,7 @@ const VerifyPage = () => {
     mutateResendEmail();
   }, []);
   const handleComeHome = () => {
-    router.push(Routers.homePage);
+    router.push(routers.homePage);
   };
   return (
     <div className="absolute top-0 bottom-0 left-0 right-0 bg-[rgba(71,74,77,0.3)] flex items-center justify-center">

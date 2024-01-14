@@ -60,7 +60,7 @@ const SignInPage = () => {
         <div>
           <div>
             <h1 className="text-3xl font-bold pb-5 text-center">
-              Đăng nhập vào Twitter
+              Đăng Nhập Vào Twitter
             </h1>
           </div>
           <div className="py-[13px]">

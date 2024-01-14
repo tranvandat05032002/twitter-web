@@ -30,9 +30,10 @@ export const requestRegister = async (registerInfo: RegisterForm) => {
         ...registerInfo,
       }
     );
+    const {access_token, refresh_token} = data.result
     saveToken({
-      access_token: data.result.access_token,
-      refresh_token: data?.result.refresh_token,
+      access_token,
+      refresh_token,
     });
   } catch (error) {
     console.log(error);
