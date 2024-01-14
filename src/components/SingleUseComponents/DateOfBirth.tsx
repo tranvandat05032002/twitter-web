@@ -103,7 +103,7 @@ const DateOfBirth: React.FC<IDateOfBirth> = (props) => {
           </CustomSelect>
         </FormControl>
 
-        <FormControl sx={{ minWidth: 110 }}>
+        <FormControl sx={{ minWidth: 110, color: '#9ca3b0' }}>
           <InputLabel
             id="demo-simple-select-helper-label"
             className="text-textGray"

@@ -30,4 +30,8 @@
   .css-hfutr2-MuiSvgIcon-root-MuiSelect-icon {
     color: gray;
   }
+  #demo-simple-select-helper-label {
+    color: #9ca3b0;
+    font-weight: 300;
+  }
 }
