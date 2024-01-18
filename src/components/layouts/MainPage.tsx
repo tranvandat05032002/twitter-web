@@ -1,5 +1,5 @@
 import React from "react";
-import { BsChevronDown, BsApple, BsTwitter } from "react-icons/bs";
+import { BsChevronDown } from "react-icons/bs";
 import Link from "next/link";
 import { GhostButton, PrimaryButton } from "@/components/common";
 import {
@@ -8,15 +8,15 @@ import {
   TermsAndPrivacyNotice,
   TwitterIcon,
 } from "@/components/SingleUseComponents";
-import { Routers } from "@/utils/router/routers";
+import { routers } from "@/utils/router/routers";
 import "vidstack/styles/defaults.css";
 import "vidstack/styles/community-skin/video.css";
-import {
-  MediaCommunitySkin,
-  MediaOutlet,
-  MediaPlayer,
-  MediaPoster,
-} from "@vidstack/react";
+// import {
+//   MediaCommunitySkin,
+//   MediaOutlet,
+//   MediaPlayer,
+//   MediaPoster,
+// } from "@vidstack/react";
 
 const MainPage = () => {
   return (
@@ -68,15 +68,15 @@ const MainPage = () => {
                 </span>
               </div>
             </button>
-            <h5>straeming Video</h5>
-            <video controls>
+            {/* <h5>straeming Video</h5> */}
+            {/* <video controls>
               <source
                 src="https://twitter-s3-ap-southeast-1.s3.ap-southeast-1.amazonaws.com/videos/VZxxlakgyd8CgYgQosLGc.mp4"
                 type="video/mp4"
               />
-            </video>
-            <h5>HLS EnCode</h5>
-            <MediaPlayer
+            </video> */}
+            {/* <h5>HLS EnCode</h5> */}
+            {/* <MediaPlayer
               title="Sprite Fight"
               src="http://localhost:4000/static/video-hls/czSU817F5GkyM3-KXa5g5/master.m3u8"
               // poster="https://image.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/thumbnail.webp?time=268&width=980"
@@ -101,7 +101,7 @@ const MainPage = () => {
                 />
               </MediaOutlet>
               <MediaCommunitySkin />
-            </MediaPlayer>
+            </MediaPlayer> */}
 
             <div className="flex items-center">
               <div>
@@ -113,7 +113,7 @@ const MainPage = () => {
               </div>
             </div>
 
-            <Link href={Routers.signUpPage} className="hover:no-underline">
+            <Link href={routers.signUpPage} className="hover:no-underline">
               <PrimaryButton className="w-80 h-11 text-base py-[2px] px-[10px]">
                 Tạo tài khoản
               </PrimaryButton>
@@ -124,7 +124,7 @@ const MainPage = () => {
 
           <div className="flex flex-col gap-y-3 max-w-[320px]">
             <p className="text-textBlue text-lg font-bold">Đã có tài khoản?</p>
-            <Link href={Routers.signInPage} className="hover:no-underline">
+            <Link href={routers.signInPage} className="hover:no-underline">
               <GhostButton className="w-80 h-11 rounded-full  py-[2px] px-[10px] text-base">
                 Đăng nhập
               </GhostButton>

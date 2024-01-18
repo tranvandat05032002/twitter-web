@@ -12,10 +12,8 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { isObjectEmpty } from "@/utils/handlers";
-import {
-  saveEmailCookies,
-} from "@/utils/auth/cookies";
-import { Routers } from "@/utils/router/routers";
+import { saveEmailCookies } from "@/utils/auth/cookies";
+import { routers } from "@/utils/router/routers";
 import { ForgotForm } from "@/app/users/find-account/page";
 import { useFindAccount } from "@/store/useFindAccount";
 import { useFindAccountByEmail } from "@/hooks/users/useMutation";
@@ -56,20 +54,20 @@ const FindAccountPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canSubmit]);
   const handleCancel = () => {
-    router.push(Routers.signInPage);
+    router.push(routers.signInPage);
   };
-  const handleFindEmail = React.useCallback(async (values: ForgotForm) => {
+  const handleFindEmail = (values: ForgotForm) => {
     if (isObjectEmpty(values)) return;
-    await mutateFindAccount(values);
-  }, []);
+    mutateFindAccount(values);
+  }
   React.useEffect(() => {
     if (isSuccess) {
       if (!dataFindAccount) return;
       setAccountFind(dataFindAccount);
       saveEmailCookies(dataFindAccount?.email as string);
-      router.push(Routers.forgotPasswordPage);
+      router.push(routers.forgotPasswordPage);
     }
-  }, [isSuccess]);
+  }, [isSuccess, router]);
   return (
     <React.Fragment>
       <div className="flex items-center justify-center">

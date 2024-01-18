@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { GhostButton, PrimaryButton } from "..";
 import { Type } from "./Button";
 import { removeEmailCookies, removeOTPToken } from "@/utils/auth/cookies";
-import { Routers } from "@/utils/router/routers";
+import { routers } from "@/utils/router/routers";
 
 interface IConditionalButton {
   handleRequest?: () => void;
@@ -20,7 +20,7 @@ const ConditionalButton: React.FC<IConditionalButton> = (props) => {
   const handleCancel = () => {
     removeEmailCookies();
     removeOTPToken();
-    router.push(Routers.signInPage);
+    router.push(routers.signInPage);
   };
   const [nextButton, setNextButton] = React.useState<boolean>(false);
   React.useEffect(() => {

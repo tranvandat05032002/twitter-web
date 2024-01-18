@@ -38,6 +38,7 @@ export interface IUpdateUser {
 export interface IToken {
   access_token: string;
   refresh_token: string;
+  email_verify_token?: string;
 }
 export interface IOTP {
   jwtToken?: string

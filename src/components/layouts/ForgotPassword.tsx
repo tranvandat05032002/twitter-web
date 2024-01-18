@@ -3,13 +3,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { GhostButton, PrimaryButton } from "@/components/common";
 import { TwitterIcon } from "@/components/SingleUseComponents";
-import {
-  getEmailCookies,
-  removeEmailCookies,
-} from "@/utils/auth/cookies";
+import { getEmailCookies, removeEmailCookies } from "@/utils/auth/cookies";
 import { normalizeEmail } from "@/utils/handlers";
 import { Radio } from "@mui/material";
-import { Routers } from "@/utils/router/routers";
+import { routers } from "@/utils/router/routers";
 import { useFindAccount } from "@/store/useFindAccount";
 import { useSendOTP } from "@/hooks/users/useMutation";
 const ForgotPasswordPage = () => {
@@ -19,18 +16,18 @@ const ForgotPasswordPage = () => {
   const { mutate: mutateSendOTP, isSuccess, isLoading } = useSendOTP();
   const handleCancelForgot = () => {
     removeEmailCookies();
-    router.push(Routers.signInPage);
+    router.push(routers.signInPage);
   };
   const { email_cookies } = getEmailCookies();
   React.useEffect(() => {
     setEmailCookies(email_cookies);
-  }, [emailCookies]);
-  const handleSendToken = React.useCallback(async () => {
-    mutateSendOTP((accountFind?.email as string) || email_cookies);
   }, []);
+  const handleSendToken = async () => {
+    mutateSendOTP((accountFind?.email as string) || emailCookies);
+  }
   React.useEffect(() => {
     if (isSuccess) {
-      router.push(Routers.sendOTPPage);
+      router.push(routers.sendOTPPage);
     }
   }, [isSuccess]);
   const email_normal = normalizeEmail(

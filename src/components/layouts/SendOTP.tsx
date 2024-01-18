@@ -2,40 +2,53 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ConditionalButton } from "@/components/common";
-import { getEmailCookies } from "@/utils/auth/cookies";
+import { getEmailCookies, removeOTPToken } from "@/utils/auth/cookies";
 import dynamic from "next/dynamic";
 import { BsArrowRightIcon } from "@/components/SingleUseComponents/Icon";
-import { Routers } from "@/utils/router/routers";
+import { routers } from "@/utils/router/routers";
 import { useCheckOTP, useResendOTP } from "@/hooks/users/useMutation";
+import { toast } from "react-toastify";
 const DynamicOtpInput = dynamic(() => import("react-otp-input"), {
   ssr: false,
 }); // render client
 const SendOTPPage = () => {
   const [otp, setOtp] = React.useState<string>("");
-  const { mutate: mutateCheckOTP, isSuccess } = useCheckOTP();
+  const [emailCookies, setEmailCookies] = React.useState<string>("");
+  const { mutate: mutateCheckOTP, isSuccess, isError } = useCheckOTP();
   const { mutate: mutateResendOTP } = useResendOTP();
   const router = useRouter();
-  const { email_cookies } = getEmailCookies();
-  const handleVerifyOTP = React.useCallback(async () => {
+  const handleVerifyOTP = () => {
     mutateCheckOTP(otp);
-  }, [otp]);
+  };
   const handleSetOTP = (value: string) => {
     setOtp(value);
   };
   React.useEffect(() => {
     if (isSuccess) {
-      router.push(Routers.resetPasswordPage);
+      toast.success("Xác thực thành công. Vui lòng chờ trong gây lát", {
+        pauseOnHover: false,
+      });
+      router.push(routers.resetPasswordPage);
     }
-  }, [isSuccess, router]);
-  const handleResendOTP = React.useCallback(async () => {
+    if (isError) {
+      toast.error("Xác thực không thành công. vui lòng nhập lại", {
+        pauseOnHover: false,
+      });
+    }
+  }, [isSuccess, isError]);
+  const handleResendOTP = async () => {
     mutateResendOTP();
+  };
+  React.useEffect(() => {
+    const { email_cookies } = getEmailCookies();
+    setEmailCookies(email_cookies);
   }, []);
   return (
     <div className="py-8">
       <div>
         <div className="text-base font-medium">
           <p className="text-white">Chúng tôi đã gửi mã OTP tới </p>
-          <p className="text-textBlue mb-4 font-light">{email_cookies}</p>
+          <p className="text-textBlue mb-4 font-light">{emailCookies}</p>
 
           <div className="flex items-center">
             <BsArrowRightIcon />

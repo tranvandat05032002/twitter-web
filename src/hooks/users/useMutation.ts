@@ -23,7 +23,8 @@ import {
   requestUpdateUserProfile,
   requestGetToken,
 } from "@/utils/api/request";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { removeEmailCookies, removeOTPToken } from "@/utils/auth/cookies";
+import { UseMutationResult, useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosInstance } from "axios";
 
 export const useRegister = () =>
@@ -91,8 +92,11 @@ export const useSendOTP = () =>
 export const useCheckOTP = () =>
   useMutation({
     mutationFn: (otp: string) => requestCheckOTP(otp),
+    onSuccess: () => {
+      removeEmailCookies();
+    }
   });
-export const useResendOTP = () =>
+export const useResendOTP = (): UseMutationResult<void, unknown, void, unknown> =>
   useMutation({
     mutationFn: () => requestResendOTP(),
   });

@@ -14,6 +14,7 @@ import {
   getOTPToken,
   getToken,
   logOutCookies,
+  removeOTPToken,
   removeToken,
   saveOTP,
   saveToken,
@@ -30,7 +31,7 @@ export const requestRegister = async (registerInfo: RegisterForm) => {
         ...registerInfo,
       }
     );
-    const {access_token, refresh_token} = data.result
+    const { access_token, refresh_token } = data.result;
     saveToken({
       access_token,
       refresh_token,
@@ -83,17 +84,17 @@ export const requestResendEmailToken = async () => {
 export const requestFetchMe = async () => {
   const { access_token } = getToken();
   if (!access_token) return;
-    const response = await apiInstance.get<TRequestUser<IUser>>("/users/me", {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
-    if (response.status === 200) {
-      const { data } = response;
-      useUserInfo.getState().setUserInfo(data.result.user);
-      return data.result.user as IUser;
-    }
+  const response = await apiInstance.get<TRequestUser<IUser>>("/users/me", {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${access_token}`,
+    },
+  });
+  if (response.status === 200) {
+    const { data } = response;
+    useUserInfo.getState().setUserInfo(data.result.user);
+    return data.result.user as IUser;
+  }
 };
 export const requestLogIn = async (signInInfo: LoginForm) => {
   try {
@@ -225,6 +226,7 @@ export const requestFindEmail = async (email: ForgotForm) => {
 };
 
 export const requestSendOTP = async (email: string) => {
+  if (!email) return;
   try {
     const response = await apiInstance.post<IOTP>("/users/forgot-password", {
       email,
@@ -241,7 +243,6 @@ export const requestSendOTP = async (email: string) => {
 };
 export const requestCheckOTP = async (otp: string) => {
   const { otp_token } = getOTPToken();
-  console.log(otp);
   try {
     const response = await apiInstance.post(
       "/users/verify-otp",
@@ -255,18 +256,9 @@ export const requestCheckOTP = async (otp: string) => {
         },
       }
     );
-    console.log(response);
-    if (response.status === 200) {
-      toast.success("Xác thực thành công. Vui lòng chờ trong gây lát", {
-        pauseOnHover: false,
-      });
-    } else {
-      toast.success("Xác thực không thành công. vui lòng nhập lại", {
-        pauseOnHover: false,
-      });
-    }
+    return response;
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 };
 
