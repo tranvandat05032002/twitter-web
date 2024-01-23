@@ -37,7 +37,7 @@ export const requestRegister = async (registerInfo: RegisterForm) => {
       refresh_token,
     });
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 };
 
@@ -54,7 +54,7 @@ export const requestVerifyEmail = async (email_token: string) => {
       refresh_token: data?.result.refresh_token,
     });
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 };
 
@@ -77,7 +77,7 @@ export const requestResendEmailToken = async () => {
       : toast.error("Email resent error!");
     // return response;
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 };
 
@@ -112,7 +112,7 @@ export const requestLogIn = async (signInInfo: LoginForm) => {
       });
     }
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 };
 
@@ -147,7 +147,7 @@ export const requestGetToken = async ({
       removeToken();
     }
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 };
 
@@ -178,7 +178,7 @@ export const requestFetchUserReload = async ({
       });
     }
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 };
 
@@ -205,7 +205,7 @@ export const requestLogout = async () => {
       });
     }
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 };
 
@@ -221,7 +221,7 @@ export const requestFindEmail = async (email: ForgotForm) => {
       return response?.data?.user;
     }
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 };
 
@@ -238,7 +238,7 @@ export const requestSendOTP = async (email: string) => {
       });
     }
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 };
 export const requestCheckOTP = async (otp: string) => {
@@ -288,7 +288,7 @@ export const requestResendOTP = async () => {
       });
     }
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 };
 
@@ -302,7 +302,7 @@ export const requestResetPassword = async (
       otp_password_token: otp_token,
     });
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 };
 
@@ -317,7 +317,7 @@ export const requestGetUserProfile = async (username: string) => {
       return;
     }
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 };
 export const requestUpdateUserProfile = async (userInfo: IUpdateUser) => {
@@ -344,6 +344,6 @@ export const requestUpdateUserProfile = async (userInfo: IUpdateUser) => {
     toast.error("Update failed", {
       pauseOnHover: false,
     });
-    console.log(error);
+    throw error;
   }
 };
