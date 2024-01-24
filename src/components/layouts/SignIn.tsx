@@ -6,14 +6,11 @@ import {
   TwitterIcon,
 } from "../SingleUseComponents";
 import {
-  AuthButtonFacebook,
-  AuthButtonGithub,
-  AuthButtonGoogle,
   ErrorMessage,
   Input,
-  PrimaryButton,
   ERROR_FORM_MESSAGES,
 } from "../common";
+import {GoogleButton, FacebookButton, PrimaryButton, GithubButton} from "../common/Button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -102,20 +99,24 @@ const SignInPage = () => {
         </div>
         <div className="pb-[13px]">
           <div className="grid grid-cols-1 gap-x-2 gap-y-1 sm:grid-cols-3">
-            <AuthButtonGoogle>
+            {/* <AuthButtonGoogle>
               <GoogleIconSignIn></GoogleIconSignIn>
               <p>Google</p>
-            </AuthButtonGoogle>
-            <AuthButtonGithub>
+            </AuthButtonGoogle> */}
+            <GoogleButton>
+            <GoogleIconSignIn></GoogleIconSignIn>
+              <p>Google</p>
+            </GoogleButton>
+            <GithubButton>
               {" "}
               <GithubIcon></GithubIcon>
               <p>Github</p>
-            </AuthButtonGithub>
-            <AuthButtonFacebook>
+            </GithubButton>
+            <FacebookButton>
               {" "}
               <FacebookIcon></FacebookIcon>
               <p>Facebook</p>
-            </AuthButtonFacebook>
+            </FacebookButton>
           </div>
         </div>
         <PrimaryButton

@@ -1,7 +1,7 @@
 import React from "react";
 import { BsChevronDown } from "react-icons/bs";
 import Link from "next/link";
-import { GhostButton, PrimaryButton } from "@/components/common";
+import { GhostButton, PrimaryButton } from "@/components/common/Button";
 import {
   AppleIcon,
   GoogleIcon,

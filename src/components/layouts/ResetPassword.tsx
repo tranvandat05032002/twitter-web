@@ -3,9 +3,7 @@ import { useRouter } from "next/navigation";
 import {
   ERROR_FORM_MESSAGES,
   ErrorMessage,
-  GhostButton,
   Input,
-  PrimaryButton,
 } from "@/components/common";
 import { TwitterIcon } from "@/components/SingleUseComponents";
 import { useForm } from "react-hook-form";
@@ -14,9 +12,10 @@ import * as yup from "yup";
 import { isObjectEmpty } from "@/utils/handlers";
 import { removeEmailCookies, removeOTPToken } from "@/utils/auth/cookies";
 import { toast } from "react-toastify";
-import { Routers } from "@/utils/router/routers";
+import { routers } from "@/utils/router/routers";
 import { ResetPasswordForm } from "@/app/users/reset-password/page";
 import { useResetPassword } from "@/hooks/users/useMutation";
+import { GhostButton, PrimaryButton } from "../common/Button";
 const schemaValidator = yup.object().shape({
   password: yup
     .string()
@@ -60,7 +59,7 @@ const ResetPasswordPage = () => {
   const handleCancel = () => {
     removeEmailCookies();
     removeOTPToken();
-    router.push(Routers.signInPage);
+    router.push(routers.signInPage);
   };
   const handleResetPassword = React.useCallback(
     async (values: ResetPasswordForm) => {
@@ -76,7 +75,7 @@ const ResetPasswordPage = () => {
       toast.success("Đổi mật khẩu thành công!", {
         pauseOnHover: false,
       });
-      router.push(Routers.signInPage);
+      router.push(routers.signInPage);
     }
   }, [isSuccess]);
   return (

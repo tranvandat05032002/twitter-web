@@ -7,7 +7,7 @@ import {
 } from "../SingleUseComponents/Icon";
 import { NAVIGATION_ITEMS } from "@/utils/constant/constants";
 import Link from "next/link";
-import { PrimaryButton } from "../common";
+import { PrimaryButton } from "../common/Button";
 import { routers } from "@/utils/router/routers";
 import Tippy from "@tippyjs/react/headless";
 import { IUser } from "@/types/userTypes";
@@ -27,6 +27,7 @@ const LeftSidebar: React.FC<ILeftSidebar> = (props) => {
       ? "bg-[rgba(29,155,240,0.2)] hover:bg-[rgba(29,155,240,0.2)] font-bold"
       : "";
   };
+  console.log("Running left sidebar")
   const handleLogout = async () => {
     mutateLogout();
     router.push(routers.mainLayoutPage);
@@ -118,4 +119,4 @@ const LeftSidebar: React.FC<ILeftSidebar> = (props) => {
   );
 };
 
-export default LeftSidebar;
+export default React.memo(LeftSidebar);

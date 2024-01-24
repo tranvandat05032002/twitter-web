@@ -1,5 +1,5 @@
 import React from "react";
-import { PrimaryButton, StickyNav } from "../common";
+import { StickyNav } from "../common";
 import {
   CommentIcon,
   DotIcon,
@@ -9,6 +9,7 @@ import {
   StatsIcon,
 } from "../SingleUseComponents/Icon";
 import { LuShare } from "react-icons/lu";
+import { PrimaryButton } from "../common/Button";
 
 const HomeLayout = () => {
   return (

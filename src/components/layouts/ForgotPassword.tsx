@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { GhostButton, PrimaryButton } from "@/components/common";
+import { GhostButton, PrimaryButton } from "@/components/common/Button";
 import { TwitterIcon } from "@/components/SingleUseComponents";
 import { getEmailCookies, removeEmailCookies } from "@/utils/auth/cookies";
 import { normalizeEmail } from "@/utils/handlers";

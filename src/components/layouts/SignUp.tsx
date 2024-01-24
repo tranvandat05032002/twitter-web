@@ -7,7 +7,6 @@ import {
   ERROR_FORM_MESSAGES,
   ErrorMessage,
   Input,
-  PrimaryButton,
 } from "@/components/common";
 import { DateOfBirth } from "@/components/SingleUseComponents";
 import { useDateStore } from "@/store";
@@ -18,6 +17,7 @@ import { RegisterForm } from "@/types/userTypes";
 import { isObjectEmpty, formatISO8601 } from "@/utils/handlers";
 import { routers } from "@/utils/router/routers";
 import { useRegister } from "@/hooks/users/useMutation";
+import { PrimaryButton } from "../common/Button";
 const schemaValidator = yup.object().shape({
   name: yup.string().required(ERROR_FORM_MESSAGES.userNameRequired),
   email: yup

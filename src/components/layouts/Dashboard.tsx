@@ -15,7 +15,7 @@ import {
 import { jwtDecode } from "jwt-decode";
 import { useGetToken, useLogoutUser } from "@/hooks/users/useMutation";
 import BackSignInModal from "../common/Modal/BackSignInModal";
-import { GhostButton } from "../common";
+import { GhostButton } from "../common/Button";
 import { IUser } from "@/types/userTypes";
 
 interface IDashboard {

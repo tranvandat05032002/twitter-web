@@ -1,10 +1,10 @@
 "use-client";
 import React from "react";
 import { useRouter } from "next/navigation";
-import { GhostButton, PrimaryButton } from "..";
-import { Type } from "./Button";
 import { removeEmailCookies, removeOTPToken } from "@/utils/auth/cookies";
 import { routers } from "@/utils/router/routers";
+import { Type } from "@/types/buttonTypes";
+import { PrimaryButton, GhostButton } from ".";
 
 interface IConditionalButton {
   handleRequest?: () => void;

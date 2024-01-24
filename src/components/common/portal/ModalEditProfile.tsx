@@ -3,6 +3,7 @@ import React from "react";
 import Portal from "./Portal";
 import dynamic from "next/dynamic";
 import LoadingPage from "../Loading/LoadingPage";
+import OverlayModal from "../Modal/OverlayModal";
 const DynamicEditProfile = dynamic(
   () => import("@/components/layouts/EditProfile"),
   {
@@ -14,9 +15,9 @@ const DynamicEditProfile = dynamic(
 const ModalEditProfile = () => {
   return (
     <div>
-        <Portal>
-          <DynamicEditProfile></DynamicEditProfile>
-        </Portal>
+      <OverlayModal>
+        <DynamicEditProfile></DynamicEditProfile>
+      </OverlayModal>
     </div>
   );
 };
