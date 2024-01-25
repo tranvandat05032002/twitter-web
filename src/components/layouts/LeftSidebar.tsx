@@ -27,7 +27,6 @@ const LeftSidebar: React.FC<ILeftSidebar> = (props) => {
       ? "bg-[rgba(29,155,240,0.2)] hover:bg-[rgba(29,155,240,0.2)] font-bold"
       : "";
   };
-  console.log("Running left sidebar")
   const handleLogout = async () => {
     mutateLogout();
     router.push(routers.mainLayoutPage);

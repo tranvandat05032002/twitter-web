@@ -12,7 +12,7 @@ function getButtonClass(typeButton: string): string {
         case "ghost":
             return "bg-transparent border font-semibold transition-all hover:no-underline hover:bg-[rgba(29,155,240,0.1)] flex items-center justify-center border-[#536472] text-[#1d9bf0]";
         case "OAuth":
-            return "w-full rounded-lg bg-transparent border flex items-center hover:bg-[#161616] border border-[#333639] hover:scale-105 transition-all font-medium gap-x-[10px] justify-center px-5 py-3 text-[#71767b] shadow";
+            return "w-full rounded-lg bg-transparent border flex items-center hover:bg-[#161616] border border-[#333639] hover:scale-105 hover:no-underline transition-all font-medium gap-x-[10px] justify-center px-5 py-3 text-[#71767b] shadow";
         case "logout":
             return "w-max rounded-lg bg-yellow-500 px-5 py-3 border border-[#333639] text-white";
         default:
