@@ -15,4 +15,6 @@ export const useFetchMe = () =>
 export const useGetProfile = (username: string) =>
   useQuery(["profile"], () => requestGetUserProfile(username), {
     refetchOnWindowFocus: false,
+    staleTime: 1 * 60 * 1000,
+    // refetchInterval: 3000
   });

@@ -107,7 +107,13 @@ export const useResetPassword = () =>
   });
 
 export const useUpdateUser = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (userInfo: IUpdateUser) => requestUpdateUserProfile(userInfo),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["profile"],
+      });
+    },
   });
 };

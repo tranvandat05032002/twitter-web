@@ -335,15 +335,8 @@ export const requestUpdateUserProfile = async (userInfo: IUpdateUser) => {
         },
       }
     );
-    if (response.status === 200) {
-      toast.success("Update success!", {
-        pauseOnHover: false,
-      });
-    }
+    return response;
   } catch (error) {
-    toast.error("Update failed", {
-      pauseOnHover: false,
-    });
     throw error;
   }
 };

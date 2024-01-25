@@ -1,5 +1,5 @@
 import React from "react";
-import { GhostButton, StickyNav } from "../common";
+import { StickyNav } from "../common";
 import {
   BackIcon,
   CalendarIcon,
@@ -13,6 +13,7 @@ import { formatMonthYear } from "@/utils/handlers";
 import { useEvent } from "@/store/useEven";
 import ModalEditProfile from "../common/portal/ModalEditProfile";
 import { useGetProfile } from "@/hooks/users/useQuery";
+import { GhostButton } from "../common/Button";
 type TParams = {
   username: string;
 };
