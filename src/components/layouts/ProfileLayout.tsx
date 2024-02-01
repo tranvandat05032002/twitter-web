@@ -85,7 +85,7 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
           </div>
           <div className="w-[134px] h-[134px] absolute bottom-0 left-4 translate-y-1/2 cursor-pointer">
             <img
-              src="/image/avatar.jpg"
+              src={dataUserProfile?.avatar}
               alt="avatar"
               className="w-full h-full rounded-full object-cover border-4 border-black"
             />

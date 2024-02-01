@@ -2,7 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/ReactToastify.css";
-import { Roboto } from "@next/font/google";
+import { Roboto } from "next/font/google";
 import QueryClientLayoutProvider from "./QueryClientProvider";
 
 const roboto = Roboto({
@@ -24,6 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       {/* <meta httpEquiv="Cross-Origin-Opener-Policy" content="same-origin"></meta> */}
+      {/* add link stop preload page */}
       <body className={roboto.className} suppressHydrationWarning={true}>
         <QueryClientLayoutProvider>
           {children}

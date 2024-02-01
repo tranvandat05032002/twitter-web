@@ -6,19 +6,26 @@ import {
   DotIcon,
 } from "../SingleUseComponents/Icon";
 import { SecondaryButton } from "../common/Button";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import Tippy from "@tippyjs/react";
 import { formatISO8601, formatMonthDayYear } from "@/utils/handlers";
 import { DateOfBirth } from "../SingleUseComponents";
-import { MenuItem, SelectChangeEvent } from "@mui/material";
+import { Avatar, MenuItem, SelectChangeEvent } from "@mui/material";
 import { useDateStore } from "@/store";
 import { useEvent } from "@/store/useEven";
 import { IUpdateUser } from "@/types/userTypes";
-import { useUpdateUser } from "@/hooks/users/useMutation";
+import { useUpdateUser, useUploadImage } from "@/hooks/users/useMutation";
 import { toast } from "react-toastify";
+import { v4 as uuidv4 } from "uuid"
+import UploadImage from "./UploadImage";
+import { useProfileStore } from "@/store/useProfile";
+import CropEasy from "../common/CropImage/CropEasy";
+import { apiInstance } from "@/utils/api";
+import { getToken } from "@/utils/auth/cookies";
 const EditProfile = () => {
   const {
     control,
+    watch,
     handleSubmit,
     setValue,
     formState: { isValid },
@@ -30,14 +37,19 @@ const EditProfile = () => {
       location: "",
       website: "",
       date_of_birth: "",
-      avatar:
-        "https://photo-cms-tpo.epicdn.me/w890/Uploaded/2023/zatmzz/2015_11_12/1_NBBR.jpg",
+      avatar: ""
     },
   });
   const { day, month, year, setDay, setMonth, setYear, setISO8601 } =
     useDateStore((state) => state);
-  const { mutate: mutateUpdateUser, isSuccess, isError } = useUpdateUser();
+  const { mutateAsync: mutateUpdateUser, isSuccess, isError } = useUpdateUser();
   const { setShowModal } = useEvent((state) => state);
+  const { userProfile } = useProfileStore(
+    (state) => state
+  );
+  const [file, setFile] = React.useState<File | null>(null);
+  const [photoURL, setPhotoURL] = React.useState<string | null>(userProfile?.avatar as string);
+  const [openCrop, setOpenCrop] = React.useState<Boolean | false>(false);
   const date = new Date();
   const lastYear = date.getFullYear();
   const dayItem = generateMenuItems({ start: 1, end: 31 });
@@ -71,25 +83,67 @@ const EditProfile = () => {
     },
     [setYear]
   );
-  const handleUpdateUser = React.useCallback((values: IUpdateUser) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("Running handle change")
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0] as File
+      setFile(file)
+      setValue("avatar", URL.createObjectURL(file))
+      setPhotoURL(URL.createObjectURL(file));
+      setOpenCrop(true)
+    }
+  }
+  const handleUpdateUser = React.useCallback(async (values: IUpdateUser) => {
     if (!isValid) return;
-    mutateUpdateUser(values);
-  }, [isValid, mutateUpdateUser]);
-  if (isSuccess) {
-    toast.success("Update success", {
-      pauseOnHover: false,
-    });
-    setTimeout(() => {
-      setShowModal(false)
-    }, 1000)
-  }
-  if (isError) {
-    toast.error("Update failed", {
-      pauseOnHover: false,
-    });
-  }
+    // upload file to S3
+    if (file) {
+      const imageFullName = uuidv4() + '.' + file?.name.split('.')?.pop()
+      const formData = new FormData();
+      formData.append("image", file as File, imageFullName);
+      const { access_token } = getToken();
+      try {
+        const response = await apiInstance.post(
+          "/medias/upload-image",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${access_token}`,
+            },
+          }
+        )
+        if (response.status === 200) {
+          const updatedValues = { ...values, avatar: response.data.result[0].url };
+          await mutateUpdateUser(updatedValues);
+        }
+      } catch (error) {
+        throw error
+      }
+    }
+  }, [isValid, mutateUpdateUser, file]);
+  React.useEffect(() => {
+    let timer1: NodeJS.Timeout | null = null;
+    if (isSuccess) {
+      toast.success("Update success", {
+        pauseOnHover: false,
+      });
+      timer1 = setTimeout(() => {
+        setShowModal(false)
+      }, 3000)
+    }
+    if (isError) {
+      toast.error("Update failed", {
+        pauseOnHover: false,
+      });
+    }
+    return () => {
+      if (timer1) {
+        clearTimeout(timer1)
+      }
+    }
+  }, [isSuccess, isError])
   return (
-    <form onSubmit={handleSubmit(handleUpdateUser)} autoComplete="off">
+    !openCrop ? (<form onSubmit={handleSubmit(handleUpdateUser)} autoComplete="off">
       <div className="max-w-[600px] w-[600px] bg-black max-h-[650px] h-[650px] overflow-auto rounded-2xl pb-4">
         <StickyNav>
           <div className="w-full h-full px-4 py-2 flex text-white items-center justify-between">
@@ -108,10 +162,6 @@ const EditProfile = () => {
           </div>
         </StickyNav>
         <div>
-          {/* <label htmlFor="avatar">
-                Photo
-              <Input control={control} type="file" name="avatar"></Input>
-            </label> */}
           <div>
             <div className="relative w-full max-h-[195px] h-[195px] mb-14">
               <div className="w-full h-full bg-black flex items-center justify-center">
@@ -127,16 +177,20 @@ const EditProfile = () => {
                     offset={[0, 2]}
                     className="z-[30] bg-black/70 text-white text-xs p-1 rounded-sm"
                   >
-                    <div className="cursor-pointer p-[10px] w-max h-max bg-black/50 hover:bg-black/30 transition duration-200 group rounded-full">
-                      <CameraPlusIcon className="text-white bg-black/10 "></CameraPlusIcon>
-                    </div>
+                    <React.Fragment>
+                      <Input type="file" accept="image/*" onChange={handleChange} control={control} id="avatar" name="avatar" className="hidden cursor-pointer border border-red-500" />
+                      <label htmlFor="avatar">
+                        <div className="cursor-pointer p-[10px] w-max h-max bg-black/50 hover:bg-black/30 transition duration-200 group rounded-full">
+                          <CameraPlusIcon className="text-white bg-black/10 cursor-pointer" />
+                        </div>
+                      </label>
+                    </React.Fragment>
                   </Tippy>
                 </div>
-                <img
-                  src="/image/avatar.jpg"
-                  alt="avatar"
-                  className="w-full h-full rounded-full object-cover z-0"
-                />
+                <Avatar
+                  alt="Remy Sharp"
+                  src={photoURL as string}
+                  sx={{ width: 114, height: 114 }} />
               </div>
             </div>
             <div className="px-4">
@@ -212,7 +266,7 @@ const EditProfile = () => {
           </div>
         </div>
       </div>
-    </form>
+    </form>) : <CropEasy {...{ photoURL, setOpenCrop, setPhotoURL, setFile }} />
   );
 };
 
