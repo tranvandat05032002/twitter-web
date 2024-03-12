@@ -31,7 +31,7 @@ function decodedUsername(username: string) {
 const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
   const router = useRouter();
   const username = decodedUsername(params.username);
-  const { userProfile, statusUpdate, setUserProfile } = useProfileStore(
+  const { userProfile, updateProfile } = useProfileStore(
     (state) => state
   );
   const { data: dataUserProfile, isSuccess } = useGetProfile(username);
@@ -54,10 +54,9 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
     // setShowModal(!statusUpdate)
     if (isSuccess) {
       if (!dataUserProfile) return;
-      setUserProfile(dataUserProfile);
+      updateProfile(dataUserProfile);
     }
   }, [isSuccess]);
-
   return (
     <React.Fragment>
       <StickyNav>
@@ -69,26 +68,29 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
             ></BackIcon>
           </div>
           <div>
-            <h2 className="text-xl font-bold">{dataUserProfile?.name}</h2>
+            <h2 className="text-xl font-bold">{userProfile?.name}</h2>
             <p className="text-textGray text-sm font-light">0 posts</p>
           </div>
         </div>
       </StickyNav>
       <div className="flex flex-col h-screen overflow-auto">
         <div className="relative w-full h-[200px] z-0">
-          <div className="absolute w-full h-full top-0 left-0">
-            <img
-              src="/image/avatar.jpg"
+          <div className="absolute w-full h-full top-0 left-0 bg-borderGrayPrimary">
+            {userProfile.cover_photo && <img
+              src={userProfile.cover_photo}
               alt=""
-              className="w-full h-full object-cover"
-            />
+              className="w-full h-full object-cover cursor-pointer"
+            />}
           </div>
           <div className="w-[134px] h-[134px] absolute bottom-0 left-4 translate-y-1/2 cursor-pointer">
-            <img
-              src={dataUserProfile?.avatar}
-              alt="avatar"
-              className="w-full h-full rounded-full object-cover border-4 border-black"
-            />
+            <div className="group absolute inset-0 rounded-full">
+              <img
+                src={userProfile.avatar}
+                alt={userProfile.name}
+                className="w-full h-full rounded-full object-cover border-4 border-black"
+              />
+            <div className="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 rounded-full transition-opacity"></div>
+            </div>
           </div>
         </div>
         <div className="w-full px-4">
@@ -103,24 +105,24 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
             </div>
             <div className="flex flex-col items-start text-sm gap-y-4">
               <div>
-                <h2 className="text-base font-bold">{dataUserProfile?.name}</h2>
+                <h2 className="text-base font-bold">{userProfile?.name}</h2>
                 <span className="text-textGray">
-                  {dataUserProfile?.username}
+                  {userProfile?.username}
                 </span>
               </div>
-              <div>{dataUserProfile?.bio}</div>
+              <div>{userProfile?.bio}</div>
               <div className="flex items-center gap-x-4">
-                {dataUserProfile?.location && (
+                {userProfile?.location && (
                   <div className="flex text-textGray">
                     <LocationIcon />
-                    <span>{dataUserProfile?.location}</span>
+                    <span>{userProfile?.location}</span>
                   </div>
                 )}
-                {dataUserProfile?.website && (
+                {userProfile?.website && (
                   <div className="flex text-textGray">
                     <LinkIcon />
-                    <a href={dataUserProfile?.website}>
-                      {dataUserProfile?.website.slice(0, 33) + "..."}
+                    <a href={userProfile?.website}>
+                      {userProfile?.website.slice(0, 33) + "..."}
                     </a>
                   </div>
                 )}
@@ -129,7 +131,7 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
                   <span>
                     Joined{" "}
                     {formatMonthYear(
-                      dataUserProfile?.created_at?.toString() as string
+                      userProfile?.created_at?.toString() as string
                     )}
                   </span>
                 </div>

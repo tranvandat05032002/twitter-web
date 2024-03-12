@@ -7,6 +7,7 @@ import {
   BsThreeDots,
   BsDot,
   BsArrowLeft,
+  BsArrowLeftShort
 } from "react-icons/bs";
 import { BiHomeHeart, BiSearch, BiHeart } from "react-icons/bi";
 import { TbCameraPlus, TbMessageCircle } from "react-icons/tb";
@@ -24,6 +25,7 @@ import { RiFileListLine } from "react-icons/ri";
 import { LiaUserFriendsSolid, LiaCalendarSolid } from "react-icons/lia";
 import { RxTwitterLogo } from "react-icons/rx";
 import { FaFacebookF, FaGithub, FaRetweet } from "react-icons/fa";
+import { HiMiniMagnifyingGlassMinus, HiMiniMagnifyingGlassPlus } from "react-icons/hi2";
 import { useEvent } from "@/store/useEven";
 interface IIcon {
   size?: "big" | "small";
@@ -285,6 +287,15 @@ export const BackIcon: React.FC<IIcon> = (props) => {
     />
   );
 };
+export const BackIconShort: React.FC<IIcon> = (props) => {
+  const { className, onClick } = props;
+  return (
+    <BsArrowLeftShort
+      onClick={onClick}
+      className={`w-[19px] h-[19px] ${className}`}
+    />
+  );
+};
 export const CloseIcon: React.FC<IIcon> = (props) => {
   const { setShowModal } = useEvent((state) => state);
   const handleClose = () => {
@@ -296,6 +307,30 @@ export const CloseIcon: React.FC<IIcon> = (props) => {
       onClick={handleClose}
       className={`w-[19px] h-[19px] ${className}`}
     ></MdClose>
+  );
+};
+export const CloseExternalEventIcon: React.FC<IIcon> = (props) => {
+  const { className } = props;
+  return (
+    <MdClose
+      className={`w-[19px] h-[19px] ${className}`}
+    ></MdClose>
+  );
+};
+export const PlusIcon: React.FC<IIcon> = (props) => {
+  const { className } = props;
+  return (
+    <HiMiniMagnifyingGlassPlus
+      className={`w-[19px] h-[19px] ${className}`}
+    ></HiMiniMagnifyingGlassPlus>
+  );
+};
+export const MinusIcon: React.FC<IIcon> = (props) => {
+  const { className } = props;
+  return (
+    <HiMiniMagnifyingGlassMinus
+      className={`w-[19px] h-[19px] ${className}`}
+    ></HiMiniMagnifyingGlassMinus>
   );
 };
 export const CameraPlusIcon: React.FC<IIcon> = (props) => {

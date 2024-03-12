@@ -6,7 +6,7 @@ import {
   VerifiedIcon,
   NotificationIcon,
   CommunityIcon,
-} from "../../components/SingleUseComponents/Icon";
+} from "../components/SingleUseComponents/Icon";
 export const NAVIGATION_ITEMS = [
   {
     title: "Home",

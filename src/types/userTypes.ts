@@ -14,7 +14,7 @@ export interface IUser {
   _id?: string;
   name: string;
   email: string;
-  date_of_birth: Date;
+  date_of_birth: string;
   created_at?: Date;
   updated_at?: Date;
   verify?: number;
@@ -33,6 +33,7 @@ export interface IUpdateUser {
   website?: string;
   location?: string;
   date_of_birth?: string;
+  cover_photo?: string;
 }
 
 export interface IToken {
