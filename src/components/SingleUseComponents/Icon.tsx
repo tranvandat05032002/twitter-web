@@ -7,12 +7,14 @@ import {
   BsThreeDots,
   BsDot,
   BsArrowLeft,
-  BsArrowLeftShort
+  BsArrowLeftShort,
+  BsFillEmojiSmileFill
 } from "react-icons/bs";
-import { BiHomeHeart, BiSearch, BiHeart } from "react-icons/bi";
+import { BiHomeHeart, BiSearch, BiHeart, BiSolidLike } from "react-icons/bi";
+import { FaPenToSquare, FaMagnifyingGlass, FaPhone, FaCircleExclamation,FaCirclePlus } from "react-icons/fa6";
 import { TbCameraPlus, TbMessageCircle } from "react-icons/tb";
 import { PiBellRinging } from "react-icons/pi";
-import { IoIosStats } from "react-icons/io";
+import { IoIosStats, IoMdImages } from "react-icons/io";
 import { LuShare } from "react-icons/lu";
 import { MdClose } from "react-icons/md";
 import { AiOutlineLink } from "react-icons/ai";
@@ -21,11 +23,15 @@ import {
   HiOutlineDotsCircleHorizontal,
   HiOutlineLocationMarker,
 } from "react-icons/hi";
-import { RiFileListLine } from "react-icons/ri";
+import {
+  HiMiniGif,
+  HiMiniPaperAirplane 
+} from "react-icons/hi2";
+import { RiFileListLine, RiEmojiStickerFill } from "react-icons/ri";
 import { LiaUserFriendsSolid, LiaCalendarSolid } from "react-icons/lia";
 import { RxTwitterLogo } from "react-icons/rx";
 import { FaFacebookF, FaGithub, FaRetweet } from "react-icons/fa";
-import { HiMiniMagnifyingGlassMinus, HiMiniMagnifyingGlassPlus } from "react-icons/hi2";
+import { HiMiniMagnifyingGlassMinus, HiMiniMagnifyingGlassPlus, HiMiniVideoCamera } from "react-icons/hi2";
 import { useEvent } from "@/store/useEven";
 interface IIcon {
   size?: "big" | "small";
@@ -229,6 +235,54 @@ export const MoreIcon: React.FC<IIcon> = () => {
 export const DotsIcon: React.FC<IIcon> = (props) => {
   const { className } = props;
   return <BsThreeDots className={`w-[19px] h-[19px] ${className}`} />;
+};
+export const PenToSquareIcon: React.FC<IIcon> = (props) => {
+  const { className } = props;
+  return <FaPenToSquare className={`w-[19px] h-[19px] ${className}`} />;
+};
+export const MagnifyingGlassIcon: React.FC<IIcon> = (props) => {
+  const { className } = props;
+  return <FaMagnifyingGlass className={`w-[19px] h-[19px] ${className}`} />;
+};
+export const VideoCameraIcon: React.FC<IIcon> = (props) => {
+  const { className } = props;
+  return <HiMiniVideoCamera className={`w-[19px] h-[19px] ${className}`} />;
+};
+export const PhoneIcon: React.FC<IIcon> = (props) => {
+  const { className } = props;
+  return <FaPhone className={`w-[19px] h-[19px] ${className}`} />;
+};
+export const ExclamationIcon: React.FC<IIcon> = (props) => {
+  const { className } = props;
+  return <FaCircleExclamation className={`w-[19px] h-[19px] ${className}`} />;
+};
+export const CirclePlusIcon: React.FC<IIcon> = (props) => {
+  const { className } = props;
+  return <FaCirclePlus className={`w-[19px] h-[19px] ${className}`} />;
+};
+export const ImagesIcon: React.FC<IIcon> = (props) => {
+  const { className } = props;
+  return <IoMdImages className={`w-[19px] h-[19px] ${className}`} />;
+};
+export const StickerSlimeIcon: React.FC<IIcon> = (props) => {
+  const { className } = props;
+  return <RiEmojiStickerFill className={`w-[19px] h-[19px] ${className}`} />; 
+};
+export const GifIcon: React.FC<IIcon> = (props) => {
+  const { className } = props;
+  return <HiMiniGif className={`w-[19px] h-[19px] ${className}`} />; 
+};
+export const EmojiSmileFillIcon: React.FC<IIcon> = (props) => {
+  const { className } = props;
+  return <BsFillEmojiSmileFill className={`w-[19px] h-[19px] ${className}`} />; 
+};
+export const LikeIcon: React.FC<IIcon> = (props) => {
+  const { className } = props;
+  return <BiSolidLike className={`w-[19px] h-[19px] ${className}`} />; 
+};
+export const PaperAirplaneIcon: React.FC<IIcon> = (props) => {
+  const { className } = props;
+  return <HiMiniPaperAirplane className={`w-[19px] h-[19px] ${className}`} />; 
 };
 export const CalendarIcon: React.FC<IIcon> = () => {
   return (

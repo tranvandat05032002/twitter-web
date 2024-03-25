@@ -5,7 +5,7 @@ import {
   ProfileIcon,
   TwitterIconVerySmall,
 } from "../SingleUseComponents/Icon";
-import { NAVIGATION_ITEMS } from "@/utils/constant/constants";
+import { NAVIGATION_ITEMS } from "@/constant/constants";
 import Link from "next/link";
 import { PrimaryButton } from "../common/Button";
 import { routers } from "@/utils/router/routers";

@@ -13,7 +13,7 @@ import { PrimaryButton } from "../common/Button";
 
 const HomeLayout = () => {
   return (
-    <React.Fragment>
+    <div className="flex w-[600px] flex-col h-full min-h-screen border-r-[0.5px] border-borderGrayPrimary">
       <StickyNav>
         <div className="p-4">
           <h1 className="text-xl font-bold">Home</h1>
@@ -123,7 +123,7 @@ const HomeLayout = () => {
           </div>
         ))}
       </div>
-    </React.Fragment>
+    </div>
   );
 };
 

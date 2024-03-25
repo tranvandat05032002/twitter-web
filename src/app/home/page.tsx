@@ -12,6 +12,7 @@ const Home = () => {
   return (
     <DashboardPage>
       <DynamicHome></DynamicHome>
+      <div>This is search page</div>
     </DashboardPage>
   );
 };

@@ -14,9 +14,9 @@ import {
 } from "@/utils/auth/cookies";
 import { jwtDecode } from "jwt-decode";
 import { useGetToken, useLogoutUser } from "@/hooks/users/useMutation";
-import BackSignInModal from "../common/Modal/BackSignInModal";
 import { GhostButton } from "../common/Button";
 import { IUser } from "@/types/userTypes";
+import RightSidebar from "./RightSidebar";
 
 interface IDashboard {
   children: React.ReactNode;
@@ -71,13 +71,9 @@ const DashboardPage: React.FC<IDashboard> = (props) => {
             showModal ? "h-screen" : "h-full"
           }`}
         >
-          <div className="max-w-screen-xl w-full h-full flex relative">
+          <div className="max-w-screen-xl w-full h-full flex">
             <LeftSidebar userInfo={userInfo}></LeftSidebar>
-            {/*change*/}
-            <main className="ml-[288px] w-[600px] flex flex-col h-full min-h-screen border-r-[0.5px] border-borderGrayPrimary">
-              {children}
-            </main>
-            <section className="">Search layout</section>
+            <RightSidebar>{children}</RightSidebar>
           </div>
         </div>
       ) : (

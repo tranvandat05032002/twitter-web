@@ -25,8 +25,12 @@ const config: Config = {
         textGreen: "#00ba7c",
         textPinkPrimary: "#f91880",
 
+        iconBackgroundGray: "#161616",
+        iconHoverBackgroundGray: "#2e2f30",
+
         bgHoverWhite: "#e0e0e0",
         bgHoverBlue: "rgba(29,155,240,0.1)",
+        bgActiveBlue: "rgba(29,155,240,0.2)",
         bgMain: "rgba(71,74,77,0.3)",
         bgBtnSecondary: "#eff3f4",
 
