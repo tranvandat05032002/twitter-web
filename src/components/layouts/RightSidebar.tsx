@@ -5,7 +5,7 @@ interface IRightSidebar {
 const RightSidebar: React.FC<IRightSidebar> = (props) => {
   const { children } = props;
   return (
-    <div className="ml-[288px] flex">{children}</div>
+    <div className="ml-[288px] flex w-full min-h-screen">{children}</div>
   );
 };
 
