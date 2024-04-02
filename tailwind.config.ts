@@ -38,6 +38,8 @@ const config: Config = {
         bgBtnSecondary: "#eff3f4",
         bgPinkGhost: "#f4212e",
         bgBlueFocus: "#1D9BF0",
+        bgGray16181c: "#16181c", 
+        bgHoverGray: "rgba(255, 255, 255, 0.03)",
 
         borderGrayPrimary: "#333639",
         borderGraySecond: "#536473",

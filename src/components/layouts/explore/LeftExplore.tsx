@@ -6,6 +6,7 @@ import { GhostButton } from '@/components/common/Button';
 import Link from 'next/link';
 import { usePathname, useRouter } from "next/navigation"
 import React from 'react';
+import ItemUser from './ItemUser';
 const user_follow = [
     {
         id: 1,
@@ -13,7 +14,6 @@ const user_follow = [
     }
 ]
 const LeftExplore = () => {
-    const [isHover, setIsHover] = React.useState<Boolean>(false);
     const [showClose, setShowClose] = React.useState<Boolean>(false);
     const [searchValue, setSearchValue] = React.useState<String>("");
     const inputRef = React.useRef<HTMLInputElement>(null);
@@ -24,9 +24,6 @@ const LeftExplore = () => {
             ? "text-white py-4 px-2 border-b-[3px] box-border border-textBlue transition"
             : "";
     };
-    const handleChange = () => {
-        setIsHover((prev) => !prev);
-    }
     const handleBack = () => {
         router.back();
     }
@@ -130,57 +127,14 @@ const LeftExplore = () => {
             <div className="py-4 border-t-[1px] border-borderGrayPrimary">
                 {user_follow.length > 0 ? <div className="w-full h-full">
                     <div className="w-full transition-all">
-                        <div className="w-full flex items-center cursor-pointer select-none justify-between text-sm py-[10px] my-[2px] px-2 hover:bg-iconBackgroundGray rounded-[5px]">
-                            <div className=" w-full flex items-start gap-x-2">
-                                <div className="w-10 h-10 mt-[6px] overflow-hidden rounded-full group relative">
-                                    <div className="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 rounded-full transition-opacity"></div>
-                                    <img
-                                        src="/image/avatar.jpg"
-                                        className="w-full h-full object-cover"
-                                    />
-                                </div>
-                                {/* <div className="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 rounded-full transition-opacity"></div> */}
-                                <div className="w-full ">
-                                    <div className="flex items-center justify-between">
-                                        <div>
-                                            <p className="font-semibold text-base">Trần Văn Đạt</p>
-                                            <p className="max-w-[180px] whitespace-nowrap text-ellipsis overflow-hidden font-normal text-[15px] text-textGray">@tranvandatevondev</p>
-                                        </div>
-                                        <button className="rounded-full bg-white text-textBlack transition-all hover:bg-bgHoverWhite/80 font-bold px-4 py-1 text-[15px]">
-                                            Follow
-                                        </button>
-                                    </div>
-                                    <p className="font-normal text-[15px]">📞 Hotline : +84 888847346 ✉️ hieutai.contact@gmail.com Support Facebook, Instagram, Google</p>
-                                </div>
-                            </div>
-                        </div>
+                        <ItemUser isFollow = {false}/>
+                        <ItemUser isFollow = {false}/>
+                        <ItemUser isFollow = {false}/>
                     </div>
                     {
                         Array.from({ length: 20 }).map((item: any, index) =>
                             <div className="w-full transition-all" key={index}>
-                                <div className="w-full flex items-center cursor-pointer select-none justify-between text-sm py-[10px] my-[2px] px-2 hover:bg-iconBackgroundGray rounded-[5px]">
-                                    <div className=" w-full flex items-start gap-x-2">
-                                        <div className="w-10 h-10 mt-[6px] overflow-hidden rounded-full group relative">
-                                            <div className="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 rounded-full transition-opacity"></div>
-                                            <img
-                                                src="/image/avatar.jpg"
-                                                className="w-full h-full object-cover"
-                                            />
-                                        </div>
-                                        <div className="w-full ">
-                                            <div className="flex items-center justify-between">
-                                                <div>
-                                                    <p className="font-semibold text-base">Trần Văn Đạt</p>
-                                                    <p className="max-w-[180px] whitespace-nowrap text-ellipsis overflow-hidden font-normal text-[15px] text-textGray">@tranvandatevondev</p>
-                                                </div>
-                                                <button onMouseEnter={handleChange} onMouseLeave={handleChange} className={`rounded-full ${!isHover ? "bg-transparent border-[0.5px] border-[#333639] text-white" : "bg-bgPinkGhost/20 border-[0.5px] border-bgPinkGhost/40 text-bgPinkGhost"} font-bold px-4 py-1 text-[15px]`}>
-                                                    {isHover ? "Unfollow" : "Following"}
-                                                </button>
-                                            </div>
-                                            <p className="font-normal text-[15px]">📞 Hotline : +84 888847346 ✉️ hieutai.contact@gmail.com Support Facebook, Instagram, Google</p>
-                                        </div>
-                                    </div>
-                                </div>
+                                <ItemUser isFollow = {true}/>
                             </div>
                         )
                     }

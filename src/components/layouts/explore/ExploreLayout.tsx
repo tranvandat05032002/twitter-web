@@ -4,7 +4,7 @@ import RightExplore from './RightExplore';
 
 const ExploreLayout = () => {
     return (
-        <div className='flex border border-red-500 w-full'>
+        <div className='flex w-full'>
             <LeftExplore></LeftExplore>
             <RightExplore></RightExplore>
         </div>
