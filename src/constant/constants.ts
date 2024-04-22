@@ -44,3 +44,15 @@ export const NAVIGATION_ITEMS = [
     href: "/verified-choose",
   },
 ];
+export const EXPLORE_ITEMS = [
+  {
+    id: 1,
+    title: "All",
+    mode: "all"
+  }, 
+  {
+    id: 2,
+    title: "Following",
+    mode: "following"
+  }
+]

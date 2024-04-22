@@ -23,6 +23,7 @@ import { toast } from "react-toastify";
 import { useUserInfo } from "@/store/useUserInfo";
 import { ForgotForm } from "@/app/users/find-account/page";
 import { ResetPasswordForm } from "@/app/users/reset-password/page";
+import { AxiosInstance } from "axios";
 export const requestRegister = async (registerInfo: RegisterForm) => {
   try {
     const { data } = await apiInstance.post<TRequestToken<IToken>>(
@@ -340,3 +341,44 @@ export const requestUpdateUserProfile = async (userInfo: IUpdateUser) => {
     throw error;
   }
 };
+export interface ISearchUser {
+  query: String,
+  limit: number,
+  page: number,
+  follow?: "on" | "off"
+}
+export const requestSearchUser = async (infoSearch: ISearchUser) => {
+  const {limit, query, page, follow} = infoSearch
+  const {access_token} = getToken()
+  try {
+    const response = await apiInstance.get(`/search/people?name=${query}&page=${page}&limit=${limit}&people_follow=${follow}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+      return response.data.result.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const requestGetUsersFollowing = async (signal?: AbortSignal) => {
+  const {access_token} = getToken()
+  try {
+    const response = await apiInstance.get(`/users/v1/follow`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      },
+      signal
+    });
+    console.log(response)
+      return {
+        data: response.data.users,
+        total: response.data.total
+      }
+  } catch (error) {
+    throw error;
+  }
+}

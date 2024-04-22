@@ -26,6 +26,8 @@ export interface IUser {
   cover_photo?: string;
 }
 
+export type UserSearchType = Omit<IUser , 'created_at' | 'updated_at' | 'verify'>
+
 export interface IUpdateUser {
   name?: string;
   avatar?: string;

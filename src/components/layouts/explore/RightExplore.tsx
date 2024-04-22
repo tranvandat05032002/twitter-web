@@ -1,14 +1,18 @@
+"use client"
 import React from 'react';
 import ItemUser from './ItemUser';
+import { useGetUsersFollowing } from '@/hooks/users/useQuery';
 const RightExplore = () => {
+    const usersFollowing = useGetUsersFollowing();
+    const dataGetUsersFollowing = usersFollowing.data
     return (
         <div className="max-w-[380px] h-full flex flex-col">
             <div className="ml-[30px] mt-3 mr-3 rounded-xl bg-bgGray16181c">
                 <div className="w-full">
-                    <h3 className="text-xl font-bold px-[15px] py-[12px]">Who to follow</h3>
+                    <h3 className="text-xl font-bold px-[15px] py-[12px]">Who to follow ({dataGetUsersFollowing?.total})</h3>
                     <div className="flex flex-col">
-                        {Array.from({ length: 5 }).map((item: any, index) =>
-                            <ItemUser key={index} miniItem={true} isFollow={true} />
+                        {dataGetUsersFollowing?.data.map((user: any) =>
+                            <ItemUser data={user?.followUsers} key={user._id} miniItem={true} isFollow={true} />
                         )}
                     </div>
                     <button className="cursor-pointer px-[15px] text-[15px] font-normal text-bgBlueFocus py-[14px] w-full hover:bg-bgHoverGray bg-transparent transition-all text-start">
