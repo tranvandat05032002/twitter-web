@@ -20,7 +20,7 @@ const AvatarProfile = ({image, changeImage, control}: IAvatar) => {
                     className="z-[30] bg-black/70 text-white text-xs p-1 rounded-sm"
                   >
                     <React.Fragment>
-                      <Input type="file" accept="image/*" onChange={changeImage} control={control} id="avatar" name="avatar" className="hidden cursor-pointer border border-red-500" />
+                      <Input type="file" accept="image/*" onChange={changeImage} control={control} id="avatar" name="avatar" className="hidden cursor-pointer" />
                       <label htmlFor="avatar">
                         <div className="cursor-pointer p-[10px] w-max h-max bg-black/50 hover:bg-black/30 transition duration-200 group rounded-full">
                           <CameraPlusIcon className="text-white bg-black/10 cursor-pointer" />

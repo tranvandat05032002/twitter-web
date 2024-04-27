@@ -9,7 +9,7 @@ import {
 import { SecondaryButton } from "../common/Button";
 import { useForm, Controller } from "react-hook-form";
 import Tippy from "@tippyjs/react";
-import { formatISO8601, formatMonthDayYear } from "@/utils/handlers";
+import { formatISO8601, formatMonthDayYear, uploadImageToS3 } from "@/utils/handlers";
 import { DateOfBirth } from "../SingleUseComponents";
 import { Avatar, MenuItem, SelectChangeEvent } from "@mui/material";
 import { useDateStore } from "@/store";
@@ -90,8 +90,7 @@ const EditProfile = () => {
     },
     [setYear]
   );
-  const handleChangeAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("Running handle change")
+  const handleChangeAvatar = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0] as File
       setFile(file)
@@ -100,67 +99,32 @@ const EditProfile = () => {
       setOpenCrop(true)
     }
   }
-  const handleChangeCoverPhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeCoverPhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0] as File
       setFileCoverPhoto(file)
       setValue("cover_photo", URL.createObjectURL(file))
-      setCoverPhotoURL(URL.createObjectURL(file));
+      const coverPhotoResult = await uploadImageToS3(file, "coverPhoto", "cover-photo")
+      setCoverPhotoURL(coverPhotoResult as string)
     }
   }
-  const uploadImageToS3 = async (file: File, key: string, type: string) => {
-    const { access_token } = getToken();
-    if (file) {
-      const formData = new FormData();
-      const imageFullName = uuidv4() + '.' + file?.name.split('.')?.pop()
-      formData.append(key, file as File, imageFullName);
-      try {
-        const response = await apiInstance.post(
-          `/medias/upload-image/${type}`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Authorization: `Bearer ${access_token}`,
-            },
-          }
-        )
-        if (response.status === 200) {
-          return response.data.result[0].url as string
-        }
-      } catch (error) {
-        throw error
-      }
-    }
-  }
-
   const handleUpdateUser = async (values: IUpdateUser) => {
     if (!isValid) return;
-    if (file || fileCoverPhoto) {
-      if (file) {
+    if (photoURL || coverPhotoURL) {
+      if (photoURL) {
         // update avatar
-        console.log("File: ", file)
-        const avatarResult = await uploadImageToS3(file, "avatar", "avatar")
-        console.log("avatarResult: ", avatarResult)
-        const updatedValues = { ...values, avatar: avatarResult as string };
-        console.log("updatedValues: ", updatedValues)
-        await mutateUpdateUser(updatedValues);
+        const updatedValues = { ...values, avatar: photoURL as string };
+        mutateUpdateUser(updatedValues);
         updateProfile(updatedValues)
       }
-      if (fileCoverPhoto) {
-        // update cover photo
-        console.log("Cover photo: ", fileCoverPhoto)
-        const coverPhotoResult = await uploadImageToS3(fileCoverPhoto, "coverPhoto", "cover-photo")
-        console.log("coverPhotoResult: ", coverPhotoResult)
-        const updatedValues = { ...values, cover_photo: coverPhotoResult as string };
-        await mutateUpdateUser(updatedValues);
+      if (coverPhotoURL) {
+        const updatedValues = { ...values, cover_photo: coverPhotoURL as string };
+        mutateUpdateUser(updatedValues);
         updateProfile(updatedValues)
       }
-      if (file && fileCoverPhoto) {
-        const avatarResult = await uploadImageToS3(file as File, "avatar", "avatar")
-        const coverPhotoResult = await uploadImageToS3(fileCoverPhoto as File, "coverPhoto", "cover-photo")
-        const updatedValues = { ...values, avatar: avatarResult as string, cover_photo: coverPhotoResult as string };
-        await mutateUpdateUser(updatedValues);
+      if (photoURL && coverPhotoURL) {
+        const updatedValues = { ...values, avatar: photoURL as string, cover_photo: coverPhotoURL as string };
+        mutateUpdateUser(updatedValues);
         updateProfile(updatedValues)
       }
     }

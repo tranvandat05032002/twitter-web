@@ -8,8 +8,9 @@ import { BackIcon, MinusIcon, PlusIcon } from "@/components/SingleUseComponents/
 import { SecondaryButton } from "../Button";
 import HeaderModalEdit from "../Modal/HeaderModalEdit";
 import { useProfileStore } from "@/store/useProfile";
+import { uploadImageToS3 } from "@/utils/handlers";
 interface ICropEasy {
-    photoURL:  string | null;
+    photoURL: string | null;
     setOpenCrop: any;
     setPhotoURL: any;
     setFile: any
@@ -17,14 +18,13 @@ interface ICropEasy {
 const CropEasy = ({ photoURL, setOpenCrop, setPhotoURL, setFile }: ICropEasy) => {
     const { userProfile } = useProfileStore(
         (state) => state
-      );
+    );
     const [crop, setCrop] = React.useState({ x: 0, y: 0 });
     const [zoom, setZoom] = React.useState(1);
     const [croppedAreaPixels, setCroppedAreaPixels] = React.useState<ICroppedPixels | null>(null);
-    
-    if(!photoURL) return;
+
+    if (!photoURL) return;
     const cropComplete = (croppedArea: any, croppedAreaPixels: ICroppedPixels) => {
-        console.log("croppedAreaPixels: ", croppedAreaPixels)
         setCroppedAreaPixels(croppedAreaPixels);
     };
 
@@ -34,8 +34,9 @@ const CropEasy = ({ photoURL, setOpenCrop, setPhotoURL, setFile }: ICropEasy) =>
                 photoURL,
                 croppedAreaPixels,
             ) as ICropImage;
-            setPhotoURL(url);
             setFile(file);
+            const avatarResult = await uploadImageToS3(file, "avatar", "avatar")
+            setPhotoURL(avatarResult);
             setOpenCrop(false);
         } catch (error) {
             throw (error)
@@ -47,7 +48,7 @@ const CropEasy = ({ photoURL, setOpenCrop, setPhotoURL, setFile }: ICropEasy) =>
     }
     return (
         <div className="max-w-[600px] w-[600px] bg-black max-h-[650px] h-[650px] rounded-2xl pb-4 overflow-hidden">
-            <HeaderModalEdit title="Edit media" eventTitle="Apply" eventButton={handleCropImage} iconType={{type: "open", eventIcon: handleBackPage}}></HeaderModalEdit>
+            <HeaderModalEdit title="Edit media" eventTitle="Apply" eventButton={handleCropImage} iconType={{ type: "open", eventIcon: handleBackPage }}></HeaderModalEdit>
             <DialogContent
                 dividers
                 sx={{
@@ -68,12 +69,12 @@ const CropEasy = ({ photoURL, setOpenCrop, setPhotoURL, setFile }: ICropEasy) =>
                     onCropComplete={cropComplete}
                 />
             </DialogContent>
-            <DialogActions sx={{ flexDirection: 'column'}}>
+            <DialogActions sx={{ flexDirection: 'column' }}>
                 <Box sx={{ width: '60%', mb: 1 }}>
                     <div className="flex justify-center items-center gap-x-[20px]">
                         <MinusIcon className="w-[30px] h-[30px] mr-[3px] text-white"></MinusIcon>
                         <Slider
-                            sx={{color: "#1d9bf0"}}
+                            sx={{ color: "#1d9bf0" }}
                             valueLabelDisplay="auto"
                             valueLabelFormat={zoomPercent}
                             min={1}
