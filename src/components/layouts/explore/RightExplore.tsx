@@ -9,7 +9,7 @@ const RightExplore = () => {
         <div className="max-w-[380px] h-full flex flex-col">
             <div className="ml-[30px] mt-3 mr-3 rounded-xl bg-bgGray16181c">
                 <div className="w-full">
-                    <h3 className="text-xl font-bold px-[15px] py-[12px]">Who to follow ({dataGetUsersFollowing?.total})</h3>
+                    <h3 className="text-xl font-bold px-[15px] py-[12px]">You are following ({dataGetUsersFollowing?.total})</h3>
                     <div className="flex flex-col">
                         {dataGetUsersFollowing?.data.map((user: any) =>
                             <ItemUser data={user?.followUsers} key={user._id} miniItem={true} isFollow={true} />
@@ -20,13 +20,13 @@ const RightExplore = () => {
                     </button>
                 </div>
             </div>
-                <div className="max-w-full ml-[30px] mt-3 mr-3 text-textGray text-sm font-normal">
-                    <ul className="ml-[12px] flex flex-wrap flex-1 break-words">
-                        {
-                            liContent.map((item: ILiContent, index) => <li key={index} className={`mr-[12px] cursor-pointer hover:underline ${index === 5 ? "last:hover:no-underline last:hover:cursor-default" : ""}`}>{item.title}</li>)
-                        }
-                    </ul>
-                </div>
+            <div className="max-w-full ml-[30px] mt-3 mr-3 text-textGray text-sm font-normal">
+                <ul className="ml-[12px] flex flex-wrap flex-1 break-words">
+                    {
+                        liContent.map((item: ILiContent, index) => <li key={index} className={`mr-[12px] cursor-pointer hover:underline ${index === 5 ? "last:hover:no-underline last:hover:cursor-default" : ""}`}>{item.title}</li>)
+                    }
+                </ul>
+            </div>
         </div>
     );
 };
@@ -35,7 +35,7 @@ export default RightExplore;
 interface ILiContent {
     title: String;
 }
-const liContent: ILiContent[]= [
+const liContent: ILiContent[] = [
     {
         title: "Terms of Service"
     },

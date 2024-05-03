@@ -16,33 +16,20 @@ import { useSearchUser } from '@/hooks/users/useQuery';
 import { EXPLORE_ITEMS } from '@/constant/constants';
 import classNames from "classnames"
 import { bstHistory } from '@/utils/historySearchBST';
-import ItermUserSearch from './ItermUserSearch';
-const user_follow = [
-    {
-        id: 1,
-        name: "TranVanDat"
-    }
-]
-const FILTERALL = "all";
-const FILLTERFOLLOWING = "following";
+import ItemUserSearch from './ItemUserSearch';
+import { useUserInfo } from '@/store/useUserInfo';
+import { MyContextType, SearchContext } from '@/context/SearchProvider';
+import SearchItem from './SearchItem';
 interface IData {
     data: IUser
 }
 const LeftExplore = () => {
-    const [showClose, setShowClose] = React.useState<Boolean>(false);
-    const [showListFilter, setShowListFilter] = React.useState<Boolean>(true);
-    const [searchValue, setSearchValue] = React.useState<String>("");
-    const [listHistorySearch, setListHistorySearch] = React.useState<String[]>([]);
-    const inputRef = React.useRef<HTMLInputElement>(null);
     const searchParams = useSearchParams()
     const slugFilter = searchParams.get('filter') || null;
     const router = useRouter()
+    const { userInfo, setShowClose, setShowListFilter, searchValue, showListFilter, inputRef, showButtonFollow, setShowButtonFollow } = React.useContext(SearchContext) as MyContextType
     const handleBack = () => {
         router.back();
-    }
-    const handleClearSearch = () => {
-        setSearchValue("");
-        inputRef.current?.focus();
     }
     React.useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -61,22 +48,6 @@ const LeftExplore = () => {
             document.removeEventListener('click', handleClickOutside);
         };
     }, []);
-    const handleSpace = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if(e.target.value.startsWith(' ')) {
-            return;
-        }
-        else {
-            setShowClose(true);
-            setShowListFilter(true);
-            setSearchValue(e.target.value);
-            setListHistorySearch((prev) => [...prev, e.target.value]);
-            // setListHistorySearch((prev): any => {
-            //         const autoCompleteResults = bstHistory.autoComplete(e.target.value);
-            //         return [...prev, autoCompleteResults]
-            //     }
-            // );
-        }
-    }
     const debounceSearchValue = useDebounce(searchValue as string, 700);
     const searchUserAll = useSearchUser({
         query: debounceSearchValue,
@@ -90,14 +61,6 @@ const LeftExplore = () => {
         page: 1,
         follow: "on"
     })
-    const handleHistorySearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if(e.key === "Enter") {
-            router.push(`/explore?q=${searchValue}&filter=${FILTERALL}`)
-            setShowListFilter(false);
-            
-            // bstHistory.insertKeyword(debounceSearchValue);
-        }
-    }
     return (
         <div className='flex-initial w-[600px] border-r-[0.5px] border-borderGrayPrimary pt-[3px]'>
             <StickyNav>
@@ -114,24 +77,15 @@ const LeftExplore = () => {
                                 </button>
                             </div>
                             <div className="w-full max-h-[420px] overflow-y-auto">
-                            {
-                                searchUserAll.data && searchUserAll.data.map((item: UserSearchType) => 
-                                    <ItermUserSearch key={item._id as string} data={item}></ItermUserSearch>
-                                )
-                            }
+                                {
+                                    searchUserAll.data && searchUserAll.data.map((item: UserSearchType) =>
+                                        <ItemUserSearch key={item._id as string} data={item}></ItemUserSearch>
+                                    )
+                                }
                             </div>
-                        </div>}
-                        <React.Fragment>
-                            <input type="text" autoComplete='off' onKeyDown={(e) => handleHistorySearch(e)} ref={inputRef } id="search-people" placeholder='Search People' value={searchValue as string} onChange={handleSpace} className="pl-[40px] pr-[12px]  py-[12px] w-full h-[43px] focus:outline-none border focus:border focus:border-bgBlueFocus border-borderGrayPrimary placeholder:text-textGray placeholder:font-normal placeholder:text-sm bg-black rounded-[30px] text-base font-normal" />
-                            <MagnifyingGlassIcon className="absolute MagnifyingGlassIcon left-[10px] top-[50%] translate-y-[-50%] text-textGray ml-[3px] font-normal" />
-                            {searchValue && showClose && 
-                            <label htmlFor='search-people'>
-                                <button type='button' onClick={handleClearSearch} className={"p-[3px] border-none outline-none rounded-full cursor-pointer absolute right-[10px] top-[50%] text-black translate-y-[-50%] bg-bgBlueFocus ml-[3px] font-normal"}>
-                                    <CloseExternalEventIcon  className='w-[15px] h-[15px]' />
-                                </button>
-                            </label>
-                            }
-                        </React.Fragment>
+                        </div>
+                        }
+                        <SearchItem />
                     </div>
                     <BoxIcon>
                         <DotsIcon className='h-[21px] w-[21px]'></DotsIcon>
@@ -144,8 +98,8 @@ const LeftExplore = () => {
                             <div key={item.id} className="h-[53px] flex-1 hover:bg-white/10 flex items-center justify-center">
                                 <Link
                                     href={`/explore?q=${debounceSearchValue}&filter=${item.mode}`}
-                                    className={classNames (`text-textGray hover:no-underline p-4 text-center`, {
-                                        "text-white py-4 px-2 border-b-[3px] box-border border-textBlue transition" : isActive,
+                                    className={classNames(`text-textGray hover:no-underline p-4 text-center`, {
+                                        "text-white py-4 px-2 border-b-[3px] box-border border-textBlue transition": isActive,
                                         "": !isActive
                                     })}
                                 >
@@ -154,44 +108,27 @@ const LeftExplore = () => {
                             </div>
                         )
                     })}
-                    {/* <div className="h-[53px] flex-1 hover:bg-white/10 flex items-center justify-center">
-                        <Link
-                            href=""
-                            className={`text-textGray hover:no-underline p-4 text-center ${isActive(
-                                "/explore"
-                            )}`}
-                        >
-                            Tweet
-                        </Link>
-                    </div>
-                    <div className="h-[53px] flex-1 hover:bg-white/10 flex items-center justify-center">
-                        <Link
-                            href=""
-                            className={`text-textGray hover:no-underline p-4 text-center ${isActive(
-                                "/explore"
-                            )}`}
-                        >
-                            People
-                        </Link>
-                    </div> */}
                 </div>
             </StickyNav>
             <div className="py-4 border-t-[1px] border-borderGrayPrimary">
                 {(searchUserAll.data?.length > 0 && slugFilter) ? <div className="w-full h-full">
-                        {
-                            searchUserAll.data.map((item: UserSearchType) => <div key={item._id as string} className="w-full transition-all"> <ItemUser data={item} isFollow = {false}/> </div>)
-                        }
                     {
-                        // Array.from({ length: 20 }).map((item: any, index) =>
-                        //     <div className="w-full transition-all" key={index}>
-                        //         <ItemUser data isFollow = {true}/>
-                        //     </div>
-                        // )
-                        searchUserFollowing.data.map((item: UserSearchType) => <div key={item._id as string} className="w-full transition-all"> <ItemUser data={item} isFollow = {true}/> </div>)
+                        searchUserAll.data.map((item: UserSearchType) => {
+                            let isMe: boolean = !!(item.username === userInfo?.username);
+                            return (
+                                <div key={item._id as string} className="w-full transition-all">
+                                    <ItemUser userInfo={userInfo as IUser} data={item} isFollow={false} isMe={isMe} />
+                                </div>
+                            )
+                        })
+                    }
+                    {
+                        searchUserFollowing.data.map((item: UserSearchType) => <div key={item._id as string} className="w-full transition-all"> <ItemUser data={item} isFollow={true} /> </div>)
                     }
                 </div> : <div className="flex justify-center items-center">
                     <strong>No results for &quot;Tàiasnaknskaskasnkasaksmasasas&quot;.</strong>
-                </div>}
+                </div>
+                }
             </div>
         </div>
     );
