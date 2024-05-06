@@ -15,6 +15,8 @@ function getButtonClass(typeButton: string): string {
             return "w-full rounded-lg bg-transparent border flex items-center hover:bg-[#161616] border border-[#333639] hover:scale-105 hover:no-underline transition-all font-medium gap-x-[10px] justify-center px-5 py-3 text-[#71767b] shadow";
         case "logout":
             return "w-max rounded-lg bg-yellow-500 px-5 py-3 border border-[#333639] text-white";
+        case "follow":
+            return "rounded-full bg-white text-textBlack transition-all hover:bg-bgHoverWhite/80 font-bold px-4 py-1 text-[15px]";
         default:
             return "";
     }

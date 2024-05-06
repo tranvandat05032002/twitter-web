@@ -5,6 +5,7 @@ import { IUser, UserSearchType } from '@/types/userTypes';
 import { Avatar } from '@mui/material';
 import React from 'react';
 import { routers } from "@/utils/router/routers";
+import ButtonFollow from "@/components/common/Button/ButtonFollow";
 interface IItemUser {
     miniItem?: boolean | false;
     isFollow?: boolean;
@@ -74,9 +75,7 @@ const ItemUser = ({ miniItem, isFollow, data, userInfo, isMe }: IItemUser) => {
                                 {!isMe && <div>
                                     {isFollow ? <button onMouseEnter={handleChange} onMouseLeave={handleChange} className={`rounded-full ${!isHover ? "bg-transparent border-[0.5px] border-[#333639] text-white" : "bg-bgPinkGhost/20 border-[0.5px] border-bgPinkGhost/40 text-bgPinkGhost"} font-bold px-4 py-1 text-[15px]`}>
                                         {isHover ? "Unfollow" : "Following"}
-                                    </button> : <button className="rounded-full bg-white text-textBlack transition-all hover:bg-bgHoverWhite/80 font-bold px-4 py-1 text-[15px]">
-                                        Follow
-                                    </button>}
+                                    </button> : <ButtonFollow>follow</ButtonFollow>}
                                 </div>}
                             </div>
                             <p className="font-normal text-[15px]">{data.bio ? data.bio : "empty"}</p>

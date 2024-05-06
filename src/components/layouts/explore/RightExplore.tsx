@@ -6,8 +6,8 @@ const RightExplore = () => {
     const usersFollowing = useGetUsersFollowing();
     const dataGetUsersFollowing = usersFollowing.data
     return (
-        <div className="max-w-[380px] h-full flex flex-col">
-            <div className="ml-[30px] mt-3 mr-3 rounded-xl bg-bgGray16181c">
+        <div className={`max-w-full w-full h-full flex flex-col flex-1 pl-[30px] pr-3 pt-3`}>
+            <div className="w-full rounded-xl bg-bgGray16181c">
                 <div className="w-full">
                     <h3 className="text-xl font-bold px-[15px] py-[12px]">You are following ({dataGetUsersFollowing?.total})</h3>
                     <div className="flex flex-col">
@@ -20,7 +20,7 @@ const RightExplore = () => {
                     </button>
                 </div>
             </div>
-            <div className="max-w-full ml-[30px] mt-3 mr-3 text-textGray text-sm font-normal">
+            <div className="max-w-full mt-3 text-textGray text-sm font-normal">
                 <ul className="ml-[12px] flex flex-wrap flex-1 break-words">
                     {
                         liContent.map((item: ILiContent, index) => <li key={index} className={`mr-[12px] cursor-pointer hover:underline ${index === 5 ? "last:hover:no-underline last:hover:cursor-default" : ""}`}>{item.title}</li>)

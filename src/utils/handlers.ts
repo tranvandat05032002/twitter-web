@@ -1,5 +1,8 @@
 import { IOAuthGoogle } from "@/types/userTypes";
 import { format, formatISO, parse } from "date-fns";
+import { getToken } from "./auth/cookies";
+import { v4 as uuidv4 } from "uuid"
+import { apiInstance } from "./api";
 export function isObjectEmpty(obj: Object): boolean {
   if (Object.values(obj).every((value) => value !== "")) {
     return false;
@@ -62,3 +65,37 @@ export const getGoogleAuthUrl = () => {
 
   return `${process.env.NEXT_PUBLIC_GOOGLE_URL}?${queryString.toString()}`;
 };
+
+export const uploadImageToS3 = async (file: File, key: string, type: string) => {
+  const { access_token } = getToken();
+  if (file) {
+    const formData = new FormData();
+    const imageFullName = uuidv4() + '.' + file?.name.split('.')?.pop()
+    formData.append(key, file as File, imageFullName);
+    try {
+      const response = await apiInstance.post(
+        `/medias/upload-image/${type}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${access_token}`,
+          },
+        }
+      )
+      if (response.status === 200) {
+        console.log("URLS3: ", response.data.result[0].url)
+        return response.data.result[0].url as string
+      }
+    } catch (error) {
+      throw error
+    }
+  }
+}
+export const decodedUsername = (username: string) => {
+  const decodedURL = decodeURIComponent(username);
+  const usernameDecoded = decodedURL.startsWith("@")
+    ? `/${decodedURL}`
+    : `/@${decodedURL}`;
+  return usernameDecoded;
+}

@@ -11,7 +11,7 @@ const Profile = ({ params }: { params: { username: string } }) => {
   
   return (
     <DashboardPage>
-      <DynamicProfile params={params}>This is Profile page</DynamicProfile>
+      <DynamicProfile params={params}>This is Profile page </DynamicProfile>
       <div>This is search page</div>
     </DashboardPage>
   );

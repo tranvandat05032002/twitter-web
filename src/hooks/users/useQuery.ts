@@ -12,9 +12,10 @@ export const useFetchMe = () =>
     staleTime: 1 * 60 * 1000,
   });
 export const useGetProfile = (username: string) =>
-  useQuery(["profile"], () => requestGetUserProfile(username), {
-    staleTime: 1 * 60 * 1000,
-    // refetchInterval: 3000
+  useQuery(["profile", username], () => requestGetUserProfile(username), {
+    staleTime: 60 * 60 * 1000,  // 1 hour
+    cacheTime: 2 * 60 * 60 * 1000,  // 2 hours
+    retry: 1
   });
 
 export const useSearchUser = (infoSearch: ISearchUser) =>
@@ -25,17 +26,17 @@ export const useSearchUser = (infoSearch: ISearchUser) =>
     retry: 0
   });
 
-  export const useGetUsersFollowing = () => 
-    useQuery({
-      queryKey: ["user_following"],
-      queryFn: () => {
+export const useGetUsersFollowing = () =>
+  useQuery({
+    queryKey: ["user_following"],
+    queryFn: () => {
       const controller = new AbortController()
       setTimeout(() => {
         controller.abort();
       }, 5000);
-        return requestGetUsersFollowing(controller.signal)
-      },
-      staleTime: 60 * 1000,
-      cacheTime: 2 * 60 * 1000,
-      keepPreviousData: true
-    })
+      return requestGetUsersFollowing(controller.signal)
+    },
+    staleTime: 60 * 1000,
+    cacheTime: 2 * 60 * 1000,
+    keepPreviousData: true
+  })

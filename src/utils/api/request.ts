@@ -348,8 +348,8 @@ export interface ISearchUser {
   follow?: "on" | "off"
 }
 export const requestSearchUser = async (infoSearch: ISearchUser) => {
-  const {limit, query, page, follow} = infoSearch
-  const {access_token} = getToken()
+  const { limit, query, page, follow } = infoSearch
+  const { access_token } = getToken()
   try {
     const response = await apiInstance.get(`/search/people?name=${query}&page=${page}&limit=${limit}&people_follow=${follow}`, {
       headers: {
@@ -357,14 +357,14 @@ export const requestSearchUser = async (infoSearch: ISearchUser) => {
         Authorization: `Bearer ${access_token}`,
       },
     });
-      return response.data.result.data;
+    return response.data.result.data;
   } catch (error) {
     throw error;
   }
 };
 
 export const requestGetUsersFollowing = async (signal?: AbortSignal) => {
-  const {access_token} = getToken()
+  const { access_token } = getToken()
   try {
     const response = await apiInstance.get(`/users/v1/follow`, {
       headers: {
@@ -374,10 +374,10 @@ export const requestGetUsersFollowing = async (signal?: AbortSignal) => {
       signal
     });
     console.log(response)
-      return {
-        data: response.data.users,
-        total: response.data.total
-      }
+    return {
+      data: response.data.users,
+      total: response.data.total
+    }
   } catch (error) {
     throw error;
   }

@@ -8,10 +8,11 @@ import {
   BsDot,
   BsArrowLeft,
   BsArrowLeftShort,
-  BsFillEmojiSmileFill
+  BsFillEmojiSmileFill,
+  BsChatDots
 } from "react-icons/bs";
 import { BiHomeHeart, BiSearch, BiHeart, BiSolidLike } from "react-icons/bi";
-import { FaPenToSquare, FaMagnifyingGlass, FaPhone, FaCircleExclamation,FaCirclePlus } from "react-icons/fa6";
+import { FaPenToSquare, FaMagnifyingGlass, FaPhone, FaCircleExclamation, FaCirclePlus } from "react-icons/fa6";
 import { TbCameraPlus, TbMessageCircle } from "react-icons/tb";
 import { PiBellRinging } from "react-icons/pi";
 import { IoIosStats, IoMdImages } from "react-icons/io";
@@ -25,7 +26,7 @@ import {
 } from "react-icons/hi";
 import {
   HiMiniGif,
-  HiMiniPaperAirplane 
+  HiMiniPaperAirplane
 } from "react-icons/hi2";
 import { RiFileListLine, RiEmojiStickerFill } from "react-icons/ri";
 import { LiaUserFriendsSolid, LiaCalendarSolid } from "react-icons/lia";
@@ -266,23 +267,27 @@ export const ImagesIcon: React.FC<IIcon> = (props) => {
 };
 export const StickerSlimeIcon: React.FC<IIcon> = (props) => {
   const { className } = props;
-  return <RiEmojiStickerFill className={`w-[19px] h-[19px] ${className}`} />; 
+  return <RiEmojiStickerFill className={`w-[19px] h-[19px] ${className}`} />;
 };
 export const GifIcon: React.FC<IIcon> = (props) => {
   const { className } = props;
-  return <HiMiniGif className={`w-[19px] h-[19px] ${className}`} />; 
+  return <HiMiniGif className={`w-[19px] h-[19px] ${className}`} />;
+};
+export const ChatIcon: React.FC<IIcon> = (props) => {
+  const { className } = props;
+  return <BsChatDots className={`w-[19px] h-[19px] ${className}`} />;
 };
 export const EmojiSmileFillIcon: React.FC<IIcon> = (props) => {
   const { className } = props;
-  return <BsFillEmojiSmileFill className={`w-[19px] h-[19px] ${className}`} />; 
+  return <BsFillEmojiSmileFill className={`w-[19px] h-[19px] ${className}`} />;
 };
 export const LikeIcon: React.FC<IIcon> = (props) => {
   const { className } = props;
-  return <BiSolidLike className={`w-[19px] h-[19px] ${className}`} />; 
+  return <BiSolidLike className={`w-[19px] h-[19px] ${className}`} />;
 };
 export const PaperAirplaneIcon: React.FC<IIcon> = (props) => {
   const { className } = props;
-  return <HiMiniPaperAirplane className={`w-[19px] h-[19px] ${className}`} />; 
+  return <HiMiniPaperAirplane className={`w-[19px] h-[19px] ${className}`} />;
 };
 export const CalendarIcon: React.FC<IIcon> = () => {
   return (
