@@ -1,5 +1,6 @@
 import { IOAuthGoogle } from "@/types/userTypes";
-import { format, formatISO, parse } from "date-fns";
+import { format, formatISO, isThisWeek, isToday, isValid, isYesterday, parse } from "date-fns";
+import { vi } from 'date-fns/locale';
 import { getToken } from "./auth/cookies";
 import { v4 as uuidv4 } from "uuid"
 import { apiInstance } from "./api";
@@ -98,4 +99,40 @@ export const decodedUsername = (username: string) => {
     ? `/${decodedURL}`
     : `/@${decodedURL}`;
   return usernameDecoded;
+}
+// Get time of day
+const getTimeOfDay = (date: Date): string => {
+  const hours = date.getHours();
+  switch (true) {
+    case hours >= 0 && hours < 12:
+      return 'sáng';
+    default:
+      return 'chiều';
+  }
+}
+// Format message time
+export const formatMessageTime = (date: Date): string => {
+  // is valid date 
+  if (!isValid(date)) {
+    return "Invalid date";
+  }
+  else {
+    // If the message was sent today, display HH:mm
+    if (isToday(date)) {
+      return format(date, 'HH:mm');
+    }
+    // If the message was sent yesterday, display "Yesterday HH:mm"
+    if (isYesterday(date)) {
+      return `Hôm qua ${format(date, 'HH:mm')} ${getTimeOfDay(date)}`
+    }
+    // If the message was sent this week, display "Day HH:mm"
+    if (isThisWeek(date)) {
+      return `${format(date, 'EEEE HH:mm', { locale: vi })} ${getTimeOfDay(date)}`;
+    }
+    // If the message was sent more than a week ago, display HH:mm dd:MM:yyyy
+    const formattedDate = format(date, 'HH:mm dd')
+    const month = format(date, 'MM')
+    const year = format(date, 'yyyy')
+    return `${formattedDate} Tháng ${month}, ${year}`;
+  }
 }

@@ -286,8 +286,8 @@ export const LikeIcon: React.FC<IIcon> = (props) => {
   return <BiSolidLike className={`w-[19px] h-[19px] ${className}`} />;
 };
 export const PaperAirplaneIcon: React.FC<IIcon> = (props) => {
-  const { className } = props;
-  return <HiMiniPaperAirplane className={`w-[19px] h-[19px] ${className}`} />;
+  const { className, onClick } = props;
+  return <HiMiniPaperAirplane onClick={onClick} className={`w-[19px] h-[19px] ${className}`} />;
 };
 export const CalendarIcon: React.FC<IIcon> = () => {
   return (

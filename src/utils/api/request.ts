@@ -24,6 +24,7 @@ import { useUserInfo } from "@/store/useUserInfo";
 import { ForgotForm } from "@/app/users/find-account/page";
 import { ResetPasswordForm } from "@/app/users/reset-password/page";
 import { AxiosInstance } from "axios";
+import { AddNewMessageResponseType, GetChatResponseType, GetMessagesResponseType, NewMessageRequestType } from "@/types/chatTypes";
 export const requestRegister = async (registerInfo: RegisterForm) => {
   try {
     const { data } = await apiInstance.post<TRequestToken<IToken>>(
@@ -85,16 +86,20 @@ export const requestResendEmailToken = async () => {
 export const requestFetchMe = async () => {
   const { access_token } = getToken();
   if (!access_token) return;
-  const response = await apiInstance.get<TRequestUser<IUser>>("/users/me", {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${access_token}`,
-    },
-  });
-  if (response.status === 200) {
-    const { data } = response;
-    useUserInfo.getState().setUserInfo(data.result.user);
-    return data.result.user as IUser;
+  try {
+    const response = await apiInstance.get<TRequestUser<IUser>>("/users/me", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+    if (response.status === 200) {
+      const { data } = response;
+      useUserInfo.getState().setUserInfo(data.result.user);
+      return data.result.user as IUser;
+    }
+  } catch (error) {
+    throw error
   }
 };
 export const requestLogIn = async (signInInfo: LoginForm) => {
@@ -308,9 +313,25 @@ export const requestResetPassword = async (
 };
 
 export const requestGetUserProfile = async (username: string) => {
+  if (!username) return null
   try {
     const response = await apiInstance.get<TRequestProfile<IUser>>(
       `/users${username}`
+    );
+    if (response.status === 200) {
+      return response.data.result;
+    } else {
+      return;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+export const requestGetUserProfileUserId = async (userId: string) => {
+  if (!userId) return null;
+  try {
+    const response = await apiInstance.get<TRequestProfile<IUser>>(
+      `/users/v1/${userId}`
     );
     if (response.status === 200) {
       return response.data.result;
@@ -380,5 +401,57 @@ export const requestGetUsersFollowing = async (signal?: AbortSignal) => {
     }
   } catch (error) {
     throw error;
+  }
+}
+export const requestGetChat = async (userId: string) => {
+  const { access_token } = getToken()
+  if (!userId) return null;
+  try {
+    const response = await apiInstance.get<GetChatResponseType>(`/chat/${userId}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+    return response.data.result
+  } catch (error) {
+    throw error
+  }
+}
+export const requestGetMessage = async (chatId: string) => {
+  const { access_token } = getToken()
+  if (!chatId) return null;
+  try {
+    const response = await apiInstance.get<GetMessagesResponseType>(`/message/${chatId}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+    if (response.status === 200) {
+      return response.data.result
+    }
+  } catch (error) {
+    throw error
+  }
+}
+export const requestAddMessage = async (newMessage: NewMessageRequestType) => {
+  const { access_token } = getToken()
+  try {
+    const response = await apiInstance.post<AddNewMessageResponseType>(`/message`, {
+      chat_id: newMessage.chatId,
+      sender_id: newMessage.senderId,
+      text: newMessage.text, 
+      created_at: newMessage.created_at,
+      updated_at: newMessage.updated_at
+    }, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      }
+    });
+    return response.data.result
+  } catch (error) {
+    throw error
   }
 }

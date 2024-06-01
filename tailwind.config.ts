@@ -14,7 +14,9 @@ const config: Config = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       boxShadow: {
-        'sm': '0 0 3px 1px rgba(255, 255, 255, 0.4)',
+        'sm-white': '0 0 3px 1px rgba(255, 255, 255, 0.4)',
+        'sm-black': '0 0 3px 1px rgba(0 0 0 0.4)',
+
       },
       colors: {
         textBlue: "#1d9bf0",
@@ -38,7 +40,7 @@ const config: Config = {
         bgBtnSecondary: "#eff3f4",
         bgPinkGhost: "#f4212e",
         bgBlueFocus: "#1D9BF0",
-        bgGray16181c: "#16181c", 
+        bgGray16181c: "#16181c",
         bgHoverGray: "rgba(255, 255, 255, 0.03)",
 
         borderGrayPrimary: "#333639",

@@ -69,7 +69,7 @@ const LeftExplore = () => {
                         <BackIcon onClick={handleBack} className='h-[21px] w-[21px]'></BackIcon>
                     </BoxIcon>
                     <div className="group-search relative w-[80%] flex">
-                        {showListFilter && <div className='absolute searchList hidden transition-all text-white shadow-sm rounded-lg bg-black w-full bottom-0 left-0 z-100 transform translate-y-full py-[2px]'>
+                        {showListFilter && <div className='absolute searchList hidden transition-all text-white shadow-sm-white rounded-lg bg-black w-full bottom-0 left-0 z-100 transform translate-y-full py-[2px]'>
                             <div className="flex px-4 py-3 justify-between items-center">
                                 <h3 className='text-xl font-bold'>Recent</h3>
                                 <button className={`rounded-full bg-transparent text-textBlue font-bold px-2 hover:bg-textBlue/10 transition-all py-[2px] text-[15px]`}>

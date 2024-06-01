@@ -1,12 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 @layer base {
-  *{
+  * {
     box-sizing: border-box;
     padding: 0%;
     margin: 0%;
   }
+
   body {
     @apply font-sans text-base mx-auto;
     line-height: 1.5;
@@ -18,27 +20,31 @@
     color: white;
     max-width: 1440px;
   }
+
   .debug-css {
     border: 1px solid red;
   }
+
   ::-webkit-scrollbar {
     width: 10px;
     background: rgba(99, 99, 99, 0.2);
   }
-  
+
   /* Track */
   ::-webkit-scrollbar-track {
     border-radius: 10px;
   }
-  
+
   /* Handle */
   ::-webkit-scrollbar-thumb {
     background: #333639;
     border-radius: 10px;
   }
+
   .group-search:focus-within .MagnifyingGlassIcon {
     color: #1D9BF0;
   }
+
   .group-search:focus-within .searchList {
     display: block;
   }
@@ -48,11 +54,14 @@
   a {
     color: #1d9bf0;
   }
+
   a:hover {
     text-decoration: underline;
   }
 }
+
 @layer base {
+
   body,
   h1,
   h2,
@@ -62,9 +71,11 @@
     margin: 0;
     padding: 0;
   }
+
   .css-hfutr2-MuiSvgIcon-root-MuiSelect-icon {
     color: gray;
   }
+
   #demo-simple-select-helper-label {
     color: #9ca3b0;
     font-weight: 300;

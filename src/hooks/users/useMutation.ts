@@ -2,6 +2,7 @@
 
 import { ForgotForm } from "@/app/users/find-account/page";
 import { ResetPasswordForm } from "@/app/users/reset-password/page";
+import { NewMessageRequestType } from "@/types/chatTypes";
 import {
   IToken,
   IUpdateUser,
@@ -22,6 +23,7 @@ import {
   requestResetPassword,
   requestUpdateUserProfile,
   requestGetToken,
+  requestAddMessage,
 } from "@/utils/api/request";
 import { removeEmailCookies, removeOTPToken } from "@/utils/auth/cookies";
 import { UseMutationResult, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -54,7 +56,7 @@ export const useLogin = () => {
 export const useGetToken = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({access_token, refresh_token}: {access_token: string, refresh_token: string}) => requestGetToken({access_token, refresh_token}),
+    mutationFn: ({ access_token, refresh_token }: { access_token: string, refresh_token: string }) => requestGetToken({ access_token, refresh_token }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ["getMe"],
@@ -117,3 +119,12 @@ export const useUpdateUser = () => {
     },
   });
 };
+export const useAddMessage = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (newMessage: NewMessageRequestType) => requestAddMessage(newMessage),
+    onSuccess(data) {
+      queryClient.invalidateQueries({ queryKey: ["message", data.chatId], exact: true })
+    },
+  });
+}
