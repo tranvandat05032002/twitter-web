@@ -54,5 +54,7 @@ export const useGetChats = (user_id: string) =>
   })
 export const useGetMessage = (chat_id: string) =>
   useQuery(["message", chat_id], () => requestGetMessage(chat_id), {
+    staleTime: 60 * 1000,
+    cacheTime: 2 * 60 * 1000,
     keepPreviousData: true
   })

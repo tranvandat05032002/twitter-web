@@ -1,4 +1,4 @@
-import { ICreateMember, MessageArray } from '@/types/chatTypes'
+import { ICreateMember, IUserSocket, MessageArray } from '@/types/chatTypes'
 import { create } from 'zustand'
 
 interface IConversation {
@@ -12,6 +12,10 @@ interface IConversation {
     // setSendMessage: (message: IMessageReceiver) => void,
     // receiverMessage: IMessageReceiver,
     // setReceiverMessage: (message: IMessageReceiver) => void,
+    onlineUsers: IUserSocket[],
+    setOnlineUsers: (userList: IUserSocket[]) => void,
+    onlineStatus: boolean,
+    setOnlineStatus: (newStatus: boolean) => void
 }
 const initialMessage = {
     _id: "",
@@ -48,4 +52,12 @@ export const useChat = create<IConversation>((set) => ({
     // setReceiverMessage: (message: IMessageReceiver) => set({
     //     receiverMessage: message
     // })
+    onlineUsers: [],
+    setOnlineUsers: (userList: IUserSocket[]) => set({
+        onlineUsers: userList
+    }),
+    onlineStatus: false,
+    setOnlineStatus: (newStatus: boolean) => set({
+        onlineStatus: newStatus
+    })
 }))

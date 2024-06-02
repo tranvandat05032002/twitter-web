@@ -103,7 +103,7 @@ const Conversation = ({ user, receiverMessage, setSendMessage }: { user: IUser, 
           </div>
         </StickyNav>
         <div className="max-h-[588px] h-[588px] overflow-auto px-[6px]">
-          {messages && messages?.map((message) => <Message key={uuidV4()} message={message} scroll={scroll as React.LegacyRef<HTMLDivElement>} currentUserId={senderId} />)}
+          {messages && messages?.map((message, index) => <Message key={index} message={message} scroll={scroll as React.LegacyRef<HTMLDivElement>} currentUserId={senderId} />)}
         </div>
         <div className="py-[10px] px-2 flex items-center gap-x-[5px]">
           <div className="flex items-center gap-x-[5px] text-textBlue">

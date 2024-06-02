@@ -9,7 +9,7 @@ import socket from '@/utils/socket';
 import { useChat } from '@/store/useChat';
 // import { IMessageReceiver } from '@/types/chatTypes';
 import { IUser } from '@/types/userTypes';
-import { IMessage } from '@/types/chatTypes';
+import { IMessage, IUserSocket } from '@/types/chatTypes';
 const initialReceiverMessage: IMessage = {
   _id: "",
   chatId: "",
@@ -21,20 +21,20 @@ const initialReceiverMessage: IMessage = {
 }
 const Messages = () => {
   const { data: user } = useFetchMe()
-  const [onlineUsers, setOnlineUsers] = React.useState([])
+  // const [onlineUsers, setOnlineUsers] = React.useState<IUserSocket[]>([])
+  const { setOnlineUsers } = useChat((state) => state)
   // const { sendMessage } = useChat((state) => state)
   const [sendMessage, setSendMessage] = React.useState<IMessage>(initialReceiverMessage)
   const [receiverMessage, setReceiverMessage] = React.useState<IMessage>(initialReceiverMessage);
   // send message to socket server
   React.useEffect(() => {
     if (sendMessage !== null) {
-      console.log("data_sendMessage: ", sendMessage)
       socket.emit('send_message', sendMessage);
     }
   }, [sendMessage])
   React.useEffect(() => {
     socket.emit('new_user_add', user?._id)
-    socket.on('get_users', (users) => {
+    socket.on('get_users', (users: IUserSocket[]) => {
       setOnlineUsers(users)
     })
   }, [user])

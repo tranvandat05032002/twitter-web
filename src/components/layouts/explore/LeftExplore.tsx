@@ -20,9 +20,6 @@ import ItemUserSearch from './ItemUserSearch';
 import { useUserInfo } from '@/store/useUserInfo';
 import { MyContextType, SearchContext } from '@/context/SearchProvider';
 import SearchItem from './SearchItem';
-interface IData {
-    data: IUser
-}
 const LeftExplore = () => {
     const searchParams = useSearchParams()
     const slugFilter = searchParams.get('filter') || null;

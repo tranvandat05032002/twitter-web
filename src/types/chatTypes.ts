@@ -8,6 +8,10 @@ export interface ICreateMember {
 export type GetChatResponseType = {
     result: ICreateMember[]
 };
+export interface IUserSocket {
+    userId: string,
+    socketId: string
+}
 // Message type
 export interface IMessage {
     _id?: string,

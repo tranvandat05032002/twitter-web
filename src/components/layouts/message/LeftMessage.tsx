@@ -6,10 +6,18 @@ import { v4 as uuidV4 } from "uuid"
 import { useGetChats } from '@/hooks/users/useQuery';
 import { useChat } from '@/store/useChat';
 import { IUser } from '@/types/userTypes';
+import { ICreateMember } from '@/types/chatTypes';
 const LeftMessage = ({ user }: { user: IUser }) => {
     // Get the chat in chat section
     const { data: chats } = useGetChats(user?._id as string)
     const { setCurrentChat, currentChat } = useChat((state) => state)
+    const { onlineUsers } = useChat((state) => state)
+    const checkOnlineStatus = (chat: ICreateMember): boolean => {
+        const chatMember = chat.members.find((member) => member !== user._id)
+        const online = onlineUsers.find((user) => user.userId === chatMember)
+        const isOnline: boolean = online ? true : false
+        return isOnline
+    }
     return (
         <div className="border-r-[0.5px] border-borderGrayPrimary h-full">
             <div className="w-[321px] max-w-[321px] relative h-screen text-white">
@@ -38,7 +46,7 @@ const LeftMessage = ({ user }: { user: IUser }) => {
                                 const isActive = currentChat._id === chat._id
                                 return (
                                     <div key={uuidV4()} onClick={() => setCurrentChat(chat)}>
-                                        <UserChat data={chat} currentUserId={user?._id as string} isActive={isActive} />
+                                        <UserChat data={chat} online={checkOnlineStatus(chat)} currentUserId={user?._id as string} isActive={isActive} />
                                     </div>
                                 )
                             }
