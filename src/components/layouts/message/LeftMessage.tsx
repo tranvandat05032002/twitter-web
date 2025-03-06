@@ -36,8 +36,8 @@ const LeftMessage = ({ user }: { user: IUser }) => {
                             </div>
                         </div>
                         <div className="relative flex w-full pt-[12px]">
-                            <MagnifyingGlassIcon className="absolute left-[10px] top-[50%] translate-y-[-25%] text-textGray ml-[3px] font-normal" />
-                            <input type="text" placeholder='Search Direct Messages' className="pl-[40px] pr-[10px]  py-[5px] h-[36px] focus:outline-none border focus:border focus:border-borderBlue border-borderGrayPrimary placeholder:text-textGray placeholder:font-normal placeholder:text-sm bg-black rounded-[30px] w-full text-sm font-light" />
+                            <MagnifyingGlassIcon className="absolute left-[10px] top-[50%] translate-y-[-25%] text-textGray ml-[3px] font-light" />
+                            <input type="text" placeholder='Search Direct Messages' className="pl-[40px] pr-[10px]  py-[5px] h-[36px] focus:outline-none border focus:border focus:border-borderBlue border-borderGrayPrimary placeholder:text-textGray placeholder:font-light placeholder:text-sm bg-black rounded-[30px] w-full text-sm font-light" />
                         </div>
                     </div>
                     <div className="mt-1 overflow-auto">

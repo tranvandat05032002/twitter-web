@@ -50,7 +50,7 @@ const DateOfBirth: React.FC<IDateOfBirth> = (props) => {
     <>
       {quote && (
         <div>
-          <h4 className="text-base font-normal">Ngày sinh</h4>
+          <h4 className="text-base font-light">Ngày sinh</h4>
           <p className="text-textGray text-sm">
             Điều này sẽ không được hiển thị công khai. Xác nhận tuổi của bạn,
             ngay cả khi tài khoản này dành cho doanh nghiệp, thú cưng hoặc thứ

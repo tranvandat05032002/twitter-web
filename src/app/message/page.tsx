@@ -60,7 +60,7 @@ const Messages = () => {
       console.log(err);
     });
     socket.on("disconnect", (reason) => {
-      if(reason) {
+      if (reason) {
         logOutCookies()
         router.push(Routers.signInPage);
       }
@@ -180,11 +180,10 @@ const Messages = () => {
                   conversations.map((message: any) => (
                     <div
                       key={uuidV4()}
-                      className={`max-w-[70%] text-left py-1 px-2 rounded-md mb-1 ${
-                        message.sender_id === userInfo?._id
-                          ? "ml-auto  bg-blue-500 text-white"
-                          : "bg-gray-200 text-black"
-                      }`}
+                      className={`max-w-[70%] text-left py-1 px-2 rounded-md mb-1 ${message.sender_id === userInfo?._id
+                        ? "ml-auto  bg-blue-500 text-white"
+                        : "bg-gray-200 text-black"
+                        }`}
                     >
                       <p className="">{message.content}</p>
                     </div>

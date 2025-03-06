@@ -126,7 +126,7 @@ const Conversation = ({ user, receiverMessage, setSendMessage }: { user: IUser, 
               onKeyDown={handleSendEnter}
               value={newMessage}
               placeholder='Search Direct Messages'
-              className="pl-[10px] pr-[40px]  py-[5px] h-[36px] focus:outline-none border focus:border focus:border-borderBlue border-borderGrayPrimary placeholder:text-textGray placeholder:font-normal placeholder:text-sm bg-black rounded-[30px] text-sm font-light w-full"
+              className="pl-[10px] pr-[40px]  py-[5px] h-[36px] focus:outline-none border focus:border focus:border-borderBlue border-borderGrayPrimary placeholder:text-textGray placeholder:font-light placeholder:text-sm bg-black rounded-[30px] text-sm font-light w-full"
             />
             <BoxIcon className={"p-[2px] absolute right-1 top-1/2 -translate-y-1/2 text-textBlue"}>
               <EmojiSmileFillIcon className='h-[21px] w-[21px]'></EmojiSmileFillIcon>

@@ -21,7 +21,7 @@ const ItemUserSearch = ({ data }: { key: string, data: UserSearchType }) => {
                             </div>
                             <div>
                                 <p className="font-semibold text-base">{data.name}</p>
-                                <p className="max-w-[180px] whitespace-nowrap text-ellipsis overflow-hidden font-normal text-[15px] text-textGray">{data.username}</p>
+                                <p className="max-w-[180px] whitespace-nowrap text-ellipsis overflow-hidden font-light text-[15px] text-textGray">{data.username}</p>
                             </div>
                         </div>
                     </div>

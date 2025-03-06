@@ -8,6 +8,7 @@ import {
   RetWeetIcon,
   StatsIcon,
 } from "../SingleUseComponents/Icon";
+import Image from 'next/image'
 import { LuShare } from "react-icons/lu";
 import { PrimaryButton } from "../common/Button";
 
@@ -21,7 +22,14 @@ const HomeLayout = () => {
       </StickyNav>
       <div className="relative border-t-[0.5px] border-b-[0.5px] p-4 flex items-stretch space-x-2 border-borderGrayPrimary h-[120px]">
         <div className="w-10 h-10 rounded-full overflow-hidden flex-none">
-          <img src="/image/avatar.jpg" className="w-full h-full object-cover" />
+          {/* <img src="/image/avatar.jpg" className="w-full h-full object-cover" /> */}
+          <Image
+            src="/image/avatar.jpg"
+            // width={500}
+            // height={500}
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            alt="Picture of the author"
+          />
         </div>
         <div className="flex flex-col w-full h-full">
           <input

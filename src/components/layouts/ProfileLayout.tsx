@@ -14,6 +14,7 @@ import { useEvent } from "@/store/useEven";
 import ModalEditProfile from "../common/portal/ModalEditProfile";
 import { useGetProfile } from "@/hooks/users/useQuery";
 import { GhostButton } from "../common/Button";
+import ModalSendChat from "../common/portal/ModalSendChat";
 type TParams = {
   username: string;
 };

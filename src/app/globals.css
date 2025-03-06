@@ -8,6 +8,23 @@
     padding: 0%;
     margin: 0%;
   }
+  h1,
+  h2,
+  h3,
+  ul,
+  li {
+    margin: 0;
+    padding: 0;
+  }
+
+  .css-hfutr2-MuiSvgIcon-root-MuiSelect-icon {
+    color: gray;
+  }
+
+  #demo-simple-select-helper-label {
+    color: #9ca3b0;
+    font-weight: 300;
+  }
 
   body {
     @apply font-sans text-base mx-auto;
@@ -58,9 +75,6 @@
   a:hover {
     text-decoration: underline;
   }
-}
-
-@layer base {
 
   body,
   h1,

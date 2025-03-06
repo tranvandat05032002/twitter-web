@@ -1,3 +1,4 @@
+"use client"
 import { useEvent } from "@/store/useEven";
 import React from "react";
 import { createPortal } from "react-dom";

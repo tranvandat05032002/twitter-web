@@ -6,8 +6,9 @@ import { Roboto } from "next/font/google";
 import QueryClientLayoutProvider from "./QueryClientProvider";
 
 const roboto = Roboto({
-  weight: ["100", "300", "400", "500", "700"],
-  subsets: ["latin"],
+  weight: ["100", "300", "500", "700"],
+  subsets: ["vietnamese"],
+  style: ["normal", "italic"],
   display: "swap",
 });
 

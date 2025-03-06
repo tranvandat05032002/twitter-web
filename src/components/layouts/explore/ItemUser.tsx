@@ -42,7 +42,7 @@ const ItemUser = ({ miniItem, isFollow, data, userInfo, isMe }: IItemUser) => {
                         <div className="w-[90%] flex items-center justify-between">
                             <div>
                                 <div className="font-semibold w-[150px] whitespace-nowrap text-ellipsis overflow-hidden text-base hover:underline">{data?.name}</div>
-                                <p className="max-w-[150px] whitespace-nowrap text-ellipsis overflow-hidden font-normal text-[15px] text-textGray">{data?.username}</p>
+                                <p className="max-w-[150px] whitespace-nowrap text-ellipsis overflow-hidden font-light text-[15px] text-textGray">{data?.username}</p>
                             </div>
                             {/* <button className="rounded-full bg-white text-textBlack transition-all hover:bg-bgHoverWhite/80 font-bold px-4 py-1 text-[15px]">
                                 Follow
@@ -70,7 +70,7 @@ const ItemUser = ({ miniItem, isFollow, data, userInfo, isMe }: IItemUser) => {
                             <div className="w-full h-full flex items-center justify-between">
                                 <div className="w-[70%] max-w-[70%]">
                                     <p className="font-semibold whitespace-nowrap text-ellipsis overflow-hidden text-base hover:underline">{data?.name}</p>
-                                    <p className="max-w-[180px] whitespace-nowrap text-ellipsis overflow-hidden font-normal text-[15px] text-textGray">{data?.username}</p>
+                                    <p className="max-w-[180px] whitespace-nowrap text-ellipsis overflow-hidden font-light text-[15px] text-textGray">{data?.username}</p>
                                 </div>
                                 {!isMe && <div>
                                     {isFollow ? <button onMouseEnter={handleChange} onMouseLeave={handleChange} className={`rounded-full ${!isHover ? "bg-transparent border-[0.5px] border-[#333639] text-white" : "bg-bgPinkGhost/20 border-[0.5px] border-bgPinkGhost/40 text-bgPinkGhost"} font-bold px-4 py-1 text-[15px]`}>
@@ -78,7 +78,7 @@ const ItemUser = ({ miniItem, isFollow, data, userInfo, isMe }: IItemUser) => {
                                     </button> : <ButtonFollow>follow</ButtonFollow>}
                                 </div>}
                             </div>
-                            <p className="font-normal text-[15px]">{data.bio ? data.bio : "empty"}</p>
+                            <p className="font-light text-[15px]">{data.bio ? data.bio : "empty"}</p>
                         </div>
                     </div>
             }

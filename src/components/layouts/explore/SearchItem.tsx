@@ -44,12 +44,12 @@ const SearchItem = () => {
     }
     return (
         <React.Fragment>
-            <input type="text" autoComplete='off' onKeyDown={(e) => handleHistorySearch(e)} id="search-people" placeholder='Search People' value={searchValue as string} onChange={handleSpace} className="pl-[40px] pr-[12px]  py-[12px] w-full h-[43px] focus:outline-none border focus:border focus:border-bgBlueFocus border-borderGrayPrimary placeholder:text-textGray placeholder:font-normal placeholder:text-sm bg-black rounded-[30px] text-base font-normal" />
-            <MagnifyingGlassIcon className="absolute MagnifyingGlassIcon left-[10px] top-[50%] translate-y-[-50%] text-textGray ml-[3px] font-normal" />
+            <input type="text" autoComplete='off' onKeyDown={(e) => handleHistorySearch(e)} id="search-people" placeholder='Search People' value={searchValue as string} onChange={handleSpace} className="pl-[40px] pr-[12px]  py-[12px] w-full h-[43px] focus:outline-none border focus:border focus:border-bgBlueFocus border-borderGrayPrimary placeholder:text-textGray placeholder:font-light placeholder:text-sm bg-black rounded-[30px] text-base font-light" />
+            <MagnifyingGlassIcon className="absolute MagnifyingGlassIcon left-[10px] top-[50%] translate-y-[-50%] text-textGray ml-[3px] font-light" />
             {
                 searchValue && showClose &&
                 <label htmlFor='search-people'>
-                    <button type='button' onClick={handleClearSearch} className={"p-[3px] border-none outline-none rounded-full cursor-pointer absolute right-[10px] top-[50%] text-black translate-y-[-50%] bg-bgBlueFocus ml-[3px] font-normal"}>
+                    <button type='button' onClick={handleClearSearch} className={"p-[3px] border-none outline-none rounded-full cursor-pointer absolute right-[10px] top-[50%] text-black translate-y-[-50%] bg-bgBlueFocus ml-[3px] font-light"}>
                         <CloseExternalEventIcon className='w-[15px] h-[15px]' />
                     </button>
                 </label>

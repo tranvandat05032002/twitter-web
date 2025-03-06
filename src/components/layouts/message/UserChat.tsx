@@ -29,7 +29,7 @@ const UserChat = ({ data, currentUserId, isActive, online }: { data: ICreateMemb
                     <div>
                         <p className="font-semibold text-base">{userInfo?.name}</p>
                         <div className="text-textGray flex items-center gap-x-[10px]">
-                            <p className="max-w-[180px] whitespace-nowrap text-ellipsis overflow-hidden font-normal text-sm">{userInfo?.name as string} </p>
+                            <p className="max-w-[180px] whitespace-nowrap text-ellipsis overflow-hidden font-light text-sm">{userInfo?.name as string} </p>
                             <p className='font-sm'>8 giờ</p>
                         </div>
                     </div>

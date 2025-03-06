@@ -15,12 +15,12 @@ const RightExplore = () => {
                             <ItemUser data={user?.followUsers} key={user._id} miniItem={true} isFollow={true} />
                         )}
                     </div>
-                    <button className="cursor-pointer px-[15px] text-[15px] font-normal text-bgBlueFocus py-[14px] w-full hover:bg-bgHoverGray bg-transparent transition-all text-start">
+                    <button className="cursor-pointer px-[15px] text-[15px] font-light text-bgBlueFocus py-[14px] w-full hover:bg-bgHoverGray bg-transparent transition-all text-start">
                         Show more
                     </button>
                 </div>
             </div>
-            <div className="max-w-full mt-3 text-textGray text-sm font-normal">
+            <div className="max-w-full mt-3 text-textGray text-sm font-light">
                 <ul className="ml-[12px] flex flex-wrap flex-1 break-words">
                     {
                         liContent.map((item: ILiContent, index) => <li key={index} className={`mr-[12px] cursor-pointer hover:underline ${index === 5 ? "last:hover:no-underline last:hover:cursor-default" : ""}`}>{item.title}</li>)
