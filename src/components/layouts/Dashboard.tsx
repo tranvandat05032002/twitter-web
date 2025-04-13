@@ -33,7 +33,7 @@ const DashboardPage: React.FC<IDashboard> = (props) => {
   const [showModalBackLogin, setShowModalBackLogin] =
     React.useState<boolean>(false);
   React.useEffect(() => {
-    if(!memoizedUser) return;
+    if (!memoizedUser) return;
     if (access_token && refresh_token) {
       if (memoizedUser.verify !== 1) {
         removeToken();
@@ -67,9 +67,8 @@ const DashboardPage: React.FC<IDashboard> = (props) => {
     <React.Fragment>
       {!showModalBackLogin ? (
         <div
-          className={`relative flex items-center w-full ${
-            showModal ? "h-screen" : "h-full"
-          }`}
+          className={`relative flex items-center w-full ${showModal ? "h-screen" : "h-full"
+            }`}
         >
           <div className="max-w-screen-xl w-full h-full flex">
             <LeftSidebar userInfo={userInfo}></LeftSidebar>
@@ -77,7 +76,7 @@ const DashboardPage: React.FC<IDashboard> = (props) => {
           </div>
         </div>
       ) : (
-        <div className="absolute w-full h-screen left-0 top-0 bottom-0 right-0 z-[1000] flex justify-center items-center bg-bgMain">
+        <div className="absolute w-full h-screen left-0 top-0 bottom-0 right-0 z-[1000] flex justify-center items-center bg-bgMain border border-red-500">
           <div className="max-w-[300px] max-h-[150px] w-[300px] h-[150px] bg-black rounded-md py-[20px] px-[20px]">
             <div className="relative w-full h-full">
               <p className="mb-[10px]">Phiên đã hết hạn</p>

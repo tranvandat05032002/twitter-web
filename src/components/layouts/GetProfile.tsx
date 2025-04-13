@@ -38,7 +38,7 @@ const GetProfile: React.FC<IGetProfile> = ({ children }) => {
     }, [isSuccess]);
     return (
         <React.Fragment>
-            <div className='flex-initial w-[642px] border-r-[0.5px] border-borderGrayPrimary pt-[3px]'>
+            <div className='flex-initial w-[642px] border-r-[0.5px] border-borderGrayPrimary pt-[3px] border'>
                 <div className="flex flex-col h-full min-h-screen border-r-[0.5px] border-borderGrayPrimary">
                     <StickyNav>
                         <div className="flex items-center pt-1 px-4">
@@ -191,7 +191,7 @@ const GetProfile: React.FC<IGetProfile> = ({ children }) => {
                     </div>
                 </div>
             </div>
-            <ModalSendChat />
+            {/* <ModalSendChat /> */}
         </React.Fragment>
     );
 };

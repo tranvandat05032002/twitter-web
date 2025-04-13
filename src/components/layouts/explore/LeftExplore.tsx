@@ -108,23 +108,36 @@ const LeftExplore = () => {
                 </div>
             </StickyNav>
             <div className="py-4 border-t-[1px] border-borderGrayPrimary">
-                {(searchUserAll.data?.length > 0 && slugFilter) ? <div className="w-full h-full">
-                    {
-                        searchUserAll.data.map((item: UserSearchType) => {
-                            let isMe: boolean = !!(item.username === userInfo?.username);
-                            return (
-                                <div key={item._id as string} className="w-full transition-all">
-                                    <ItemUser userInfo={userInfo as IUser} data={item} isFollow={false} isMe={isMe} />
-                                </div>
-                            )
-                        })
-                    }
-                    {
-                        searchUserFollowing.data.map((item: UserSearchType) => <div key={item._id as string} className="w-full transition-all"> <ItemUser data={item} isFollow={true} /> </div>)
-                    }
-                </div> : <div className="flex justify-center items-center">
-                    <strong>No results for &quot;Tàiasnaknskaskasnkasaksmasasas&quot;.</strong>
-                </div>
+                {
+                    slugFilter === "all" ? (
+                        (searchUserAll.data?.length > 0 && slugFilter) ?
+                            <div className="w-full h-full">
+                                {
+                                    searchUserAll.data.map((item: UserSearchType) => {
+                                        let isMe: boolean = !!(item.username === userInfo?.username);
+                                        return (
+                                            <div key={item._id as string} className="w-full transition-all">
+                                                <ItemUser userInfo={userInfo as IUser} data={item} isFollow={item?.is_following ?? false} isMe={isMe} />
+                                            </div>
+                                        )
+                                    })
+                                }
+                                {/* {
+                                    searchUserFollowing.data.map((item: UserSearchType) => <div key={item._id as string} className="w-full transition-all"> <ItemUser data={item} isFollow={true} /> </div>)
+                                } */}
+                            </div> : <div className="flex justify-center items-center">
+                                <strong>No results for &quot;Tàiasnaknskaskasnkasaksmasasas&quot;.</strong>
+                            </div>
+                    ) : (
+                        (searchUserAll.data?.length > 0 && slugFilter) ?
+                            <div className="w-full h-full">
+                                {
+                                    searchUserFollowing.data.map((item: UserSearchType) => item.is_following === true ? <div key={item._id as string} className="w-full transition-all"> <ItemUser data={item} isFollow={true} /> </div> : null)
+                                }
+                            </div> : <div className="flex justify-center items-center">
+                                <strong>No results for &quot;Tàiasnaknskaskasnkasaksmasasas&quot;.</strong>
+                            </div>
+                    )
                 }
             </div>
         </div>

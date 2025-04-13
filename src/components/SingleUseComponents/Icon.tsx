@@ -242,8 +242,8 @@ export const PenToSquareIcon: React.FC<IIcon> = (props) => {
   return <FaPenToSquare className={`w-[19px] h-[19px] ${className}`} />;
 };
 export const MagnifyingGlassIcon: React.FC<IIcon> = (props) => {
-  const { className } = props;
-  return <FaMagnifyingGlass className={`w-[19px] h-[19px] ${className}`} />;
+  const { className, ...rest } = props;
+  return <FaMagnifyingGlass className={`w-[19px] h-[19px] ${className}`} {...rest} />;
 };
 export const VideoCameraIcon: React.FC<IIcon> = (props) => {
   const { className } = props;
@@ -369,10 +369,11 @@ export const CloseIcon: React.FC<IIcon> = (props) => {
   );
 };
 export const CloseExternalEventIcon: React.FC<IIcon> = (props) => {
-  const { className } = props;
+  const { className, ...rest } = props;
   return (
     <MdClose
       className={`w-[19px] h-[19px] ${className}`}
+      {...rest}
     ></MdClose>
   );
 };

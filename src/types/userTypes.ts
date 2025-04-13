@@ -24,9 +24,10 @@ export interface IUser {
   username?: string;
   avatar?: string;
   cover_photo?: string;
+  is_following?: boolean;
 }
 
-export type UserSearchType = Omit<IUser , 'created_at' | 'updated_at' | 'verify'>
+export type UserSearchType = Omit<IUser, 'created_at' | 'updated_at' | 'verify'>
 
 export interface IUpdateUser {
   name?: string;

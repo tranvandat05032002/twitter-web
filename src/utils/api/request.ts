@@ -378,6 +378,7 @@ export const requestSearchUser = async (infoSearch: ISearchUser) => {
         Authorization: `Bearer ${access_token}`,
       },
     });
+    console.log("Search ---> ", response.data)
     return response.data.result.data;
   } catch (error) {
     throw error;
@@ -387,14 +388,13 @@ export const requestSearchUser = async (infoSearch: ISearchUser) => {
 export const requestGetUsersFollowing = async (signal?: AbortSignal) => {
   const { access_token } = getToken()
   try {
-    const response = await apiInstance.get(`/users/v1/follow`, {
+    const response = await apiInstance.get(`/users/me/follow`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${access_token}`,
       },
       signal
     });
-    console.log(response)
     return {
       data: response.data.users,
       total: response.data.total
@@ -441,7 +441,7 @@ export const requestAddMessage = async (newMessage: NewMessageRequestType) => {
     const response = await apiInstance.post<AddNewMessageResponseType>(`/message`, {
       chat_id: newMessage.chatId,
       sender_id: newMessage.senderId,
-      text: newMessage.text, 
+      text: newMessage.text,
       created_at: newMessage.created_at,
       updated_at: newMessage.updated_at
     }, {
