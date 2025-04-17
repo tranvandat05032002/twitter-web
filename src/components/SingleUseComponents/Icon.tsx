@@ -356,9 +356,10 @@ export const BackIconShort: React.FC<IIcon> = (props) => {
   );
 };
 export const CloseIcon: React.FC<IIcon> = (props) => {
-  const { setShowModal } = useEvent((state) => state);
+  const { setShowModal, setShowCreatePost } = useEvent((state) => state);
   const handleClose = () => {
     setShowModal(false);
+    setShowCreatePost(false);
   };
   const { className } = props;
   return (

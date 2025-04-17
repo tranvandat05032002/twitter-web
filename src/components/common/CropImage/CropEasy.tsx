@@ -15,7 +15,7 @@ interface ICropEasy {
     setPhotoURL: any;
     setFile: any
 }
-const CropEasy = ({ photoURL, setOpenCrop, setPhotoURL, setFile }: ICropEasy) => {
+const CropEasy = ({ photoURL, setOpenCrop, setPhotoURL, setFile }: ICropEasy): JSX.Element | null => {
     const { userProfile } = useProfileStore(
         (state) => state
     );
@@ -23,7 +23,7 @@ const CropEasy = ({ photoURL, setOpenCrop, setPhotoURL, setFile }: ICropEasy) =>
     const [zoom, setZoom] = React.useState(1);
     const [croppedAreaPixels, setCroppedAreaPixels] = React.useState<ICroppedPixels | null>(null);
 
-    if (!photoURL) return;
+    if (!photoURL) return null;
     const cropComplete = (croppedArea: any, croppedAreaPixels: ICroppedPixels) => {
         setCroppedAreaPixels(croppedAreaPixels);
     };

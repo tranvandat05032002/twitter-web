@@ -28,10 +28,15 @@ export const NAVIGATION_ITEMS = [
     icon: MessageIcon,
     href: "/messages",
   },
+  // {
+  //   title: "Lists",
+  //   icon: ListIcon,
+  //   href: "/datdev0503/lists",
+  // },
   {
-    title: "Lists",
+    title: "Ngrok",
     icon: ListIcon,
-    href: "/datdev0503/lists",
+    href: "/chat/ai/ngrok",
   },
   {
     title: "Communities",
@@ -49,7 +54,7 @@ export const EXPLORE_ITEMS = [
     id: 1,
     title: "All",
     mode: "all"
-  }, 
+  },
   {
     id: 2,
     title: "Following",

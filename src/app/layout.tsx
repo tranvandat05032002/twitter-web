@@ -4,6 +4,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/ReactToastify.css";
 import { Roboto } from "next/font/google";
 import QueryClientLayoutProvider from "./QueryClientProvider";
+import 'swiper/css';
+import 'swiper/css/navigation';
 
 const roboto = Roboto({
   weight: ["100", "300", "500", "700"],
