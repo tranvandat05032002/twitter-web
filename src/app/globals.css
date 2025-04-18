@@ -35,7 +35,7 @@
     -moz-osx-font-smoothing: grayscale;
     background-color: #000000;
     color: white;
-    max-width: 1440px;
+    /* max-width: 1440px; */
   }
 
   .debug-css {
