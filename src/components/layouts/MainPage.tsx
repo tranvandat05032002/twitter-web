@@ -11,6 +11,7 @@ import {
 import { routers } from "@/utils/router/routers";
 import "vidstack/styles/defaults.css";
 import "vidstack/styles/community-skin/video.css";
+import Image from "next/image";
 // import {
 //   MediaCommunitySkin,
 //   MediaOutlet,
@@ -38,11 +39,20 @@ const MainPage = () => {
           <div className="flex flex-col gap-y-3 max-w-[320px] mb-7">
             <button className="w-80 h-11 rounded-full bg-white text-textBlack transition-all hover:bg-bgHoverWhite py-[2px] px-[10px] relative">
               <div className="flex items-center">
-                <div className="w-6 h-6 rounded-full overflow-hidden ml-[-4px] mr-2">
+                {/* <div className="w-6 h-6 rounded-full overflow-hidden ml-[-4px] mr-2">
                   <img
                     src="/image/avatar.jpg"
                     alt="avatar"
                     className="w-full h-full object-cover rounded-full"
+                  />
+                </div> */}
+                <div className="w-6 h-6 rounded-full overflow-hidden ml-[-4px] mr-2">
+                  <Image
+                    src="/image/avatar.jpg"
+                    alt="avatar"
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded-full"
                   />
                 </div>
                 <div className="text-xs text-start">

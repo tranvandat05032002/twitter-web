@@ -16,6 +16,7 @@ import { useForm } from 'react-hook-form'
 import { PrimaryButton } from '@/components/common/Button';
 import BoxIcon from '@/components/SingleUseComponents/BoxIcon';
 import Emoji from '@/components/common/Emoji/Emoji';
+import Image from 'next/image';
 const options = [
     { label: 'Công khai', value: 'public', icon: TiWorld },
     { label: 'Bạn bè', value: 'friends', icon: FaUserFriends },
@@ -89,9 +90,15 @@ export default function HomeCreatePost() {
                         <div className="flex flex-col w-full h-full px-[3px]">
                             <div className="px-4 pb-[30px]">
                                 <div className='flex items-center mb-4'>
-                                    <div className="w-10 h-10 rounded-full overflow-hidden flex-none">
-                                        <img src="/image/avatar.jpg" className="w-full h-full object-cover" />
-                                    </div>
+                                <div className="w-10 h-10 rounded-full overflow-hidden flex-none">
+                                    <Image
+                                        src="/image/avatar.jpg"
+                                        alt="Avatar" 
+                                        layout="fill" 
+                                        objectFit="cover"
+                                        className="rounded-full"
+                                    />
+                                </div>
                                     <div className='ml-[10px]'>
                                         <p>Trần Văn Đạt</p>
                                         <div className="relative inline-block text-left mt-[2px]" ref={dropdownRef}>

@@ -194,9 +194,18 @@ const EditProfile = () => {
                       <CloseExternalEventIcon className="text-white bg-black/10 "></CloseExternalEventIcon>
                     </button>}
                   </div>
-                  <div className="w-full h-full absolute">
+                  <div className="relative w-full h-screen">
                     <div className="absolute inset-0 bg-black/50"></div>
-                    {coverPhotoURL && <img src={coverPhotoURL as string} alt="cover photo" className="w-full h-full object-cover" />}
+                    {coverPhotoURL && (
+                      <Image
+                        src={coverPhotoURL}
+                        alt="Ảnh bìa"
+                        layout="fill"
+                        objectFit="cover"
+                        className="z-0"
+                      />
+                    )}
+                    {/* Nội dung khác có thể được thêm vào đây */}
                   </div>
                 </div>
               </div>

@@ -8,7 +8,7 @@ import { getToken, logOutCookies, saveProfileMe, saveToken } from "@/utils/auth/
 import { routers as Routers } from "@/utils/router/routers";
 import socket from "@/utils/socket";
 import axios from "axios";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import React from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { v4 as uuidV4 } from "uuid";

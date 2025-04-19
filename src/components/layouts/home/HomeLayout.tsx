@@ -14,6 +14,7 @@ import OverlayModal from "@/components/common/Modal/OverlayModal";
 import HomeCreatePost from "./HomeCreatePost";
 import ModalEditProfile from "@/components/common/portal/ModalEditProfile";
 import { useEvent } from "@/store/useEven";
+import Image from "next/image";
 
 const HomeLayout = () => {
   const { showCreatePost, setShowCreatePost } = useEvent((state) => state);
@@ -32,9 +33,15 @@ const HomeLayout = () => {
         </StickyNav>
         <div className="border-t-[0.5px] border-b-[0.5px] p-4 border-borderGrayPrimary py-[20px] space-y-4">
           <div className="flex items-center space-x-4">
-            <div className="w-10 h-10 rounded-full overflow-hidden flex-none">
-              <img src="/image/avatar.jpg" className="w-full h-full object-cover" />
-            </div>
+          <div className="w-10 h-10 rounded-full overflow-hidden flex-none">
+            <Image
+              src="/image/avatar.jpg" 
+              alt="Avatar" 
+              layout="fill" 
+              objectFit="cover"
+              className="rounded-full" 
+            />
+          </div>
             <div className="w-full">
               <button
                 className="bg-transparent text-left border hover:bg-[rgba(29,155,240,0.1)] border-borderGrayPrimary cursor-pointer font-[300] text-sm text-white px-4 py-[10px] rounded-full w-full outline-none"
@@ -55,9 +62,12 @@ const HomeLayout = () => {
               className="p-4 pb-2 border-b-[0.25px] border-borderGrayPrimary flex space-x-4"
             >
               <div className="w-10 h-10 rounded-full overflow-hidden flex-none">
-                <img
+                <Image
                   src="/image/avatar.jpg"
-                  className="w-full h-full object-cover"
+                  alt="Avatar"
+                  layout="fill"
+                  objectFit="cover"
+                  className="rounded-full"
                 />
               </div>
               <div className="flex flex-col pr-[25px]">
@@ -86,10 +96,12 @@ const HomeLayout = () => {
                     </div>
                   </div>
                   <div className="w-full h-[510px] aspect-square rounded-lg overflow-hidden">
-                    <img
+                    <Image
                       src="/image/avatar.jpg"
                       alt=""
-                      className="w-full h-full object-cover"
+                      layout="fill"
+                      objectFit="cover"
+                      className="rounded-lg"
                     />
                   </div>
                 </div>

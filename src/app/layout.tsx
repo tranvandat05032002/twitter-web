@@ -7,12 +7,12 @@ import QueryClientLayoutProvider from "./QueryClientProvider";
 import 'swiper/css';
 import 'swiper/css/navigation';
 
-const roboto = Roboto({
-  weight: ["100", "300", "500", "700"],
-  subsets: ["vietnamese"],
-  style: ["normal", "italic"],
-  display: "swap",
-});
+// const roboto = Roboto({
+//   weight: ["100", "300", "500", "700"],
+//   subsets: ["vietnamese"],
+//   style: ["normal", "italic"],
+//   display: "swap",
+// });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -27,7 +27,7 @@ export default function RootLayout({
     <html lang="en">
       {/* <meta httpEquiv="Cross-Origin-Opener-Policy" content="same-origin"></meta> */}
       {/* add link stop preload page */}
-      <body className={roboto.className} suppressHydrationWarning={true}>
+      <body suppressHydrationWarning={true}>
         <QueryClientLayoutProvider >
           {children}
           <ToastContainer />

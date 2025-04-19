@@ -1,8 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
-  webpack: (config) => {
-    return config; 
+  images: {
+    localPatterns: [
+      {
+        pathname: '/public/image/**',
+        search: '',
+      },
+    ],
   },
 };
 

@@ -5,7 +5,7 @@ import { TwitterIcon } from "@/components/SingleUseComponents";
 import { routers } from "@/utils/router/routers";
 import { useResendEmailToken, useVerifyEmail } from "@/hooks/users/useMutation";
 import { saveToken } from "@/utils/auth/cookies";
-const VerifyPage = () => {
+const VerifyPageComponent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [statusVerify, setStatusVerify] = React.useState<Boolean>(false);
@@ -23,10 +23,10 @@ const VerifyPage = () => {
     if (isSuccess) {
       setStatusVerify(true);
     }
-  }, [statusVerify, isSuccess]);
+  }, [isSuccess]);
   const handleResendVerify = React.useCallback(async () => {
     mutateResendEmail();
-  }, []);
+  }, [mutateResendEmail]);
   const handleComeHome = () => {
     router.push(routers.homePage);
   };
@@ -88,4 +88,10 @@ const VerifyPage = () => {
   );
 };
 
-export default VerifyPage;
+export default function VerifyPage() {
+  return (
+    <React.Suspense fallback={<div>Loading...</div>}>
+      <VerifyPageComponent />
+    </React.Suspense>
+  );
+}
