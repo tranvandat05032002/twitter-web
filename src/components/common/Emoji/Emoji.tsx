@@ -9,34 +9,46 @@ const Emoji = () => {
     const [showPicker, setShowPicker] = React.useState(false);
 
     const handleEmojiSelect = (emoji: any) => {
-        console.log("Selected emoji:", emoji.native); // hoặc truyền ra prop nếu cần
         setShowPicker(false);
     };
 
+    const handleShowEmoji = (status: Boolean) => {
+        setShowPicker(!status)
+    }
     return (
         <Tippy
             interactive
             visible={showPicker}
+            arrow={true}
             onClickOutside={() => setShowPicker(false)}
-            offset={[0, 10]}
+            offset={[0, 5]}
             placement="top"
             render={(attrs) => (
                 <div
-                    className="w-[320px] max-w-[90vw] overflow-hidden rounded-xl shadow-lg bg-white"
+                    className="w-max max-w-[90vw] overflow-hidden rounded-xl shadow-lg bg-white"
                     tabIndex={-1}
                     {...attrs}
                 >
-                    <Picker data={data} onEmojiSelect={handleEmojiSelect} autoFocus={true} />
+                    <div style={{ display: showPicker ? 'block' : 'none' }} className="h-[290px]">
+                        <Picker
+                            style={{ height: "290px" }}
+                            data={data}
+                            onEmojiSelect={handleEmojiSelect}
+                            previewPosition="none"
+                            locale="vi"
+                            autoFocus={true} />
+                    </div>
                 </div>
             )}
         >
-            <BoxIcon>
-                <FaRegSmile
+            <div className='p-2 rounded-full cursor-pointer hover:bg-iconBackgroundGray'>
+                <FaRegSmile title='Emoji'
                     className="w-[25px] h-[25px] cursor-pointer"
-                    onClick={() => setShowPicker(prev => !prev)}
+                    onClick={() => handleShowEmoji(showPicker)}
                 />
-            </BoxIcon>
+            </div>
         </Tippy>
+
     );
 };
 

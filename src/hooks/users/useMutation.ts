@@ -3,6 +3,7 @@
 import { ForgotForm } from "@/app/users/find-account/page";
 import { ResetPasswordForm } from "@/app/users/reset-password/page";
 import { NewMessageRequestType } from "@/types/chatTypes";
+import { TweetForm } from "@/types/tweetTypes";
 import {
   IToken,
   IUpdateUser,
@@ -24,6 +25,7 @@ import {
   requestUpdateUserProfile,
   requestGetToken,
   requestAddMessage,
+  requestCreateTweet,
 } from "@/utils/api/request";
 import { removeEmailCookies, removeOTPToken } from "@/utils/auth/cookies";
 import { UseMutationResult, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -125,6 +127,17 @@ export const useAddMessage = () => {
     mutationFn: (newMessage: NewMessageRequestType) => requestAddMessage(newMessage),
     onSuccess(data) {
       queryClient.invalidateQueries({ queryKey: ["message", data.chatId], exact: true })
+    },
+  });
+}
+
+// Tweet
+export const useCreateTweet = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: TweetForm) => requestCreateTweet(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tweet"] })
     },
   });
 }

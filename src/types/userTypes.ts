@@ -10,7 +10,7 @@ export type RegisterForm = {
   date_of_birth: string;
 };
 
-export interface IUser {
+export type IUser = {
   _id?: string;
   name: string;
   email: string;

@@ -37,6 +37,9 @@
     color: white;
     /* max-width: 1440px; */
   }
+  em-emoji-picker {
+    height: 290px;
+  }
 
   .debug-css {
     border: 1px solid red;

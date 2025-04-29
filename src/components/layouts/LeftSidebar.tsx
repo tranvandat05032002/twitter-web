@@ -14,6 +14,7 @@ import { IUser } from "@/types/userTypes";
 import { usePathname, useRouter } from "next/navigation";
 import { useLogoutUser } from "@/hooks/users/useMutation";
 import Image from "next/image";
+import { Avatar } from "@mui/material";
 
 interface ILeftSidebar {
   userInfo: IUser | null;
@@ -97,15 +98,14 @@ const LeftSidebar: React.FC<ILeftSidebar> = (props) => {
           <div className="px-2 absolute bottom-0 w-full left-0 ">
             <div className="flex items-center cursor-pointer select-none justify-between text-sm py-[10px] my-[2px] px-2 hover:bg-bgHoverBlue rounded-full">
               <div className="flex items-center gap-x-2">
-              <div className="w-10 h-10 overflow-hidden rounded-full relative"> {/* Thêm relative khi dùng fill */}
-                <Image
-                  src="/image/avatar.jpg"
-                  alt="Ảnh đại diện"
-                  width={40}
-                  height={40}  // Giúp trình duyệt tải đúng kích thước
-                  className="object-cover rounded-full"
-                />
-              </div>
+                <div className="w-10 h-10 overflow-hidden rounded-full relative"> {/* Thêm relative khi dùng fill */}
+                  <Avatar
+                    src="/image/avatar.jpg"
+                    alt="Ảnh đại diện"
+                    className="object-fit-cover"
+                    sx={{ width: 40, height: 40 }}
+                  />
+                </div>
                 <div>
                   <p>{userInfo?.name}</p>
                   <p className="text-textGray">{userInfo?.username}</p>

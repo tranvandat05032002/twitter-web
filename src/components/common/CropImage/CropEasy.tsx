@@ -35,8 +35,8 @@ const CropEasy = ({ photoURL, setOpenCrop, setPhotoURL, setFile }: ICropEasy): J
                 croppedAreaPixels,
             ) as ICropImage;
             setFile(file);
-            const avatarResult = await uploadImageToS3(file, "avatar", "avatar")
-            setPhotoURL(avatarResult);
+            const media = await uploadImageToS3(file, "avatar", "avatar")
+            setPhotoURL(media?.url);
             setOpenCrop(false);
         } catch (error) {
             throw (error)

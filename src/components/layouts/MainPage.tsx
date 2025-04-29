@@ -12,6 +12,7 @@ import { routers } from "@/utils/router/routers";
 import "vidstack/styles/defaults.css";
 import "vidstack/styles/community-skin/video.css";
 import Image from "next/image";
+import { Avatar } from "@mui/material";
 // import {
 //   MediaCommunitySkin,
 //   MediaOutlet,
@@ -39,20 +40,11 @@ const MainPage = () => {
           <div className="flex flex-col gap-y-3 max-w-[320px] mb-7">
             <button className="w-80 h-11 rounded-full bg-white text-textBlack transition-all hover:bg-bgHoverWhite py-[2px] px-[10px] relative">
               <div className="flex items-center">
-                {/* <div className="w-6 h-6 rounded-full overflow-hidden ml-[-4px] mr-2">
-                  <img
-                    src="/image/avatar.jpg"
-                    alt="avatar"
-                    className="w-full h-full object-cover rounded-full"
-                  />
-                </div> */}
                 <div className="w-6 h-6 rounded-full overflow-hidden ml-[-4px] mr-2">
-                  <Image
-                    src="/image/avatar.jpg"
-                    alt="avatar"
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-full"
+                  <Avatar
+                    src={"/image/avatar.jpg"}
+                    className="object-fit-cover"
+                    sx={{ width: 24, height: 24 }}
                   />
                 </div>
                 <div className="text-xs text-start">
@@ -70,7 +62,7 @@ const MainPage = () => {
               </div>
             </button>
 
-            <button className="w-80 h-11 rounded-full bg-white text-textBlack transition-all hover:bg-bgHoverWhite                                                                                                                               ] py-[2px] px-[10px]">
+            <button className="w-80 h-11 rounded-full bg-white text-textBlack transition-all hover:bg-bgHoverWhite py-[2px] px-[10px]">
               <div className="flex items-center justify-center">
                 <AppleIcon></AppleIcon>
                 <span className="text-textBlackBtn text-base font-bold">

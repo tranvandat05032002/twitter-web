@@ -1,7 +1,5 @@
 // Method: GET
-
-import { IUser } from "@/types/userTypes";
-import { ISearchUser, requestFetchMe, requestGetChat, requestGetMessage, requestGetUserProfile, requestGetUserProfileUserId, requestGetUsersFollowing, requestSearchUser } from "@/utils/api/request";
+import { ISearchUser, requestFetchMe, requestGetChat, requestGetMessage, requestGetTweets, requestGetUserProfile, requestGetUserProfileUserId, requestGetUsersFollowing, requestSearchUser } from "@/utils/api/request";
 import { useQuery } from "@tanstack/react-query";
 
 export const useFetchMe = () =>
@@ -30,18 +28,17 @@ export const useSearchUser = (infoSearch: ISearchUser) =>
     enabled: Boolean(infoSearch.query),
     staleTime: 60 * 1000,
     cacheTime: 2 * 60 * 1000,
-    retry: 0
   });
 
 export const useGetUsersFollowing = () =>
   useQuery({
     queryKey: ["user_following"],
-    queryFn: () => {
-      const controller = new AbortController()
-      setTimeout(() => {
-        controller.abort();
-      }, 5000);
-      return requestGetUsersFollowing(controller.signal)
+    queryFn: async () => {
+      const controller = new AbortController();
+      const signal = controller.signal;
+
+      const response = await requestGetUsersFollowing(signal);
+      return response;
     },
     staleTime: 60 * 1000,
     cacheTime: 2 * 60 * 1000,
@@ -58,3 +55,25 @@ export const useGetMessage = (chat_id: string) =>
     cacheTime: 2 * 60 * 1000,
     keepPreviousData: true
   })
+
+// tweet
+export const useGetTweets = () => {
+  return useQuery({
+    queryKey: ['tweets'], // Đổi tên key cho rõ ràng hơn
+    queryFn: async () => {
+      const controller = new AbortController();
+      const signal = controller.signal;
+
+      // Gọi API và trả về dữ liệu
+      const response = await requestGetTweets(signal);
+      return response;
+    },
+    staleTime: 60 * 1000, // Dữ liệu sẽ được coi là "cũ" sau 60 giây
+    cacheTime: 2 * 60 * 1000, // Dữ liệu sẽ được lưu trong cache trong 2 phút
+    keepPreviousData: true, // Giữ dữ liệu cũ trong khi đang tải dữ liệu mới
+    retry: 3, // Số lần thử lại khi có lỗi
+    onError: (error) => {
+      console.error('Error fetching tweets:', error);
+    },
+  });
+};

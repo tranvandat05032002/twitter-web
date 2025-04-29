@@ -2,10 +2,11 @@
 const nextConfig = {
   reactStrictMode: false,
   images: {
-    localPatterns: [
+    remotePatterns: [
       {
-        pathname: '/public/image/**',
-        search: '',
+        protocol: 'https',
+        hostname: 'twitter-s3-ap-southeast-1.s3.ap-southeast-1.amazonaws.com',
+        pathname: '/**',
       },
     ],
   },

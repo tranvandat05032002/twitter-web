@@ -1,9 +1,11 @@
 import { IOAuthGoogle } from "@/types/userTypes";
-import { format, formatISO, isThisWeek, isToday, isValid, isYesterday, parse } from "date-fns";
+import { differenceInDays, differenceInMinutes, format, formatISO, isThisWeek, isToday, isValid, isYesterday, parse } from "date-fns";
 import { vi } from 'date-fns/locale';
 import { getToken } from "./auth/cookies";
 import { v4 as uuidv4 } from "uuid"
 import { apiInstance } from "./api";
+import { Mediatype } from "@/types/tweetTypes";
+import { HASHTAG_REGEX, MENTION_REGEX } from "@/constant/constants";
 export function isObjectEmpty(obj: Object): boolean {
   if (Object.values(obj).every((value) => value !== "")) {
     return false;
@@ -86,7 +88,11 @@ export const uploadImageToS3 = async (file: File, key: string, type: string) => 
       )
       if (response.status === 200) {
         console.log("URLS3: ", response.data.result[0].url)
-        return response.data.result[0].url as string
+        const media: Mediatype = {
+          url: response.data.result[0].url as string,
+          type: response.data.result[0].type as number
+        }
+        return media
       }
     } catch (error) {
       throw error
@@ -135,4 +141,60 @@ export const formatMessageTime = (date: Date): string => {
     const year = format(date, 'yyyy')
     return `${formattedDate} Tháng ${month}, ${year}`;
   }
+}
+
+
+export const formatTweetTime = (date: Date): string => {
+  // Kiểm tra xem có phải là ngày hợp lệ không
+  if (!isValid(date)) {
+    return "Invalid date";
+  } else {
+    const minutesDifference = differenceInMinutes(new Date(), date);
+    const daysDifference = differenceInDays(new Date(), date);
+
+    // Nếu tin nhắn được gửi trong vòng 1 phút, hiển thị "Vừa xong"
+    if (minutesDifference < 1) {
+      return "Vừa xong";
+    }
+    // Nếu tin nhắn được gửi trong vòng 1 giờ, hiển thị số phút
+    if (minutesDifference < 60) {
+      return `${minutesDifference} phút trước`;
+    }
+    // Nếu tin nhắn được gửi hôm nay, hiển thị HH:mm
+    if (isToday(date)) {
+      return format(date, 'HH:mm');
+    }
+    // Nếu tin nhắn được gửi hôm qua, hiển thị "Hôm qua"
+    if (isYesterday(date)) {
+      return `Hôm qua`;
+    }
+    // Nếu tin nhắn được gửi trong tuần này
+    if (isThisWeek(date)) {
+      if (daysDifference >= 2 && daysDifference <= 7) {
+        return `${daysDifference} ngày trước`;
+      }
+    }
+    // Nếu tin nhắn được gửi hơn một tuần trước, hiển thị dd/MM/yyyy
+    return format(date, 'dd/MM/yyyy', { locale: vi });
+  }
+}
+
+/**
+ * Trích xuất tất cả hashtag từ content
+ * @param content - chuỗi nội dung
+ * @returns danh sách hashtag không trùng lặp
+ */
+export const extractHashtags = (content: string): string[] => {
+  const matches = content.match(HASHTAG_REGEX) || []
+  return [...new Set(matches)]
+}
+
+/**
+ * Trích xuất tất cả mentions từ content
+ * @param content - chuỗi nội dung
+ * @returns danh sách mentions không trùng lặp
+ */
+export const extractMentios = (content: string): string[] => {
+  const matches = content.match(MENTION_REGEX) || []
+  return [...new Set(matches)]
 }

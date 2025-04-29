@@ -104,8 +104,8 @@ const EditProfile = () => {
       const file = e.target.files[0] as File
       setFileCoverPhoto(file)
       setValue("cover_photo", URL.createObjectURL(file))
-      const coverPhotoResult = await uploadImageToS3(file, "coverPhoto", "cover-photo")
-      setCoverPhotoURL(coverPhotoResult as string)
+      const media = await uploadImageToS3(file, "coverPhoto", "cover-photo")
+      setCoverPhotoURL(media?.url ?? "/image/avatar.jpg")
     }
   }
   const handleUpdateUser = async (values: IUpdateUser) => {
@@ -195,15 +195,17 @@ const EditProfile = () => {
                     </button>}
                   </div>
                   <div className="relative w-full h-screen">
-                    <div className="absolute inset-0 bg-black/50"></div>
+                    <div className="absolue inset-0 bg-black/50"></div>
                     {coverPhotoURL && (
-                      <Image
-                        src={coverPhotoURL}
-                        alt="Ảnh bìa"
-                        layout="fill"
-                        objectFit="cover"
-                        className="z-0"
-                      />
+                      <div className="relative w-full h-[250px]">
+                        <Image
+                          src={coverPhotoURL}
+                          alt="Ảnh bìa"
+                          fill
+                          objectFit="cover"
+                          className="z-0"
+                        />
+                      </div>
                     )}
                     {/* Nội dung khác có thể được thêm vào đây */}
                   </div>

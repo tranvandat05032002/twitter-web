@@ -25,6 +25,7 @@ import { ForgotForm } from "@/app/users/find-account/page";
 import { ResetPasswordForm } from "@/app/users/reset-password/page";
 import { AxiosInstance } from "axios";
 import { AddNewMessageResponseType, GetChatResponseType, GetMessagesResponseType, NewMessageRequestType } from "@/types/chatTypes";
+import { ResultTweet, TweetForm } from "@/types/tweetTypes";
 export const requestRegister = async (registerInfo: RegisterForm) => {
   try {
     const { data } = await apiInstance.post<TRequestToken<IToken>>(
@@ -451,6 +452,40 @@ export const requestAddMessage = async (newMessage: NewMessageRequestType) => {
       }
     });
     return response.data.result
+  } catch (error) {
+    throw error
+  }
+}
+
+// Tweet
+export const requestCreateTweet = async (data: TweetForm) => {
+  const { access_token } = getToken()
+  try {
+    const response = await apiInstance.post(`/tweet`, data, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      }
+    });
+    return response.status
+  } catch (error) {
+    throw error
+  }
+}
+
+export const requestGetTweets = async (signal?: AbortSignal) => {
+  const { access_token } = getToken()
+  try {
+    const response = await apiInstance.get(`/tweet?limit=5&page=1`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      },
+      signal
+    });
+    if (response.status === 200) {
+      return response.data.result as ResultTweet
+    }
   } catch (error) {
     throw error
   }
