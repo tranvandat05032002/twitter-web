@@ -55,7 +55,7 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
   const avatarUrl: string = userProfile.avatar ?? '/image/avatar.jpg';
   return (
     <React.Fragment>
-      <div className="w-[600px] flex flex-col h-full min-h-screen border-r-[0.5px] border-borderGrayPrimary">
+      <div className="w-[600px] flex flex-col border-r-[0.5px] border-borderGrayPrimary">
         <StickyNav>
           <div className="flex items-center pt-1 px-4">
             <div className="text-white p-2 mr-6 rounded-full hover:bg-white/10 transition duration-200 cursor-pointer">
@@ -70,30 +70,35 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
             </div>
           </div>
         </StickyNav>
-        <div className="flex flex-col h-screen overflow-auto">
-          <div className="relative w-full h-[200px] z-0">
-          <div className="absolute w-full h-full top-0 left-0 bg-borderGrayPrimary">
-            {userProfile.cover_photo && (
-              <Image
-                src={userProfile.cover_photo}
-                alt="Cover photo"
-                layout="fill" 
-                objectFit="cover"
-                className="cursor-pointer"
-              />
-            )}
+        {/* <StickyNav>
+          <div className="p-4">
+            <h1 className="text-xl font-bold">Meteeor</h1>
           </div>
-            <div className="w-[134px] h-[134px] absolute bottom-0 left-4 translate-y-1/2 cursor-pointer">
-            <div className="group absolute inset-0 rounded-full">
-              <Image
-                src={avatarUrl}
-                alt={userProfile.name}
-                layout="fill" // Để hình ảnh chiếm toàn bộ không gian
-                objectFit="cover" // Để hình ảnh được cắt theo tỷ lệ
-                className="rounded-full border-[3px] border-black"
-              />
-              <div className="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 rounded-full transition-opacity"></div>
+        </StickyNav> */}
+        <div className="flex flex-col pb-1 overflow-auto">
+          <div className="relative w-full h-[200px] z-0">
+            <div className="absolute w-full h-full top-0 left-0 bg-borderGrayPrimary">
+              {userProfile.cover_photo && (
+                <Image
+                  src={userProfile.cover_photo}
+                  alt="Cover photo"
+                  layout="fill"
+                  objectFit="cover"
+                  className="cursor-pointer"
+                />
+              )}
             </div>
+            <div className="w-[134px] h-[134px] absolute bottom-0 left-4 translate-y-1/2 cursor-pointer">
+              <div className="group absolute inset-0 rounded-full">
+                <Image
+                  src={avatarUrl}
+                  alt={userProfile.name}
+                  layout="fill" // Để hình ảnh chiếm toàn bộ không gian
+                  objectFit="cover" // Để hình ảnh được cắt theo tỷ lệ
+                  className="rounded-full border-[3px] border-black"
+                />
+                <div className="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 rounded-full transition-opacity"></div>
+              </div>
             </div>
           </div>
           <div className="w-full px-4">
@@ -205,10 +210,10 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
                 </Link>
               </div>
             </div>
-            <div className="py-4 border-y-[0.5px] border-borderGrayPrimary">
-              {children}
-            </div>
           </div>
+        </div>
+        <div className="pt-4 border-t-[0.5px] border-borderGrayPrimary">
+          {children}
         </div>
       </div>
       <ModalEditProfile></ModalEditProfile>
