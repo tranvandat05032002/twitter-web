@@ -25,7 +25,8 @@ import { ForgotForm } from "@/app/users/find-account/page";
 import { ResetPasswordForm } from "@/app/users/reset-password/page";
 import { AxiosInstance } from "axios";
 import { AddNewMessageResponseType, GetChatResponseType, GetMessagesResponseType, NewMessageRequestType } from "@/types/chatTypes";
-import { ResultTweet, TweetForm } from "@/types/tweetTypes";
+import { ResultTweet, Tweet, TweetForm } from "@/types/tweetTypes";
+import { useQueryClient } from "@tanstack/react-query";
 export const requestRegister = async (registerInfo: RegisterForm) => {
   try {
     const { data } = await apiInstance.post<TRequestToken<IToken>>(
@@ -486,6 +487,59 @@ export const requestGetTweets = async (signal?: AbortSignal) => {
     if (response.status === 200) {
       return response.data.result as ResultTweet
     }
+  } catch (error) {
+    throw error
+  }
+}
+
+export const requestGetTweetById = async (tweet_id: string): Promise<Tweet> => {
+  const { access_token } = getToken()
+  // try {
+  const response = await apiInstance.get(`/tweet/${tweet_id}`, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${access_token}`,
+    },
+  });
+  if (!response.data) {
+    throw new Error("Tweet not found");
+  }
+
+  // if (response.status === 200) {
+  return response.data.result as Tweet
+  // }
+  // } catch (error) {
+  // throw error
+  // }
+}
+
+// Like/Unlike
+export const requestToggleLike = async ({ tweet_id, liked, like_id }: { tweet_id: string, liked: boolean, like_id: string }) => {
+  const { access_token } = getToken()
+  console.log("tweet_id ---> ", tweet_id)
+  try {
+    if (liked && like_id) {
+      await apiInstance.delete(`/like/${like_id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${access_token}`,
+        },
+      })
+    } else {
+      const res = await apiInstance.post(`/like`, {
+        tweet_id
+      }, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${access_token}`,
+        },
+      })
+      const like_id = res.data?.result._id
+      return {
+        like_id
+      }
+    }
+    return
   } catch (error) {
     throw error
   }

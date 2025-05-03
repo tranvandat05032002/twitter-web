@@ -1,5 +1,5 @@
 // Method: GET
-import { ISearchUser, requestFetchMe, requestGetChat, requestGetMessage, requestGetTweets, requestGetUserProfile, requestGetUserProfileUserId, requestGetUsersFollowing, requestSearchUser } from "@/utils/api/request";
+import { ISearchUser, requestFetchMe, requestGetChat, requestGetMessage, requestGetTweetById, requestGetTweets, requestGetUserProfile, requestGetUserProfileUserId, requestGetUsersFollowing, requestSearchUser } from "@/utils/api/request";
 import { useQuery } from "@tanstack/react-query";
 
 export const useFetchMe = () =>
@@ -72,6 +72,18 @@ export const useGetTweets = () => {
     cacheTime: 2 * 60 * 1000, // Dữ liệu sẽ được lưu trong cache trong 2 phút
     keepPreviousData: true, // Giữ dữ liệu cũ trong khi đang tải dữ liệu mới
     retry: 3, // Số lần thử lại khi có lỗi
+    onError: (error) => {
+      console.error('Error fetching tweets:', error);
+    },
+  });
+};
+
+export const useGetTweetById = (tweet_id: string) => {
+  return useQuery({
+    queryKey: ['tweet', tweet_id],
+    queryFn: async () => {
+      return await requestGetTweetById(tweet_id);
+    },
     onError: (error) => {
       console.error('Error fetching tweets:', error);
     },

@@ -3,10 +3,14 @@ import { CloseExternalEventIcon, DotsIcon, MagnifyingGlassIcon } from "@/compone
 import { Avatar } from "@mui/material";
 import classNames from "classnames";
 import { useEvent } from '@/store/useEven';
+import { useGetUsersFollowing } from '@/hooks/users/useQuery';
+import ItemUserFollowing from '@/components/common/Tweet/ItemUserFollowing';
 
 export default function HomeFollowing() {
     const [isSearching, setIsSearching] = React.useState(false)
     const { showCreatePost } = useEvent((state) => state);
+    const usersFollowing = useGetUsersFollowing();
+    const dataGetUsersFollowing = usersFollowing.data
     return (
         <div className={`w-[320px] ${showCreatePost ? "h-screen overflow-hidden" : ""}`}>
             <div className="sticky top-0">
@@ -38,27 +42,9 @@ export default function HomeFollowing() {
                     {/* </StickyNav> */}
                 </div>
                 <div className="p-[13px] max-h-screen overflow-y-auto">
-                    {Array.from({ length: 20 }).map((_, index) => (
-                        <div key={index} className="w-full h-[56px] group transition-all">
-                            <div className={classNames("flex items-center relative cursor-pointer select-none justify-between text-sm py-[10px] my-[2px] px-2 hover:bg-iconBackgroundGray rounded-[5px]")}>
-                                <div className="flex items-center gap-x-2">
-                                    <div className="relative w-10 h-10">
-                                        {/* Hiển thị trạng thái online */}
-                                        <div className="absolute w-2 h-2 rounded-full bg-[#31a24c] bottom-0 right-1 z-[1000]" />
-                                        <div className="overflow-hidden rounded-full z-[-1]">
-                                            <Avatar src="/image/avatar.jpg" />
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <p className="text-base">Trần Văn Đạt {index + 1}</p>
-                                    </div>
-                                </div>
-                                <div className="hidden absolute group-hover:block top-1/2 right-[20px] translate-y-[-50%] p-2 rounded-full bg-iconBackgroundGray hover:bg-iconHoverBackgroundGray">
-                                    <DotsIcon />
-                                </div>
-                            </div>
-                        </div>
-                    ))}
+                    {dataGetUsersFollowing?.data.map((user: any) =>
+                        <ItemUserFollowing data={user?.followUsers} key={user._id} />
+                    )}
                 </div>
             </div>
         </div>

@@ -61,7 +61,3 @@ export const EXPLORE_ITEMS = [
     mode: "following"
   }
 ]
-
-export const HASHTAG_REGEX = /#[\wÀ-ỹ\d_]+/g
-export const MENTION_REGEX = /@[\w\d_]+/g
-export const HASHTAG_MENTION_REGEX = /(@[\w\d_]+|#[\wÀ-ỹ\d_]+)/g

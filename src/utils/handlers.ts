@@ -5,7 +5,7 @@ import { getToken } from "./auth/cookies";
 import { v4 as uuidv4 } from "uuid"
 import { apiInstance } from "./api";
 import { Mediatype } from "@/types/tweetTypes";
-import { HASHTAG_REGEX, MENTION_REGEX } from "@/constant/constants";
+import { HASHTAG_REGEX, MENTION_REGEX } from "@/constant/tweet";
 export function isObjectEmpty(obj: Object): boolean {
   if (Object.values(obj).every((value) => value !== "")) {
     return false;

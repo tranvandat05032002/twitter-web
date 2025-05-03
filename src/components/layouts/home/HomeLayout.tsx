@@ -1,31 +1,20 @@
 import React from "react";
 import { StickyNav } from "../../common";
-import {
-  CommentIcon,
-  DotIcon,
-  DotsIcon,
-  HeartIcon,
-  RetWeetIcon,
-  StatsIcon,
-} from "../../SingleUseComponents/Icon";
-import { LuShare } from "react-icons/lu";
 import HomeStory from "./HomeStory";
 import { useInView } from "react-intersection-observer";
-import OverlayModal from "@/components/common/Modal/OverlayModal";
 import HomeCreatePost from "./HomeCreatePost";
-import ModalEditProfile from "@/components/common/portal/ModalEditProfile";
 import { useEvent } from "@/store/useEven";
-import Image from "next/image";
 import { Avatar } from "@mui/material";
-import { useGetTweets } from "@/hooks/users/useQuery";
 import { parseISO } from "date-fns";
-import { formatMessageTime, formatTweetTime } from "@/utils/handlers";
+import { formatTweetTime } from "@/utils/handlers";
 import TweetComponent from "@/components/common/Tweet/TweetComponent";
 import { useInfiniteTweets } from "@/hooks/useInfiniteQuery";
 import { LoadingSniper } from "@/components/common/Loading/LoadingSniper";
+import { useProfileStore } from "@/store/useProfile";
 
 const HomeLayout = () => {
   const { showCreatePost, setShowCreatePost } = useEvent((state) => state);
+  const textareaRef = React.useRef<HTMLTextAreaElement | null>(null);
   const {
     data,
     fetchNextPage,
@@ -35,6 +24,9 @@ const HomeLayout = () => {
     status,
   } = useInfiniteTweets();
   const { ref: loader, inView } = useInView({ threshold: 1 });
+  const { userProfile } = useProfileStore(
+    (state) => state
+  );
 
   React.useEffect(() => {
     if (inView && hasNextPage) {
@@ -57,10 +49,11 @@ const HomeLayout = () => {
         </StickyNav>
         <div className="border-t-[0.5px] border-b-[0.5px] p-4 border-borderGrayPrimary py-[20px] space-y-4">
           <div className="flex items-center space-x-4">
-            <div className="w-10 h-10 rounded-full overflow-hidden flex-none">
+            <div className="w-10 h-10 rounded-full overflow-hidden flex-none cursor-pointer">
               <Avatar
-                src="/image/avatar.jpg"
-                className="object-fit-cover"
+                src={userProfile.avatar}
+                className="object-fit-cover hover:opacity-80"
+                title={userProfile.name}
                 sx={{ width: '100%', height: '100%' }}
               />
             </div>

@@ -4,12 +4,13 @@ import { FaRegSmile } from 'react-icons/fa';
 import Picker from '@emoji-mart/react';
 import data from '@emoji-mart/data';
 import Tippy from '@tippyjs/react';
-
-const Emoji = () => {
+interface EmojiPickerProps {
+    onSelectEmoji: (emoji: string) => void;
+}
+const Emoji: React.FC<EmojiPickerProps> = ({ onSelectEmoji }) => {
     const [showPicker, setShowPicker] = React.useState(false);
-
     const handleEmojiSelect = (emoji: any) => {
-        setShowPicker(false);
+        onSelectEmoji(emoji.native)
     };
 
     const handleShowEmoji = (status: Boolean) => {
@@ -29,9 +30,9 @@ const Emoji = () => {
                     tabIndex={-1}
                     {...attrs}
                 >
-                    <div style={{ display: showPicker ? 'block' : 'none' }} className="h-[290px]">
+                    <div style={{ display: showPicker ? 'block' : 'none' }} className="h-[295px] bg-[#151617]">
                         <Picker
-                            style={{ height: "290px" }}
+                            style={{ height: "295px" }}
                             data={data}
                             onEmojiSelect={handleEmojiSelect}
                             previewPosition="none"

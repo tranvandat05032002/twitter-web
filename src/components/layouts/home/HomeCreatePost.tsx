@@ -21,16 +21,12 @@ import Image from 'next/image';
 import { Mediatype, TweetForm } from '@/types/tweetTypes';
 import { extractHashtags, extractMentios, uploadImageToS3 } from '@/utils/handlers';
 import { useCreateTweet } from '@/hooks/users/useMutation';
-import { HASHTAG_MENTION_REGEX } from '@/constant/constants';
-const options = [
-    { id: 0, label: 'Công khai', value: "public", icon: TiWorld },
-    { id: 1, label: 'Bạn bè', value: "friend", icon: FaUserFriends },
-    { id: 2, label: 'Chỉ mình tôi', value: "private", icon: FaUserLock },
-]
+import { HASHTAG_MENTION_REGEX, optionsArea } from '@/constant/tweet';
+
 export const highlightContent = (content: string) => {
     // if (!content.startsWith("@") || !content.startsWith("#")) return "";
     return content.replace(HASHTAG_MENTION_REGEX, (match) => {
-        if (!match.startsWith("@") || !match.startsWith("#")) return "";
+        if (!match.startsWith("@") && !match.startsWith("#")) return match;
         console.log("running")
         const color = match.startsWith("@") || match.startsWith("#") ? "text-blue-500" : "";
         return `<span class="${color}">${match}</span>`;
@@ -43,8 +39,9 @@ export default function HomeCreatePost() {
     const { setShowCreatePost } = useEvent((state) => state);
     const [showFormAddImage, setShowFormAddImage] = React.useState(false)
     const [images, setImages] = React.useState<{ file: File; media: Mediatype }[]>([]);
-    const [selected, setSelected] = React.useState(options[0]) // Mặc định: "Bạn bè cụ thể"
+    const [selected, setSelected] = React.useState(optionsArea[0]) // Mặc định: "Bạn bè cụ thể"
     const [isOpen, setIsOpen] = React.useState(false)
+    const textareaRef = React.useRef<HTMLTextAreaElement | null>(null);
     const { mutate, isLoading } = useCreateTweet()
     const dropdownRef = React.useRef<HTMLDivElement>(null)
 
@@ -107,6 +104,30 @@ export default function HomeCreatePost() {
             url: data.media.url,
             type: data.media.type
         })))
+    }
+
+    const handleAddEmoji = (emoji: string) => {
+        console.log("running")
+        const currentText = getValues("content")
+        const textarea = textareaRef.current;
+
+        if (!textarea) return
+
+        const start = textarea.selectionStart
+        const end = textarea.selectionEnd
+
+        const newText =
+            currentText.substring(0, start) +
+            emoji +
+            currentText.substring(end, currentText.length);
+
+        setValue("content", newText)
+
+        // Set lại con trỏ sau emoji
+        setTimeout(() => {
+            textarea.focus();
+            textarea.setSelectionRange(start + emoji.length, start + emoji.length);
+        }, 0);
     }
 
     const handleCreateTweet = async (values: TweetForm) => {
@@ -180,8 +201,8 @@ export default function HomeCreatePost() {
                                                         </button>
 
                                                         {isOpen && (
-                                                            <div className="absolute mt-2 w-48 bg-black shadow-lg rounded-md z-10 border border-borderGrayPrimary">
-                                                                {options.map((option) => (
+                                                            <div className="absolute mt-2 w-48 bg-black shadow-lg rounded-md z-[999] border border-borderGrayPrimary debug-css">
+                                                                {optionsArea.map((option) => (
                                                                     <button
                                                                         key={option.value}
                                                                         type="button"
@@ -204,7 +225,7 @@ export default function HomeCreatePost() {
                                     </div>
                                     <div className='flex justify-between items-center mb-[25px]'>
                                         <div className="relative w-full">
-                                            <div className="absolute inset-0 text-white whitespace-pre-wrap break-words pointer-events-none text-opacity-80 z-0 debug-css">
+                                            <div className="absolute inset-0 text-white whitespace-pre-wrap break-words pointer-events-none text-opacity-80 z-0">
                                                 <div dangerouslySetInnerHTML={{ __html: highlightContent(contentValue) }} />
                                             </div>
                                             <Controller
@@ -214,6 +235,7 @@ export default function HomeCreatePost() {
                                                     <textarea
                                                         {...field}
                                                         className="w-full bg-transparent outline-none border-none placeholder:text-textGray resize-none whitespace-pre-wrap break-words z-10 relative"
+                                                        ref={textareaRef}
                                                         placeholder="Bạn đang nghĩ gì thế?"
                                                         onChange={(e) => {
                                                             field.onChange(e);
@@ -223,7 +245,7 @@ export default function HomeCreatePost() {
                                                 )}
                                             />
                                         </div>
-                                        <Emoji></Emoji>
+                                        <Emoji onSelectEmoji={handleAddEmoji}></Emoji>
                                     </div>
                                     {showFormAddImage &&
                                         <div className="w-full max-h-[260px] h-[260px] bg-black flex items-center justify-center rounded-xl border-[0.5px] border-borderGrayPrimary">

@@ -7,7 +7,7 @@ import { useGetTweets } from "@/hooks/users/useQuery";
 import { parseISO } from "date-fns";
 import { formatTweetTime } from "@/utils/handlers";
 import TweetComponent from "@/components/common/Tweet/TweetComponent";
-import { useInfiniteTweets } from "@/hooks/useInfiniteQuery";
+import { useInfiniteOwnerTweets } from "@/hooks/useInfiniteQuery";
 import { useInView } from "react-intersection-observer";
 import { LoadingSniper } from "@/components/common/Loading/LoadingSniper";
 const DynamicProfile = dynamic(() => import("@/components/layouts/ProfileLayout"), {
@@ -22,7 +22,7 @@ const Profile = ({ params }: { params: { username: string } }) => {
     isFetchingNextPage,
     isLoading,
     status,
-  } = useInfiniteTweets();
+  } = useInfiniteOwnerTweets();
   const { ref: loader, inView } = useInView({ threshold: 1 });
 
   React.useEffect(() => {

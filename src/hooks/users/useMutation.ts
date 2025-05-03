@@ -3,7 +3,7 @@
 import { ForgotForm } from "@/app/users/find-account/page";
 import { ResetPasswordForm } from "@/app/users/reset-password/page";
 import { NewMessageRequestType } from "@/types/chatTypes";
-import { TweetForm } from "@/types/tweetTypes";
+import { Tweet, TweetForm } from "@/types/tweetTypes";
 import {
   IToken,
   IUpdateUser,
@@ -26,6 +26,7 @@ import {
   requestGetToken,
   requestAddMessage,
   requestCreateTweet,
+  requestToggleLike,
 } from "@/utils/api/request";
 import { removeEmailCookies, removeOTPToken } from "@/utils/auth/cookies";
 import { UseMutationResult, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -137,7 +138,19 @@ export const useCreateTweet = () => {
   return useMutation({
     mutationFn: (data: TweetForm) => requestCreateTweet(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["tweet"] })
+      queryClient.invalidateQueries({ queryKey: ["tweets"] })
     },
   });
+}
+
+// Like/Unlike
+export const useToggleLike = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: requestToggleLike,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tweets"] })
+    },
+  })
 }

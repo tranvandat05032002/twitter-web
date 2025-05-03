@@ -1,7 +1,9 @@
 import { DotIcon, DotsIcon } from '@/components/SingleUseComponents/Icon';
+import { optionsArea } from '@/constant/tweet';
 import { Tweet } from '@/types/tweetTypes';
 import { Avatar } from '@mui/material';
 import Image from 'next/image';
+import Link from 'next/link';
 import React from 'react';
 import TweetAction from './TweetAction';
 
@@ -24,9 +26,11 @@ const TweetComponent = ({ tweet, time }: { tweet: Tweet, time: string }) => {
                         <div className="flex items-center justify-between">
                             <div className="flex items-center w-full text-base justify-between text-textGray">
                                 <div className="flex items-center space-x-1">
-                                    <h2 className="text-base font-bold text-white">
-                                        {tweet.user.name}
-                                    </h2>
+                                    <Link className="no-underline hover:no-underline" href={`/profile/v1?profile_username=${tweet.user.username}`}>
+                                        <h2 className="text-base font-bold text-white">
+                                            {tweet.user.name}
+                                        </h2>
+                                    </Link>
                                     <p>{tweet.user.username}</p>
                                 </div>
                                 <div className="cursor-pointer hover:bg-bgHoverBlue group rounded-full">
@@ -38,6 +42,12 @@ const TweetComponent = ({ tweet, time }: { tweet: Tweet, time: string }) => {
                             <div className="text-textGray text-sm">{time}</div>
                             <div>
                                 <DotIcon style={{ color: "#71767b" }}></DotIcon>
+                            </div>
+                            <div className="text-textGray">
+                                {
+                                    optionsArea.map((area) => area.id === tweet.audience ? <area.icon title={area.label} /> : null)
+                                }
+
                             </div>
                         </div>
                     </div>
