@@ -1,16 +1,12 @@
 import { Input, StickyNav } from '@/components/common'
-import DOMPurify from 'dompurify';
 import { IoMdArrowDropdown } from "react-icons/io";
-import { TiWorld } from "react-icons/ti";
 import { FaUser, FaSmile, FaMapMarkerAlt, FaRegSmile, FaUserFriends, FaUserLock } from 'react-icons/fa'
 import { MdPhotoLibrary } from 'react-icons/md'
-// import { RiGiftFill } from 'react-icons/ri'
 import { BsThreeDots } from 'react-icons/bs'
 import OverlayModal from '@/components/common/Modal/OverlayModal'
 import { CameraPlusIcon, CloseExternalEventIcon, CloseIcon, DotIcon } from '@/components/SingleUseComponents/Icon'
 import { useEvent } from '@/store/useEven'
 import { useProfileStore } from '@/store/useProfile'
-import { IUpdateUser } from '@/types/userTypes'
 import Tippy from '@tippyjs/react'
 import React from 'react'
 import { useForm, Controller } from 'react-hook-form'
@@ -32,11 +28,12 @@ export const highlightContent = (content: string) => {
         return `<span class="${color}">${match}</span>`;
     });
 };
-export default function HomeCreatePost() {
+export default function HomeCreatePost({ onClose }: { onClose: () => void }) {
+    console.log("Running create post")
     const { userProfile, updateProfile } = useProfileStore(
         (state) => state
     );
-    const { setShowCreatePost } = useEvent((state) => state);
+    // const { setShowCreatePost } = useEvent((state) => state);
     const [showFormAddImage, setShowFormAddImage] = React.useState(false)
     const [images, setImages] = React.useState<{ file: File; media: Mediatype }[]>([]);
     const [selected, setSelected] = React.useState(optionsArea[0]) // Mặc định: "Bạn bè cụ thể"
@@ -67,9 +64,9 @@ export default function HomeCreatePost() {
     });
 
     const contentValue = watch("content");
-    const handleCloseCreatePost = () => {
-        setShowCreatePost(false)
-    }
+    // const handleCloseCreatePost = () => {
+    //     setShowCreatePost(false)
+    // }
 
     const handleShowFormAddImage = () => {
         setShowFormAddImage(!showFormAddImage)
@@ -145,7 +142,7 @@ export default function HomeCreatePost() {
         mutate(payload)
         reset();
         setImages([]);
-        setShowCreatePost(false);
+        onClose();
     }
     const handleRemoveImage = (index: number) => {
         setImages((prev) => prev.filter((_, idx) => idx != index))
@@ -163,7 +160,7 @@ export default function HomeCreatePost() {
                                 </div>
                                 <button className={`rounded-full bg-black border-[0.5px] border-[#333639] text-white font-bold px-4 py-1 text-[15px] hover:bg-iconHoverBackgroundGray`}
                                     type="button"
-                                    onClick={handleCloseCreatePost}
+                                    onClick={onClose}
                                 >
                                     Hủy
                                 </button>

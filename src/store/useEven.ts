@@ -1,19 +1,20 @@
 import { create } from "zustand";
 
-type EvenType = {
-  showModal: Boolean;
-  showEdit: Boolean;
-  showCreatePost: Boolean,
-  setShowModal: (status: Boolean) => void;
-  setShowEdit: (status: Boolean) => void;
-  setShowCreatePost: (status: Boolean) => void;
+export enum ModalType {
+  NONE = '',
+  CREATE_POST = 'CREATE_POST',
+  DETAIL_TWEET = 'DETAIL_TWEET',
+  EDIT = 'EDIT',
+}
+
+type EventStore = {
+  activeModal: ModalType;
+  setActiveModal: (modal: ModalType) => void;
+  closeModal: () => void;
 };
 
-export const useEvent = create<EvenType>((set) => ({
-  showModal: false,
-  showEdit: false,
-  showCreatePost: false,
-  setShowModal: (status: Boolean) => set(() => ({ showModal: status })),
-  setShowEdit: (status: Boolean) => set(() => ({ showEdit: status })),
-  setShowCreatePost: (status: Boolean) => set(() => ({ showCreatePost: status })),
+export const useEvent = create<EventStore>((set) => ({
+  activeModal: ModalType.NONE,
+  setActiveModal: (modal) => set({ activeModal: modal }),
+  closeModal: () => set({ activeModal: ModalType.NONE }),
 }));

@@ -3,7 +3,7 @@ import { StickyNav } from "../../common";
 import HomeStory from "./HomeStory";
 import { useInView } from "react-intersection-observer";
 import HomeCreatePost from "./HomeCreatePost";
-import { useEvent } from "@/store/useEven";
+import { ModalType, useEvent } from "@/store/useEven";
 import { Avatar } from "@mui/material";
 import { parseISO } from "date-fns";
 import { formatTweetTime } from "@/utils/handlers";
@@ -11,10 +11,14 @@ import TweetComponent from "@/components/common/Tweet/TweetComponent";
 import { useInfiniteTweets } from "@/hooks/useInfiniteQuery";
 import { LoadingSniper } from "@/components/common/Loading/LoadingSniper";
 import { useProfileStore } from "@/store/useProfile";
+import HomeDetailTweet from "./HomeDetailTweet";
+import { Tweet } from "@/types/tweetTypes";
 
 const HomeLayout = () => {
-  const { showCreatePost, setShowCreatePost } = useEvent((state) => state);
+  const { activeModal, setActiveModal, closeModal } = useEvent();
   const textareaRef = React.useRef<HTMLTextAreaElement | null>(null);
+  const [selectedTweet, setSelectedTweet] = React.useState<Tweet | null>(null);
+  const [selectedTweetTime, setSelectedTweetTime] = React.useState<string>("");
   const {
     data,
     fetchNextPage,
@@ -35,13 +39,19 @@ const HomeLayout = () => {
   }, [inView, hasNextPage, fetchNextPage]);
 
   const handleOpenModal = React.useCallback(() => {
-    setShowCreatePost(true);
-  }, [showCreatePost]);
+    setActiveModal(ModalType.CREATE_POST);
+  }, [setActiveModal]);
+
+  const handleOpenDetailTweet = React.useCallback((tweet: Tweet, time: string) => {
+    setActiveModal(ModalType.DETAIL_TWEET);
+    setSelectedTweet(tweet);
+    setSelectedTweetTime(time);
+  }, [setActiveModal]);
 
   const tweets = data?.pages.flatMap((page) => page?.tweet.tweets ?? []);
   return (
     <React.Fragment>
-      <div className={`flex w-[662px] flex-col ${showCreatePost ? "h-screen overflow-hidden" : "h-full"} min-h-screen border-r-[0.5px] border-borderGrayPrimary`}>
+      <div className={`flex w-[662px] flex-col min-h-screen border-r-[0.5px] border-borderGrayPrimary ${activeModal === ModalType.CREATE_POST ? "h-screen overflow-hidden" : ""}`}>
         <StickyNav>
           <div className="p-4">
             <h1 className="text-xl font-bold">Meteeor</h1>
@@ -73,10 +83,14 @@ const HomeLayout = () => {
         <div className="flex flex-col">
           {data?.pages.map((page, i) => (
             <React.Fragment key={i}>
-              {page?.tweet?.tweets.map((tweet: any) => {
+              {page?.tweet?.tweets.map((tweet: Tweet) => {
                 const date = parseISO(tweet.created_at);
                 const time = formatTweetTime(date);
-                return <TweetComponent key={tweet._id} tweet={tweet} time={time} />;
+                return (
+                  <React.Fragment key={tweet._id}>
+                    <TweetComponent tweet={tweet} time={time} onOpenDetail={() => handleOpenDetailTweet(tweet, time)} />
+                  </React.Fragment>
+                );
               })}
             </React.Fragment>
           ))}
@@ -88,7 +102,16 @@ const HomeLayout = () => {
           {!isLoading && tweets?.length === 0 && <p className="text-center text-textGray my-4">Chưa có bài viết nào.</p>}
         </div>
       </div>
-      <HomeCreatePost></HomeCreatePost>
+      <>
+        {activeModal === ModalType.CREATE_POST && <HomeCreatePost onClose={closeModal} />}
+        {activeModal === ModalType.DETAIL_TWEET && selectedTweet && (
+          <HomeDetailTweet
+            onClose={closeModal}
+            tweet={selectedTweet}
+            time={selectedTweetTime}
+          />
+        )}
+      </>
     </React.Fragment>
   );
 };

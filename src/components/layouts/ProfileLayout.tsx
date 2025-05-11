@@ -10,7 +10,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useProfileStore } from "@/store/useProfile";
 import { decodedUsername, formatMonthYear } from "@/utils/handlers";
-import { useEvent } from "@/store/useEven";
+import { ModalType, useEvent } from "@/store/useEven";
 import ModalEditProfile from "../common/portal/ModalEditProfile";
 import { useGetProfile } from "@/hooks/users/useQuery";
 import { GhostButton } from "../common/Button";
@@ -30,7 +30,8 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
     (state) => state
   );
   const { data: dataUserProfile, isSuccess } = useGetProfile(username);
-  const { showModal, setShowModal } = useEvent((state) => state);
+  const activeModal = useEvent((state) => state.activeModal);
+  const setActiveModal = useEvent((state) => state.setActiveModal);
   const handleBackHome = React.useCallback(() => {
     router.back();
   }, [router]);
@@ -41,8 +42,10 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
       : "";
   };
   const handleOpenModal = React.useCallback(() => {
-    setShowModal(true);
-  }, [showModal]);
+    setActiveModal(ModalType.EDIT);
+  }, [setActiveModal]);
+
+  console.log("activeModal ---> ", activeModal)
 
   React.useEffect(() => {
     // getUserProfile(username);
@@ -55,7 +58,7 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
   const avatarUrl: string = userProfile.avatar ?? '/image/avatar.jpg';
   return (
     <React.Fragment>
-      <div className="w-[600px] flex flex-col border-r-[0.5px] border-borderGrayPrimary">
+      <div className={`w-[600px] flex flex-col border-r-[0.5px] border-borderGrayPrimary ${activeModal !== ModalType.NONE ? " h-screen overflow-hidden" : "h-full"} `}>
         <StickyNav>
           <div className="flex items-center pt-1 px-4">
             <div className="text-white p-2 mr-6 rounded-full hover:bg-white/10 transition duration-200 cursor-pointer">
@@ -75,7 +78,7 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
             <h1 className="text-xl font-bold">Meteeor</h1>
           </div>
         </StickyNav> */}
-        <div className="flex flex-col pb-1 overflow-auto">
+        <div className="flex flex-col pb-1">
           <div className="relative w-full h-[200px] z-0">
             <div className="absolute w-full h-full top-0 left-0 bg-borderGrayPrimary">
               {userProfile.cover_photo && (
@@ -216,7 +219,7 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
           {children}
         </div>
       </div>
-      <ModalEditProfile></ModalEditProfile>
+      {activeModal === ModalType.EDIT && <ModalEditProfile />}
     </React.Fragment>
   );
 };

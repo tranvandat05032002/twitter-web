@@ -50,7 +50,7 @@ const EditProfile = () => {
   const { day, month, year, setDay, setMonth, setYear, setISO8601 } =
     useDateStore((state) => state);
   const { mutateAsync: mutateUpdateUser, isSuccess, isError } = useUpdateUser();
-  const { setShowModal } = useEvent((state) => state);
+  const { setActiveModal, closeModal } = useEvent((state) => state);
   const [file, setFile] = React.useState<File | null>(null);
   const [fileCoverPhoto, setFileCoverPhoto] = React.useState<File | null>(null);
   const [photoURL, setPhotoURL] = React.useState<string | null>(userProfile?.avatar as string);
@@ -148,21 +148,16 @@ const EditProfile = () => {
       toast.success("Update success", {
         pauseOnHover: false,
       });
-      timer1 = setTimeout(() => {
-        setShowModal(false)
-      }, 3000)
+      closeModal()
     }
     if (isError) {
       toast.error("Update failed", {
         pauseOnHover: false,
       });
     }
-    return () => {
-      if (timer1) {
-        clearTimeout(timer1)
-      }
-    }
+
   }, [isSuccess, isError])
+  // console.log("ActiveModal ---> ", active)
   return (
     !openCrop ? (<form onSubmit={handleSubmit(handleUpdateUser)} autoComplete="off">
       <div className="max-w-[600px] w-[600px] bg-black max-h-[650px] h-[650px] overflow-auto rounded-2xl pb-4">

@@ -99,9 +99,9 @@ export default function HomeStory() {
                             <Image
                                 src="/image/avatar.jpg"
                                 alt={story.name}
-                                layout="responsive" // Hoặc layout="fill" nếu bạn muốn hình ảnh chiếm toàn bộ không gian
-                                width={120} // Chiều rộng hình ảnh
-                                height={200} // Chiều cao hình ảnh
+                                layout="responsive"
+                                width={120}
+                                height={200}
                                 className={`object-cover transition-transform duration-300 hover:scale-[1.02] ${story.isCreate ? 'opacity-40' : 'hover:opacity-80'}`}
                             />
                             {story.isCreate ? (
@@ -113,19 +113,12 @@ export default function HomeStory() {
                                 </div>
                             ) : (
                                 <>
-                                    {/* <div className="absolute top-2 left-2 w-8 h-8 rounded-full border-2 border-blue-500 overflow-hidden z-10 hover:bg-[rgba(29,155,240,0.1)]">
-                                        <img
-                                            src="/image/avatar.jpg"
-                                            alt="story-avatar"
-                                            className="w-full h-full object-cover"
-                                        />
-                                    </div> */}
                                     <div className="absolute top-2 left-2 w-8 h-8 rounded-full border-2 border-blue-500 overflow-hidden z-10 hover:bg-[rgba(29,155,240,0.1)]">
                                         <Image
                                             src="/image/avatar.jpg"
                                             alt="story-avatar"
-                                            layout="fill" 
-                                            objectFit="cover" 
+                                            layout="fill"
+                                            objectFit="cover"
                                         />
                                     </div>
                                     <p className="absolute bottom-2 left-2 right-2 text-sm text-white font-semibold truncate z-10">

@@ -198,3 +198,15 @@ export const extractMentios = (content: string): string[] => {
   const matches = content.match(MENTION_REGEX) || []
   return [...new Set(matches)]
 }
+
+export function GridImages(imageCount: number): string {
+  let gridClasses = 'grid ';
+  if (imageCount === 1) {
+    gridClasses += 'grid-cols-1 grid-rows-1';
+  } else if (imageCount === 2) {
+    gridClasses += 'grid-cols-1 grid-rows-2';
+  } else if (imageCount >= 3) {
+    gridClasses += 'grid-cols-2 grid-rows-2';
+  }
+  return gridClasses
+}

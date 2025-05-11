@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import LeftSidebar from "./LeftSidebar";
-import { useEvent } from "@/store/useEven";
+import { ModalType, useEvent } from "@/store/useEven";
 import { useFetchMe } from "@/hooks/users/useQuery";
 import { useUserInfo } from "@/store/useUserInfo";
 import { useRouter } from "next/navigation";
@@ -23,7 +23,7 @@ interface IDashboard {
 }
 const DashboardPage: React.FC<IDashboard> = (props) => {
   const { children } = props;
-  const { showModal } = useEvent((state) => state);
+  const { activeModal } = useEvent((state) => state);
   const { access_token, refresh_token } = getToken();
   const { userInfo } = useUserInfo();
   const router = useRouter();
@@ -67,7 +67,7 @@ const DashboardPage: React.FC<IDashboard> = (props) => {
     <React.Fragment>
       {!showModalBackLogin ? (
         <div
-          className={`relative flex items-center w-full ${showModal ? "h-screen" : "h-full"
+          className={`relative flex items-center w-full ${activeModal !== ModalType.NONE ? "h-screen" : "h-full"
             }`}
         >
           <div className="max-w-screen-xl w-full h-full flex">

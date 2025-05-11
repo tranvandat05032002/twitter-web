@@ -2,17 +2,17 @@ import React from 'react'
 import { CloseExternalEventIcon, DotsIcon, MagnifyingGlassIcon } from "@/components/SingleUseComponents/Icon";
 import { Avatar } from "@mui/material";
 import classNames from "classnames";
-import { useEvent } from '@/store/useEven';
+import { ModalType, useEvent } from '@/store/useEven';
 import { useGetUsersFollowing } from '@/hooks/users/useQuery';
 import ItemUserFollowing from '@/components/common/Tweet/ItemUserFollowing';
 
 export default function HomeFollowing() {
     const [isSearching, setIsSearching] = React.useState(false)
-    const { showCreatePost } = useEvent((state) => state);
+    const { activeModal } = useEvent((state) => state);
     const usersFollowing = useGetUsersFollowing();
     const dataGetUsersFollowing = usersFollowing.data
     return (
-        <div className={`w-[320px] ${showCreatePost ? "h-screen overflow-hidden" : ""}`}>
+        <div className={`w-[320px]`}>
             <div className="sticky top-0">
                 <div className="border-b-[0.5px] border-borderGrayPrimary">
 

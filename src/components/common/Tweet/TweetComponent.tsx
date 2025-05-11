@@ -1,16 +1,18 @@
 import { DotIcon, DotsIcon } from '@/components/SingleUseComponents/Icon';
 import { optionsArea } from '@/constant/tweet';
 import { Tweet } from '@/types/tweetTypes';
+import { GridImages } from '@/utils/handlers';
 import { Avatar } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
+import ImagePreview from './ImagePreview';
 import TweetAction from './TweetAction';
 
-const TweetComponent = ({ tweet, time }: { tweet: Tweet, time: string }) => {
+const TweetComponent = ({ tweet, time, onOpenDetail }: { tweet: Tweet, time: string, onOpenDetail: () => void }) => {
+    const [showPreviewImage, setShowPreviewImage] = React.useState(false)
     return (
         <div
-            key={tweet._id}
             className="p-4 pb-2 border-b-[0.25px] border-borderGrayPrimary flex space-x-4"
         >
             <div className="w-10 h-10 rounded-full overflow-hidden flex-none">
@@ -45,7 +47,7 @@ const TweetComponent = ({ tweet, time }: { tweet: Tweet, time: string }) => {
                             </div>
                             <div className="text-textGray">
                                 {
-                                    optionsArea.map((area) => area.id === tweet.audience ? <area.icon title={area.label} /> : null)
+                                    optionsArea.map((area) => area.id === tweet.audience ? <area.icon key={area.id} title={area.label} /> : null)
                                 }
 
                             </div>
@@ -56,105 +58,34 @@ const TweetComponent = ({ tweet, time }: { tweet: Tweet, time: string }) => {
                     </div>
                     {tweet.medias.length > 0 && (
                         <div className={`relative w-full h-[510px] aspect-square rounded-lg overflow-hidden grid ${GridImages(tweet.medias.length)} gap-1 p-1`}>
-                            {tweet.medias.length === 1 && (
-                                <div className="relative w-full h-full rounded overflow-hidden">
+                            {tweet.medias.slice(0, 4).map((media, index) => (
+                                <div
+                                    key={index}
+                                    className={`relative w-full h-full rounded overflow-hidden ${tweet.medias.length === 3 && index === 0 ? "col-span-2" : ""} ${tweet.medias.length >= 4 && index === 3 ? "cursor-pointer" : ""}`}
+                                >
                                     <Image
-                                        src={tweet.medias[0].url}
+                                        src={media.url}
+                                        onClick={() => setShowPreviewImage(true)}
                                         alt=""
                                         fill
-                                        className="object-cover"
+                                        className="object-cover cursor-pointer"
                                     />
-                                </div>
-                            )}
-
-                            {tweet.medias.length === 2 && (
-                                <>
-                                    {tweet.medias.map((media, index) => (
-                                        <div key={index} className="relative w-full h-full rounded overflow-hidden">
-                                            <Image
-                                                src={media.url}
-                                                alt=""
-                                                fill
-                                                className="object-cover"
-                                            />
-                                        </div>
-                                    ))}
-                                </>
-                            )}
-
-                            {tweet.medias.length === 3 && (
-                                <>
-                                    <div className="relative w-full h-full col-span-2 rounded overflow-hidden">
-                                        <Image
-                                            src={tweet.medias[0].url}
-                                            alt=""
-                                            fill
-                                            className="object-cover"
-                                        />
-                                    </div>
-                                    <div className="relative w-full h-full rounded overflow-hidden">
-                                        <Image
-                                            src={tweet.medias[1].url}
-                                            alt=""
-                                            fill
-                                            className="object-cover"
-                                        />
-                                    </div>
-                                    <div className="relative w-full h-full rounded overflow-hidden">
-                                        <Image
-                                            src={tweet.medias[2].url}
-                                            alt=""
-                                            fill
-                                            className="object-cover"
-                                        />
-                                    </div>
-                                </>
-                            )}
-
-                            {tweet.medias.length >= 4 && (
-                                <>
-                                    {tweet.medias.slice(0, 3).map((media, index) => (
-                                        <div key={index} className="relative w-full h-full rounded overflow-hidden">
-                                            <Image
-                                                src={media.url}
-                                                alt=""
-                                                fill
-                                                className="object-cover"
-                                            />
-                                        </div>
-                                    ))}
-                                    <div className="relative w-full h-full rounded overflow-hidden cursor-pointer">
-                                        <Image
-                                            src={tweet.medias[3].url}
-                                            alt=""
-                                            fill
-                                            className="object-cover"
-                                        />
+                                    {/* Nếu là ảnh thứ 4 và còn nhiều hơn 4 ảnh thì hiển thị số lượng còn lại */}
+                                    {tweet.medias.length > 4 && index === 3 && (
                                         <div className="absolute inset-0 bg-black/50 text-white flex items-center justify-center text-lg font-semibold">
                                             +{tweet.medias.length - 3}
                                         </div>
-                                    </div>
-                                </>
-                            )}
+                                    )}
+                                </div>
+                            ))}
                         </div>
                     )}
                 </div>
-                <TweetAction tweet={tweet} />
+                {showPreviewImage && <ImagePreview medias={tweet.medias} onClose={() => setShowPreviewImage(false)} />}
+                <TweetAction tweet={tweet} onOpenDetail={onOpenDetail} />
             </div>
         </div>
     );
 };
-
-function GridImages(imageCount: number): string {
-    let gridClasses = 'grid ';
-    if (imageCount === 1) {
-        gridClasses += 'grid-cols-1 grid-rows-1';
-    } else if (imageCount === 2) {
-        gridClasses += 'grid-cols-1 grid-rows-2';
-    } else if (imageCount >= 3) {
-        gridClasses += 'grid-cols-2 grid-rows-2';
-    }
-    return gridClasses
-}
 
 export default TweetComponent;
