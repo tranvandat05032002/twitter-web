@@ -12,9 +12,9 @@ import { IUser } from '@/types/userTypes';
 import { IMessage, IUserSocket } from '@/types/chatTypes';
 const initialReceiverMessage: IMessage = {
   _id: "",
-  chatId: "",
-  receiverId: "",
-  senderId: "",
+  chat_id: "",
+  receiver_id: "",
+  sender_id: "",
   created_at: "",
   updated_at: "",
   text: ""
@@ -28,22 +28,33 @@ const Messages = () => {
   const [receiverMessage, setReceiverMessage] = React.useState<IMessage>(initialReceiverMessage);
   // send message to socket server
   React.useEffect(() => {
-    if (sendMessage !== null) {
+    if (sendMessage !== null && sendMessage.text !== "") {
       socket.emit('send_message', sendMessage);
     }
   }, [sendMessage])
   React.useEffect(() => {
+    if (!user?._id) return;
+
     socket.emit('new_user_add', user?._id)
-    socket.on('get_users', (users: IUserSocket[]) => {
-      setOnlineUsers(users)
-    })
+
+    const handleGetUsers = (users: IUserSocket[]) => {
+      setOnlineUsers(users);
+    };
+    socket.on('get_users', handleGetUsers)
+
+    return () => {
+      socket.off('get_users')
+    }
   }, [user])
   // Get the message from socket server
   React.useEffect(() => {
     socket.on('receiver_message', (data: IMessage) => {
-      console.log("data_receiver: ", data)
       setReceiverMessage(data)
     })
+
+    return () => {
+      socket.off('receiver_message')
+    }
   }, [])
   if (!user) return;
   return (

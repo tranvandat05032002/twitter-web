@@ -41,7 +41,7 @@ const TweetAction = ({ tweet, onOpenDetail }: { tweet: Tweet, onOpenDetail: () =
                     <div className="rounded-full p-2 group-hover:bg-textBlue/10 transition duration-200 hover:text-textBlue group">
                         <CommentIcon className="group-hover:text-textBlue" />
                     </div>
-                    <span className="group-hover:text-textBlue">{comment_count >= 0 && comment_count < 1000 ? comment_count : comment_count.toString + "K"}</span>
+                    <span className="group-hover:text-textBlue">{tweet?.comments >= 0 && tweet?.comments < 1000 ? tweet.comments : tweet.comments.toString + "K"}</span>
                 </div>
                 <div className="flex gap-x-[2px] items-center group cursor-pointer">
                     <div className="rounded-full p-2 group-hover:bg-textGreen/10 transition duration-200 hover:text-textGreen group">

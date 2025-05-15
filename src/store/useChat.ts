@@ -21,10 +21,10 @@ const initialMessage = {
     _id: "",
     created_at: "",
     updated_at: "",
-    chatId: "",
-    senderId: "",
+    chat_id: "",
+    sender_id: "",
     text: "",
-    receiverId: "",
+    receiver_id: "",
 }
 export const useChat = create<IConversation>((set) => ({
     messages: [],

@@ -1,5 +1,5 @@
 // Method: GET
-import { ISearchUser, requestFetchMe, requestGetChat, requestGetMessage, requestGetTweetById, requestGetTweets, requestGetUserProfile, requestGetUserProfileUserId, requestGetUsersFollowing, requestSearchUser } from "@/utils/api/request";
+import { ISearchUser, requestFetchMe, requestGetChat, requestGetComments, requestGetMessage, requestGetTweetById, requestGetTweets, requestGetUserProfile, requestGetUserProfileUserId, requestGetUsersFollowing, requestSearchUser } from "@/utils/api/request";
 import { useQuery } from "@tanstack/react-query";
 
 export const useFetchMe = () =>
@@ -86,6 +86,18 @@ export const useGetTweetById = (tweet_id: string) => {
     },
     onError: (error) => {
       console.error('Error fetching tweets:', error);
+    },
+  });
+};
+
+export const useGetComments = (tweet_id: string) => {
+  return useQuery({
+    queryKey: ['comments', tweet_id],
+    queryFn: async () => {
+      return await requestGetComments(tweet_id);
+    },
+    onError: (error) => {
+      console.error('Error fetching comments:', error);
     },
   });
 };

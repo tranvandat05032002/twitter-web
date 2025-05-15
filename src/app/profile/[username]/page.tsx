@@ -10,6 +10,8 @@ import TweetComponent from "@/components/common/Tweet/TweetComponent";
 import { useInfiniteOwnerTweets } from "@/hooks/useInfiniteQuery";
 import { useInView } from "react-intersection-observer";
 import { LoadingSniper } from "@/components/common/Loading/LoadingSniper";
+import { ModalType, useEvent } from "@/store/useEven";
+import { Tweet } from "@/types/tweetTypes";
 const DynamicProfile = dynamic(() => import("@/components/layouts/ProfileLayout"), {
   loading: () => <LoadingPage></LoadingPage>
 })
@@ -24,12 +26,23 @@ const Profile = ({ params }: { params: { username: string } }) => {
     status,
   } = useInfiniteOwnerTweets();
   const { ref: loader, inView } = useInView({ threshold: 1 });
+  const { activeModal, setActiveModal, closeModal } = useEvent();
+  const textareaRef = React.useRef<HTMLTextAreaElement | null>(null);
+  const [selectedTweet, setSelectedTweet] = React.useState<Tweet | null>(null);
+  const [selectedTweetTime, setSelectedTweetTime] = React.useState<string>("");
 
   React.useEffect(() => {
     if (inView && hasNextPage) {
       fetchNextPage();
     }
   }, [inView, hasNextPage, fetchNextPage]);
+
+  const handleOpenDetailTweet = React.useCallback((tweet: Tweet, time: string) => {
+    setActiveModal(ModalType.DETAIL_TWEET);
+    setSelectedTweet(tweet);
+    setSelectedTweetTime(time);
+  }, [setActiveModal]);
+
   const tweets = data?.pages.flatMap((page) => page?.tweet.tweets ?? []);
   return (
     <DashboardPage>
@@ -40,7 +53,7 @@ const Profile = ({ params }: { params: { username: string } }) => {
               {page?.tweet?.tweets.map((tweet: any) => {
                 const date = parseISO(tweet.created_at);
                 const time = formatTweetTime(date);
-                return <TweetComponent key={tweet._id} tweet={tweet} time={time} />;
+                return <TweetComponent key={tweet._id} tweet={tweet} time={time} onOpenDetail={() => handleOpenDetailTweet(tweet, time)} />;
               })}
             </React.Fragment>
           ))}

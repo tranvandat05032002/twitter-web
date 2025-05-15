@@ -24,7 +24,10 @@ const Conversation = ({ user, receiverMessage, setSendMessage }: { user: IUser, 
   const [showSend, setShowSend] = React.useState<boolean>(false)
   const { mutate: addNewMessage } = useAddMessage()
   React.useEffect(() => {
-    if (receiverMessage !== null && receiverMessage.chatId === currentChat._id) {
+    if (receiverMessage !== null && receiverMessage.chat_id === currentChat._id) {
+      console.log("receiverMessage ---> ", receiverMessage)
+      console.log("currentChat._id ----> ", currentChat._id)
+      console.log("receiverMessage.chat_id ----> ", receiverMessage.chat_id)
       setMessages([...messages, receiverMessage]);
     }
   }, [receiverMessage])
@@ -45,8 +48,8 @@ const Conversation = ({ user, receiverMessage, setSendMessage }: { user: IUser, 
     if (newMessage === "") return;
     const dateSend = new Date();
     const newMessageObj: NewMessageRequestType = {
-      chatId: currentChat._id,
-      senderId: senderId,
+      chat_id: currentChat._id,
+      sender_id: senderId,
       text: newMessage,
       created_at: dateSend,
       updated_at: dateSend
@@ -55,7 +58,7 @@ const Conversation = ({ user, receiverMessage, setSendMessage }: { user: IUser, 
     addNewMessage(newMessageObj)
     // set data sendMessage has receiver_id --> send to server socket
     const receiverId = currentChat.members.find((id) => id !== senderId);
-    setSendMessage({ ...newMessageObj, receiverId: receiverId as string })
+    setSendMessage({ ...newMessageObj, receiver_id: receiverId as string })
     setNewMessage("")
   }
   const handleSendEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {

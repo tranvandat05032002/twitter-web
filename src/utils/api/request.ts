@@ -27,6 +27,7 @@ import { AxiosInstance } from "axios";
 import { AddNewMessageResponseType, GetChatResponseType, GetMessagesResponseType, NewMessageRequestType } from "@/types/chatTypes";
 import { ResultTweet, Tweet, TweetForm } from "@/types/tweetTypes";
 import { useQueryClient } from "@tanstack/react-query";
+import { Comment, CommentForm, CommentWithReplies, ResultComment } from "@/types/commentTypes";
 export const requestRegister = async (registerInfo: RegisterForm) => {
   try {
     const { data } = await apiInstance.post<TRequestToken<IToken>>(
@@ -441,8 +442,8 @@ export const requestAddMessage = async (newMessage: NewMessageRequestType) => {
   const { access_token } = getToken()
   try {
     const response = await apiInstance.post<AddNewMessageResponseType>(`/message`, {
-      chat_id: newMessage.chatId,
-      sender_id: newMessage.senderId,
+      chat_id: newMessage.chat_id,
+      sender_id: newMessage.sender_id,
       text: newMessage.text,
       created_at: newMessage.created_at,
       updated_at: newMessage.updated_at
@@ -540,6 +541,44 @@ export const requestToggleLike = async ({ tweet_id, liked, like_id }: { tweet_id
       }
     }
     return
+  } catch (error) {
+    throw error
+  }
+}
+
+export const requestGetComments = async (tweet_id: string): Promise<ResultComment> => {
+  const { access_token } = getToken()
+  try {
+    const response = await apiInstance.get(`/comment/${tweet_id}?limit=${10}&page=${1}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+    return response.data as ResultComment
+  } catch (error) {
+    throw new Error("Comment not found");
+  }
+
+  // if (response.status === 200) {
+  // }
+  // } catch (error) {
+  // throw error
+  // }
+}
+
+export const requestCreateComment = async (data: CommentForm) => {
+  const { access_token } = getToken()
+  try {
+    const response = await apiInstance.post(`/comment`, {
+      ...data
+    }, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      }
+    });
+    return response.data.result as Comment
   } catch (error) {
     throw error
   }

@@ -23,13 +23,11 @@ export const highlightContent = (content: string) => {
     // if (!content.startsWith("@") || !content.startsWith("#")) return "";
     return content.replace(HASHTAG_MENTION_REGEX, (match) => {
         if (!match.startsWith("@") && !match.startsWith("#")) return match;
-        console.log("running")
         const color = match.startsWith("@") || match.startsWith("#") ? "text-blue-500" : "";
         return `<span class="${color}">${match}</span>`;
     });
 };
 export default function HomeCreatePost({ onClose }: { onClose: () => void }) {
-    console.log("Running create post")
     const { userProfile, updateProfile } = useProfileStore(
         (state) => state
     );
@@ -81,7 +79,6 @@ export default function HomeCreatePost({ onClose }: { onClose: () => void }) {
         const newImages = await Promise.all(
             newFiles.map(async (file) => {
                 const media = await uploadImageToS3(file, "avatar", "avatar")
-                console.log("url ===> ", media)
                 if (!media) return null;
                 return {
                     file,
@@ -104,7 +101,6 @@ export default function HomeCreatePost({ onClose }: { onClose: () => void }) {
     }
 
     const handleAddEmoji = (emoji: string) => {
-        console.log("running")
         const currentText = getValues("content")
         const textarea = textareaRef.current;
 
@@ -138,7 +134,6 @@ export default function HomeCreatePost({ onClose }: { onClose: () => void }) {
             hashtags,
             mentions
         }
-        console.log("Tweet data ===> ", payload)
         mutate(payload)
         reset();
         setImages([]);

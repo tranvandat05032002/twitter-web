@@ -7,6 +7,9 @@ import { formatMessageTime } from '@/utils/handlers';
 const Message = ({ message, currentUserId, scroll }: { message: IMessage, currentUserId: string, scroll: React.LegacyRef<HTMLDivElement> }) => {
     const date = parseISO(message?.created_at as string);
     const time = formatMessageTime(date);
+    console.log("message.sender_id === currentUserId ---> ", message.sender_id === currentUserId)
+    console.log("message.sender_id ----> ", message.sender_id)
+    console.log("currentUserId----> ", currentUserId)
     return (
         <Tippy
             placement="left"
@@ -18,7 +21,7 @@ const Message = ({ message, currentUserId, scroll }: { message: IMessage, curren
         >
             <div
                 ref={scroll}
-                className={`max-w-[70%] w-max text-left py-2 px-3 rounded-[18px] mb-1 ${message.senderId === currentUserId
+                className={`max-w-[70%] w-max text-left py-2 px-3 rounded-[18px] mb-1 ${message.sender_id === currentUserId
                     ? "ml-auto  bg-[#0084ff] text-white"
                     : "bg-[#f0f0f0] text-black"
                     }`}

@@ -15,9 +15,9 @@ export interface IUserSocket {
 // Message type
 export interface IMessage {
     _id?: string,
-    chatId: string,
-    senderId: string,
-    receiverId?: string,
+    chat_id: string,
+    sender_id: string,
+    receiver_id?: string,
     text: string
     created_at?: string | Date,
     updated_at?: string | Date,

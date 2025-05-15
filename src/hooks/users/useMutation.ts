@@ -3,6 +3,7 @@
 import { ForgotForm } from "@/app/users/find-account/page";
 import { ResetPasswordForm } from "@/app/users/reset-password/page";
 import { NewMessageRequestType } from "@/types/chatTypes";
+import { Comment, CommentForm } from "@/types/commentTypes";
 import { Tweet, TweetForm } from "@/types/tweetTypes";
 import {
   IToken,
@@ -27,6 +28,7 @@ import {
   requestAddMessage,
   requestCreateTweet,
   requestToggleLike,
+  requestCreateComment,
 } from "@/utils/api/request";
 import { removeEmailCookies, removeOTPToken } from "@/utils/auth/cookies";
 import { UseMutationResult, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -127,7 +129,7 @@ export const useAddMessage = () => {
   return useMutation({
     mutationFn: (newMessage: NewMessageRequestType) => requestAddMessage(newMessage),
     onSuccess(data) {
-      queryClient.invalidateQueries({ queryKey: ["message", data.chatId], exact: true })
+      queryClient.invalidateQueries({ queryKey: ["message", data.chat_id], exact: true })
     },
   });
 }
@@ -153,4 +155,16 @@ export const useToggleLike = () => {
       queryClient.invalidateQueries({ queryKey: ["tweets"] })
     },
   })
+}
+
+// Comment
+export const useCreateComment = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: CommentForm) => requestCreateComment(data),
+    onSuccess(data) {
+      console.log("data.tweet_id -----> ", data.tweet_id)
+      queryClient.invalidateQueries({ queryKey: ["comments", data.tweet_id], exact: true })
+    },
+  });
 }

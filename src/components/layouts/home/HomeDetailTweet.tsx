@@ -1,4 +1,4 @@
-import { StickyNav } from '@/components/common';
+import { Input, StickyNav } from '@/components/common';
 import { CommentIcon, DotIcon, HeartIcon, RetWeetIcon } from '@/components/SingleUseComponents/Icon';
 import { optionsArea } from '@/constant/tweet';
 import { useEvent } from '@/store/useEven';
@@ -11,6 +11,13 @@ import { LuShare } from 'react-icons/lu';
 import { FaHeart } from "react-icons/fa";
 import CommentList from '@/components/common/Tweet/CommentList';
 import { HiMiniPaperAirplane } from "react-icons/hi2";
+import { useFetchMe, useGetComments } from '@/hooks/users/useQuery';
+import { CommentForm, CommentWithReplies } from '@/types/commentTypes';
+import { Avatar } from '@mui/material';
+import { useMe } from '@/context/UserContext';
+import { Controller, useForm } from 'react-hook-form';
+import BoxIcon from '@/components/SingleUseComponents/BoxIcon';
+import { useCreateComment } from '@/hooks/users/useMutation';
 
 const HomeDetailTweet = ({
     onClose,
@@ -21,7 +28,30 @@ const HomeDetailTweet = ({
     tweet: Tweet;
     time: string;
 }) => {
-    const { user, liked, likes, comment_count, bookmarks } = tweet;
+    const { user: userMe } = useMe()
+    const { user, liked, likes, comment_count, bookmarks, comments: commentSize } = tweet;
+    const { data } = useGetComments(tweet._id)
+    const { mutate } = useCreateComment()
+    const commentRef = React.useRef<HTMLInputElement | null>(null)
+
+    const {
+        control,
+        handleSubmit,
+        reset,
+        setValue,
+        watch,
+        getValues,
+        formState: { isValid },
+    } = useForm<CommentForm>({
+        mode: "onSubmit",
+        defaultValues: {
+            parent_id: null,
+            tweet_id: tweet._id,
+            content: ""
+        },
+    });
+
+    const comments = data?.result.comments as CommentWithReplies[]
 
     const getNameSplit = user.name.split(' ');
     const getName = getNameSplit[getNameSplit.length - 1];
@@ -29,10 +59,30 @@ const HomeDetailTweet = ({
     useEffect(() => {
         const originalOverflow = document.body.style.overflow;
         document.body.style.overflow = 'hidden';
+        commentRef.current?.focus()
         return () => {
             document.body.style.overflow = originalOverflow;
         };
     }, []);
+
+    const handleCommentChange = (fieldOnChange: (...event: any[]) => void) => (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        if (value.startsWith(" ")) return;
+        fieldOnChange(value.replace(/^\s+/, ""));
+    };
+    const handleCreateCommentEnter = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            const values = getValues();
+            handleCreateComment(values)
+        }
+    }
+    const handleCreateComment = async (values: CommentForm) => {
+        if (!isValid || values.content === "") return;
+
+        mutate(values)
+        reset();
+    }
 
     return createPortal(
         <div className="fixed inset-0 z-[1000] flex justify-center items-center bg-[rgba(91,112,131,0.4)]">
@@ -138,7 +188,7 @@ const HomeDetailTweet = ({
                                         {/* Comment */}
                                         <div className="flex-1 flex flex-col items-center group cursor-pointer">
                                             <span className='my-[6px]'>
-                                                {comment_count < 1000 ? comment_count : (comment_count / 1000).toFixed(1) + "K"} bình luận
+                                                {commentSize < 1000 ? commentSize : (commentSize / 1000).toFixed(1) + "K"} bình luận
                                             </span>
                                             <div className='w-full border-y-[0.5px] border-borderGrayPrimary py-1'>
                                                 <div className="w-full flex items-center justify-center space-x-2 p-2 group-hover:bg-textBlue/10 transition duration-200 hover:text-textBlue">
@@ -176,19 +226,45 @@ const HomeDetailTweet = ({
                                         </div>
                                     </div>
                                     <div className='px-2'>
-                                        <CommentList />
+                                        <CommentList comments={comments ?? []} />
                                     </div>
                                     <div className="backdrop-blur bg-black/80 sticky bottom-0 z-[100] flex items-center pb-2 pt-2">
-                                        <div className="w-8 h-8 rounded-full bg-gray-700 mr-2" />
-                                        <div className='flex-1 bg-[#242526] text-textGray rounded-full relative'>
-                                            <input
-                                                className="w-full bg-transparent text-white px-4 py-2 outline-none"
-                                                placeholder="Viết bình luận..."
-                                            />
-                                            <button className='absolute right-4 top-[50%] -translate-y-1/2 cursor-not-allowed' type='button'>
-                                                <HiMiniPaperAirplane className='w-[23px] h-[23px]' />
-                                            </button>
+                                        {/* <div className="w-8 h-8 rounded-full bg-gray-700 mr-2" /> */}
+                                        <div className='w-8 h-8 rounded-full bg-gray-700 overflow-hidden flex items-center justify-center mr-2 cursor-pointer' title={userMe?.name}>
+                                            <Avatar
+                                                src={userMe?.avatar}
+                                                alt={userMe?.name}
+                                                className="w-full h-full object-cover" />
                                         </div>
+                                        <form onSubmit={handleSubmit(handleCreateComment)} autoComplete='off' className='flex w-full'>
+                                            <div className='flex-1 bg-[#242526] text-textGray rounded-full relative'>
+                                                <Controller
+                                                    control={control}
+                                                    name="content"
+                                                    render={({ field }) => (
+                                                        <input
+                                                            {...field}
+                                                            className="flex-1 bg-transparent text-white px-4 py-2 outline-none"
+                                                            placeholder="Viết bình luận..."
+                                                            ref={commentRef}
+                                                            onChange={handleCommentChange(field.onChange)}
+                                                            onKeyDown={handleCreateCommentEnter}
+                                                        />
+                                                    )}
+                                                />
+                                                <button className={`absolute right-4 top-[50%] -translate-y-1/2 cursor-not-allowed ${watch("content")?.trim() && "cursor-pointer"}`} type='submit'>
+                                                    {!watch("content")?.trim() ?
+                                                        <div className="p-2">
+                                                            <HiMiniPaperAirplane className={`w-[23px] h-[23px]`} />
+                                                        </div>
+                                                        :
+                                                        <BoxIcon className={"text-textBlue hover:bg-[#323334]"}>
+                                                            <HiMiniPaperAirplane className={`w-[23px] h-[23px]`} />
+                                                        </BoxIcon>
+                                                    }
+                                                </button>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
