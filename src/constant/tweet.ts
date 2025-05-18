@@ -11,4 +11,5 @@ export const optionsArea = [
     { id: 2, label: 'Chỉ mình tôi', value: "private", icon: FaUserLock },
 ]
 
-export const TWEET_LIMIT = 5
+export const TWEET_LIMIT = 5;
+export const COMMENT_LIMIT = 10;

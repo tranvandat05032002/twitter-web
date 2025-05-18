@@ -28,6 +28,7 @@ import { AddNewMessageResponseType, GetChatResponseType, GetMessagesResponseType
 import { ResultTweet, Tweet, TweetForm } from "@/types/tweetTypes";
 import { useQueryClient } from "@tanstack/react-query";
 import { Comment, CommentForm, CommentWithReplies, ResultComment } from "@/types/commentTypes";
+import { COMMENT_LIMIT, TWEET_LIMIT } from "@/constant/tweet";
 export const requestRegister = async (registerInfo: RegisterForm) => {
   try {
     const { data } = await apiInstance.post<TRequestToken<IToken>>(
@@ -493,6 +494,40 @@ export const requestGetTweets = async (signal?: AbortSignal) => {
   }
 }
 
+export const requestFetchInfiniteTweets = async ({ pageParam = 1 }) => {
+  const { access_token } = getToken()
+  try {
+    const response = await apiInstance.get(`/tweet?limit=${TWEET_LIMIT}&page=${pageParam}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+    if (response.status === 200) {
+      return response.data.result as ResultTweet
+    }
+  } catch (error) {
+    throw error
+  }
+};
+
+export const requestFetchInfiniteOwnerTweets = async ({ pageParam = 1 }) => {
+  const { access_token } = getToken()
+  try {
+    const response = await apiInstance.get(`/tweet/owner?limit=${TWEET_LIMIT}&page=${pageParam}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+    if (response.status === 200) {
+      return response.data.result as ResultTweet
+    }
+  } catch (error) {
+    throw error
+  }
+};
+
 export const requestGetTweetById = async (tweet_id: string): Promise<Tweet> => {
   const { access_token } = getToken()
   // try {
@@ -559,13 +594,26 @@ export const requestGetComments = async (tweet_id: string): Promise<ResultCommen
   } catch (error) {
     throw new Error("Comment not found");
   }
-
-  // if (response.status === 200) {
-  // }
-  // } catch (error) {
-  // throw error
-  // }
 }
+
+export const requestFetchInfiniteComments = async ({ pageParam = 1, tweet_id }: { pageParam: number, tweet_id: string }) => {
+  const { access_token } = getToken()
+  console.log("pageParam ----> ", pageParam)
+  if (!pageParam) return
+  try {
+    const response = await apiInstance.get(`/comment/${tweet_id}?limit=${COMMENT_LIMIT}&page=${pageParam}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+    if (response.status === 200) {
+      return response.data as ResultComment
+    }
+  } catch (error) {
+    throw error
+  }
+};
 
 export const requestCreateComment = async (data: CommentForm) => {
   const { access_token } = getToken()

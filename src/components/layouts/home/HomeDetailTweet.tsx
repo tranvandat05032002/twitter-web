@@ -23,6 +23,9 @@ import TweetHeader from '@/components/common/Tweet/TweetHeader';
 import socket from '@/utils/socket';
 import { BsDatabaseAdd } from 'react-icons/bs';
 import { CommentParentInputForm } from '@/components/common/Tweet/Comment/CommentForm';
+import { useInfiniteComments } from '@/hooks/useInfiniteQuery';
+import { useInView } from 'react-intersection-observer';
+import { LoadingSniper } from '@/components/common/Loading/LoadingSniper';
 
 const HomeDetailTweet = ({
     onClose,
@@ -35,11 +38,25 @@ const HomeDetailTweet = ({
 }) => {
     const { user: userMe } = useMe()
     const { user } = tweet;
-    const { data } = useGetComments(tweet._id)
+    const {
+        data,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
+        isLoading,
+        status,
+    } = useInfiniteComments(tweet._id);
+    const { ref: loader, inView } = useInView({ threshold: 1 });
     const [comments, setComments] = React.useState<CommentWithReplies[]>([])
     const commentRef = React.useRef<HTMLInputElement | null>(null)
 
     const getName = user.name.trim().split(' ').at(-1) ?? user.name;
+
+    React.useEffect(() => {
+        if (inView && hasNextPage) {
+            fetchNextPage();
+        }
+    }, [inView, hasNextPage, fetchNextPage]);
 
     useEffect(() => {
         const originalOverflow = document.body.style.overflow;
@@ -51,9 +68,10 @@ const HomeDetailTweet = ({
     }, []);
 
     React.useEffect(() => {
-        if (!data?.result.comments) return
-        setComments(data?.result.comments ?? [])
-    }, [data?.result.comments])
+        const commentsFlat = data?.pages.flatMap((page) => page?.result?.comments ?? []);
+        if (!commentsFlat) return
+        setComments(commentsFlat ?? [])
+    }, [data])
 
     React.useEffect(() => {
         // Khi nhận được comment từ server
@@ -98,6 +116,11 @@ const HomeDetailTweet = ({
                             <TweetAction tweet={tweet} isDetaild={true} />
                             <div className="flex-1 min-h-0 overflow-y-auto px-2">
                                 <CommentList comments={comments ?? []} />
+                                {hasNextPage && (
+                                    <div ref={loader} className="text-center p-4">
+                                        {isFetchingNextPage && <LoadingSniper className="border-blue-300 mx-auto h-6 w-6" />}
+                                    </div>
+                                )}
                             </div>
                             <div className="sticky bottom-0 left-0 z-[100] backdrop-blur bg-black/80 flex items-center py-2">
                                 <div className='w-8 h-8 rounded-full bg-gray-700 overflow-hidden flex items-center justify-center mx-2 cursor-pointer' title={userMe?.name}>

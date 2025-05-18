@@ -1,6 +1,6 @@
 // Method: GET
 import { ISearchUser, requestFetchMe, requestGetChat, requestGetComments, requestGetMessage, requestGetTweetById, requestGetTweets, requestGetUserProfile, requestGetUserProfileUserId, requestGetUsersFollowing, requestSearchUser } from "@/utils/api/request";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
 export const useFetchMe = () =>
   useQuery({
