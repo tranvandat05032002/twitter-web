@@ -82,7 +82,7 @@ const TweetComponent = ({ tweet, time, onOpenDetail }: { tweet: Tweet, time: str
                     )}
                 </div>
                 {showPreviewImage && <ImagePreview medias={tweet.medias} onClose={() => setShowPreviewImage(false)} />}
-                <TweetAction tweet={tweet} onOpenDetail={onOpenDetail} />
+                <TweetAction tweet={tweet} onOpenDetail={onOpenDetail} isDetaild={false} />
             </div>
         </div>
     );

@@ -7,6 +7,8 @@ import { Avatar } from '@mui/material';
 import React from 'react';
 import { FaHeart } from 'react-icons/fa';
 import { useMe } from '@/context/UserContext';
+import { formatTweetTime } from '@/utils/handlers';
+import { parseISO } from 'date-fns';
 
 function CommentItem({ comment, isReply = false }: { comment: CommentWithReplies | Comment; isReply?: boolean }) {
     const { user: currentUser } = useMe();
@@ -15,6 +17,10 @@ function CommentItem({ comment, isReply = false }: { comment: CommentWithReplies
     const handleOpenReply = () => {
         setOpenReply(true)
     }
+
+    const date = parseISO(comment.created_at);
+    const time = formatTweetTime(date);
+
     const handleShowAllReplies = () => {
         setShowReplies(true)
     }
@@ -24,7 +30,7 @@ function CommentItem({ comment, isReply = false }: { comment: CommentWithReplies
                 <div className="w-8 h-8 rounded-full bg-gray-700 overflow-hidden flex items-center justify-center">
                     {comment.user.avatar ? (
                         <Avatar
-                            src={comment.user.avatar}
+                            src={comment?.user.avatar}
                             alt="avatar"
                             className="w-full h-full object-cover" />
                     ) : (
@@ -36,11 +42,11 @@ function CommentItem({ comment, isReply = false }: { comment: CommentWithReplies
             </div>
             <div className='w-full'>
                 <div className="bg-[#242526] w-max px-[10px] py-[6px] rounded-xl text-sm text-white">
-                    <span className="font-semibold">{comment.user.name}</span>
+                    <span className="font-semibold">{comment?.user.name}</span>
                     <div>{comment.content}</div>
                 </div>
                 <div className="flex items-center space-x-3 text-xs text-gray-400 mt-1">
-                    {/* {comment.time && <span>{comment.time}</span>} */}
+                    {comment.created_at && <span>{time}</span>}
                     <button className="hover:underline">Thích</button>
                     <button onClick={handleOpenReply} className="hover:underline">Phản hồi</button>
 

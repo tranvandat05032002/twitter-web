@@ -162,9 +162,8 @@ export const useCreateComment = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data: CommentForm) => requestCreateComment(data),
-    onSuccess(data) {
-      console.log("data.tweet_id -----> ", data.tweet_id)
-      queryClient.invalidateQueries({ queryKey: ["comments", data.tweet_id], exact: true })
-    },
+    // onSuccess(data) {
+    //   queryClient.invalidateQueries({ queryKey: ["comments", data.tweet_id], exact: true })
+    // },
   });
 }

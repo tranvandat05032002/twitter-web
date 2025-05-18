@@ -25,9 +25,6 @@ const Conversation = ({ user, receiverMessage, setSendMessage }: { user: IUser, 
   const { mutate: addNewMessage } = useAddMessage()
   React.useEffect(() => {
     if (receiverMessage !== null && receiverMessage.chat_id === currentChat._id) {
-      console.log("receiverMessage ---> ", receiverMessage)
-      console.log("currentChat._id ----> ", currentChat._id)
-      console.log("receiverMessage.chat_id ----> ", receiverMessage.chat_id)
       setMessages([...messages, receiverMessage]);
     }
   }, [receiverMessage])

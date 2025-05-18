@@ -578,7 +578,7 @@ export const requestCreateComment = async (data: CommentForm) => {
         Authorization: `Bearer ${access_token}`,
       }
     });
-    return response.data.result as Comment
+    return response.data.result as CommentWithReplies
   } catch (error) {
     throw error
   }

@@ -8,7 +8,7 @@ const CommentList = ({ comments }: { comments: CommentWithReplies[] }) => {
             <div className="space-y-2">
                 {comments.length > 0 ? comments.map((comment) => (
                     <CommentItem key={comment._id} comment={comment} />
-                )) : <div>Hãy là người bình luận đầu tiên</div>}
+                )) : <p className="text-center text-textGray">Hãy là người bình luận đầu tiên</p>}
             </div>
         </div>
     );
