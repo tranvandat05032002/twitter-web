@@ -1,27 +1,14 @@
-import { Input, StickyNav } from '@/components/common';
-import { CommentIcon, DotIcon, HeartIcon, RetWeetIcon } from '@/components/SingleUseComponents/Icon';
-import { optionsArea } from '@/constant/tweet';
-import { useEvent } from '@/store/useEven';
+import { StickyNav } from '@/components/common';
 import { Tweet } from '@/types/tweetTypes';
-import { GridImages } from '@/utils/handlers';
-import Image from 'next/image';
 import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { LuShare } from 'react-icons/lu';
-import { FaHeart } from "react-icons/fa";
 import CommentList from '@/components/common/Tweet/Comment/CommentList';
-import { HiMiniPaperAirplane } from "react-icons/hi2";
-import { useFetchMe, useGetComments } from '@/hooks/users/useQuery';
 import { CommentForm, CommentWithReplies } from '@/types/commentTypes';
 import { Avatar } from '@mui/material';
 import { useMe } from '@/context/UserContext';
-import { Controller, useForm } from 'react-hook-form';
-import BoxIcon from '@/components/SingleUseComponents/BoxIcon';
-import { useCreateComment } from '@/hooks/users/useMutation';
 import TweetAction from '@/components/common/Tweet/TweetAction';
 import TweetHeader from '@/components/common/Tweet/TweetHeader';
 import socket from '@/utils/socket';
-import { BsDatabaseAdd } from 'react-icons/bs';
 import { CommentParentInputForm } from '@/components/common/Tweet/Comment/CommentForm';
 import { useInfiniteComments } from '@/hooks/useInfiniteQuery';
 import { useInView } from 'react-intersection-observer';
@@ -75,16 +62,34 @@ const HomeDetailTweet = ({
 
     React.useEffect(() => {
         // Khi nhận được comment từ server
-        socket.on('receiver_comment', (data: CommentWithReplies) => {
-            setComments((prev) => {
-                const isExist = prev.some((c) => c._id === data._id);
-                if (isExist) return prev;
-                return [...prev, data];
-            })
-        })
+        const handler = (data: CommentWithReplies) => {
+            if (!data.parent_id) {
+                setComments(prev => {
+                    const exists = prev.some(c => c._id === data._id);
+                    if (exists) return prev;
+                    return [...prev, data];
+                });
+            } else {
+                setComments(prev => {
+                    return prev.map(c => {
+                        if (c._id === data.parent_id) {
+                            const already = c.replies?.some(r => r._id === data._id);
+                            if (already) return c;
+                            return {
+                                ...c,
+                                replies: [...(c.replies || []), data],
+                            };
+                        }
+                        return c;
+                    });
+                });
+            }
+        };
+
+        socket.on('receiver_comment', handler)
 
         return () => {
-            socket.off('receiver_comment')
+            socket.off('receiver_comment', handler)
         }
     }, [])
 
@@ -115,7 +120,7 @@ const HomeDetailTweet = ({
                             <TweetHeader tweet={tweet} user={user} time={time} />
                             <TweetAction tweet={tweet} isDetaild={true} />
                             <div className="flex-1 min-h-0 overflow-y-auto px-2">
-                                <CommentList comments={comments ?? []} />
+                                <CommentList comments={comments ?? []} setComments={setComments} />
                                 {hasNextPage && (
                                     <div ref={loader} className="text-center p-4">
                                         {isFetchingNextPage && <LoadingSniper className="border-blue-300 mx-auto h-6 w-6" />}
@@ -129,7 +134,9 @@ const HomeDetailTweet = ({
                                         alt={userMe?.name}
                                         className="w-full h-full object-cover" />
                                 </div>
-                                <div className="flex-1"><CommentParentInputForm tweet_id={tweet._id} currentUser={userMe} setComments={setComments} commentRef={commentRef} /></div>
+                                <div className="flex-1">
+                                    <CommentParentInputForm tweetId={tweet._id} isChild={false} currentUser={userMe} setComments={setComments} commentRef={commentRef} parentId={null} />
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -76,7 +76,7 @@ const DashboardPage: React.FC<IDashboard> = (props) => {
           </div>
         </div>
       ) : (
-        <div className="absolute w-full h-screen left-0 top-0 bottom-0 right-0 z-[1000] flex justify-center items-center bg-bgMain border border-red-500">
+        <div className="absolute w-full h-screen left-0 top-0 bottom-0 right-0 z-[1000] flex justify-center items-center bg-bgMain">
           <div className="max-w-[300px] max-h-[150px] w-[300px] h-[150px] bg-black rounded-md py-[20px] px-[20px]">
             <div className="relative w-full h-full">
               <p className="mb-[10px]">Phiên đã hết hạn</p>

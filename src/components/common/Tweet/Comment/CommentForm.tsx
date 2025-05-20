@@ -1,4 +1,3 @@
-
 import { useCreateComment } from '@/hooks/users/useMutation';
 import { CommentForm, CommentWithReplies } from '@/types/commentTypes';
 import { HiMiniPaperAirplane } from "react-icons/hi2";
@@ -8,17 +7,23 @@ import socket from '@/utils/socket';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 interface CommentInputFormProps {
-    tweet_id: string;
+    tweetId: string;
+    parentId: string | null;
     currentUser: IUser | null;
     setComments: React.Dispatch<React.SetStateAction<CommentWithReplies[]>>;
-    commentRef: React.MutableRefObject<HTMLInputElement | null>
+    commentRef: React.MutableRefObject<HTMLInputElement | null>;
+    className?: string;
+    isChild: boolean;
 }
 
 export const CommentParentInputForm: React.FC<CommentInputFormProps> = ({
-    tweet_id,
+    tweetId,
+    parentId,
     currentUser,
     setComments,
-    commentRef
+    commentRef,
+    className,
+    isChild
 }) => {
     const {
         control,
@@ -30,13 +35,13 @@ export const CommentParentInputForm: React.FC<CommentInputFormProps> = ({
     } = useForm<CommentForm>({
         mode: "onSubmit",
         defaultValues: {
-            parent_id: null,
-            tweet_id,
+            parent_id: parentId,
+            tweet_id: tweetId,
             content: ""
         },
     });
 
-    const { mutate, isSuccess } = useCreateComment()
+    const { mutate } = useCreateComment()
 
     const handleCreateCommentEnter = async (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter" && !e.shiftKey) {
@@ -56,30 +61,46 @@ export const CommentParentInputForm: React.FC<CommentInputFormProps> = ({
         if (!values.content.trim() || !currentUser) return;
         mutate(values, {
             onSuccess: (data) => {
-                setComments(prev => [...prev, {
+                const newComment = {
                     ...data,
                     user: currentUser
-                }])
-                // console.log("client ----> ", data)
-                socket.emit('send_comment', {
-                    ...data,
-                    user: currentUser
-                })
+                }
+
+                if (isChild) {
+                    setComments(prev => {
+                        return prev.map(comment => {
+                            if (comment._id === parentId) {
+                                return {
+                                    ...comment,
+                                    replies: [...(comment.replies || []), newComment]
+                                };
+                            }
+                            return comment;
+                        });
+                    });
+                    socket.emit('send_comment', {
+                        ...newComment,
+                        parent_id: parentId
+                    });
+                } else {
+                    setComments(prev => [...prev, newComment]);
+                    socket.emit('send_comment', newComment);
+                }
                 reset();
             }
         })
     }
 
     return (
-        <form onSubmit={handleSubmit(handleCreateComment)} autoComplete='off'>
-            <div className='flex-1 bg-[#242526] text-textGray rounded-full relative'>
+        <form onSubmit={handleSubmit(handleCreateComment)} autoComplete='off' className='flex-1'>
+            <div className={`flex-1 bg-[#242526] text-textGray rounded-full relative ${className}`}>
                 <Controller
                     control={control}
                     name="content"
                     render={({ field }) => (
                         <input
                             {...field}
-                            className="w-full bg-transparent text-white pl-4 pr-16 py-2 outline-none"
+                            className={`${isChild ? 'w-full bg-[#242526] text-white rounded-full px-4 py-1 outline-none placeholder:text-sm' : 'w-full bg-transparent text-white pl-4 pr-16 py-2 outline-none'}`}
                             placeholder="Viết bình luận..."
                             ref={commentRef}
                             onChange={handleCommentChange(field.onChange)}
@@ -87,14 +108,14 @@ export const CommentParentInputForm: React.FC<CommentInputFormProps> = ({
                         />
                     )}
                 />
-                <button className={`absolute right-4 top-[50%] -translate-y-1/2 cursor-not-allowed ${watch("content")?.trim() && "cursor-pointer"}`} type='submit'>
+                <button className={`absolute right-3 top-[50%] -translate-y-1/2 cursor-not-allowed ${watch("content")?.trim() && "cursor-pointer"}`} type='submit'>
                     {!watch("content")?.trim() ?
                         <div className="p-2">
-                            <HiMiniPaperAirplane className={`w-[23px] h-[23px]`} />
+                            <HiMiniPaperAirplane className={`${isChild ? "w-[19px] h-[19px]" : "w-[23px] h-[23px]"}`} />
                         </div>
                         :
                         <BoxIcon className={"text-textBlue hover:bg-[#323334]"}>
-                            <HiMiniPaperAirplane className={`w-[23px] h-[23px]`} />
+                            <HiMiniPaperAirplane className={`${isChild ? "w-[19px] h-[19px]" : "w-[23px] h-[23px]"}`} />
                         </BoxIcon>
                     }
                 </button>

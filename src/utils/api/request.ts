@@ -598,7 +598,6 @@ export const requestGetComments = async (tweet_id: string): Promise<ResultCommen
 
 export const requestFetchInfiniteComments = async ({ pageParam = 1, tweet_id }: { pageParam: number, tweet_id: string }) => {
   const { access_token } = getToken()
-  console.log("pageParam ----> ", pageParam)
   if (!pageParam) return
   try {
     const response = await apiInstance.get(`/comment/${tweet_id}?limit=${COMMENT_LIMIT}&page=${pageParam}`, {
