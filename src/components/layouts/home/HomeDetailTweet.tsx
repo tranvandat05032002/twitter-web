@@ -30,8 +30,6 @@ const HomeDetailTweet = ({
         fetchNextPage,
         hasNextPage,
         isFetchingNextPage,
-        isLoading,
-        status,
     } = useInfiniteComments(tweet._id);
     const { ref: loader, inView } = useInView({ threshold: 1 });
     const [comments, setComments] = React.useState<CommentWithReplies[]>([])
@@ -120,7 +118,7 @@ const HomeDetailTweet = ({
                             <TweetHeader tweet={tweet} user={user} time={time} />
                             <TweetAction tweet={tweet} isDetaild={true} />
                             <div className="flex-1 min-h-0 overflow-y-auto px-2">
-                                <CommentList comments={comments ?? []} setComments={setComments} />
+                                <CommentList comments={comments ?? []} setComments={setComments} tweetUserId={tweet.user_id} />
                                 {hasNextPage && (
                                     <div ref={loader} className="text-center p-4">
                                         {isFetchingNextPage && <LoadingSniper className="border-blue-300 mx-auto h-6 w-6" />}

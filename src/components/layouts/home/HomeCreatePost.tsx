@@ -267,7 +267,7 @@ export default function HomeCreatePost({ onClose }: { onClose: () => void }) {
                                                                         />
                                                                         <label htmlFor="medias">
                                                                             <div className="cursor-pointer bg-black/50 hover:bg-black/30 transition duration-200 rounded-full">
-                                                                                <CameraPlusIcon className="text-white bg-black/10 cursor-pointer text-red-500"></CameraPlusIcon>
+                                                                                <CameraPlusIcon className="text-white bg-black/10 cursor-pointer"></CameraPlusIcon>
                                                                             </div>
                                                                         </label>
                                                                     </React.Fragment>

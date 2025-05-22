@@ -29,6 +29,7 @@ import {
   requestCreateTweet,
   requestToggleLike,
   requestCreateComment,
+  requestDeleteComment,
 } from "@/utils/api/request";
 import { removeEmailCookies, removeOTPToken } from "@/utils/auth/cookies";
 import { UseMutationResult, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -165,5 +166,16 @@ export const useCreateComment = () => {
     // onSuccess(data) {
     //   queryClient.invalidateQueries({ queryKey: ["comments", data.tweet_id], exact: true })
     // },
+  });
+}
+
+export const useDeleteComment = (tweet_id: string) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (comment_id: string) => requestDeleteComment(comment_id),
+    retry: 2,
+    onSuccess(data) {
+      queryClient.invalidateQueries({ queryKey: ["comments", tweet_id], exact: true })
+    },
   });
 }

@@ -83,7 +83,9 @@ export const CommentParentInputForm: React.FC<CommentInputFormProps> = ({
                         parent_id: parentId
                     });
                 } else {
-                    setComments(prev => [...prev, newComment]);
+                    setComments(prev => {
+                        return [...prev, newComment]
+                    });
                     socket.emit('send_comment', newComment);
                 }
                 reset();

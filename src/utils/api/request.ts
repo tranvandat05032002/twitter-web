@@ -630,3 +630,18 @@ export const requestCreateComment = async (data: CommentForm) => {
     throw error
   }
 }
+
+export const requestDeleteComment = async (comment_id: string) => {
+  const { access_token } = getToken()
+  try {
+    const response = await apiInstance.delete(`/comment/${comment_id}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      }
+    });
+    return response.data
+  } catch (error) {
+    throw error
+  }
+}

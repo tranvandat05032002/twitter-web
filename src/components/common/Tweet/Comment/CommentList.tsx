@@ -2,7 +2,11 @@ import { CommentWithReplies } from '@/types/commentTypes';
 import React from 'react';
 import CommentItem from './CommentItem';
 
-const CommentList = ({ comments, setComments }: { comments: CommentWithReplies[], setComments: React.Dispatch<React.SetStateAction<CommentWithReplies[]>> }) => {
+const CommentList = ({ tweetUserId, comments, setComments }: {
+    tweetUserId: string;
+    comments: CommentWithReplies[];
+    setComments: React.Dispatch<React.SetStateAction<CommentWithReplies[]>>;
+}) => {
     const [replyingCommentId, setReplyingCommentId] = React.useState<string | null>(null);
     React.useEffect(() => {
         if (comments.length > 0) {
@@ -13,14 +17,14 @@ const CommentList = ({ comments, setComments }: { comments: CommentWithReplies[]
     return (
         <div className="w-full mt-1">
             <div className="space-y-2">
-                {comments.length > 0 ? comments.map((comment, index) => (
+                {comments.length > 0 ? comments.map((comment) => (
                     <CommentItem
                         key={comment._id}
+                        tweetUserId={tweetUserId}
                         comment={comment}
                         replyingCommentId={replyingCommentId}
                         setReplyingCommentId={setReplyingCommentId}
                         setComments={setComments}
-                        id={index === comments.length - 1 ? 'last-comment' : undefined}
                     />
                 )) : <p className="text-center text-textGray">Hãy là người bình luận đầu tiên</p>}
             </div>
