@@ -4,11 +4,11 @@ import { Tweet } from '@/types/tweetTypes';
 import React from 'react';
 import { LuShare } from 'react-icons/lu';
 import { FaHeart } from "react-icons/fa";
-import { useEvent } from '@/store/useEven';
+import { ModalType, useEvent } from '@/store/useEven';
 
 const TweetAction = ({ tweet, onOpenDetail, isDetaild }: { tweet: Tweet, onOpenDetail?: () => void, isDetaild: Boolean }) => {
     let { likes, comment_count, bookmarks, _id, liked, comments: commentSize } = tweet
-    const { setActiveModal } = useEvent((state) => state);
+    const { setActiveModal, activeModal } = useEvent((state) => state);
     if (comment_count === undefined) {
         comment_count = 0
     }
@@ -60,7 +60,7 @@ const TweetAction = ({ tweet, onOpenDetail, isDetaild }: { tweet: Tweet, onOpenD
                 <div className="w-full flex items-center text-textGray text-base">
                     {/* Like */}
                     <div className="flex-1 flex flex-col items-center group cursor-pointer">
-                        <span className={`${liked && "text-textPinkPrimary"} my-[6px]`}>
+                        <span className={`my-[6px]`}>
                             {likes < 1000 ? likes : (likes / 1000).toFixed(1) + "K"} thích
                         </span>
                         <div className='w-full border-y-[0.5px] border-borderGrayPrimary py-1'>
@@ -77,7 +77,7 @@ const TweetAction = ({ tweet, onOpenDetail, isDetaild }: { tweet: Tweet, onOpenD
                             {commentSize < 1000 ? commentSize : (commentSize / 1000).toFixed(1) + "K"} bình luận
                         </span>
                         <div className='w-full border-y-[0.5px] border-borderGrayPrimary py-1'>
-                            <div className="w-full flex items-center justify-center space-x-2 p-2 group-hover:bg-textBlue/10 transition duration-200 hover:text-textBlue">
+                            <div className={`w-full flex items-center justify-center space-x-2 p-2 group-hover:bg-textBlue/10 transition duration-200 hover:text-textBlue ${activeModal === ModalType.DETAIL_TWEET ? "bg-textBlue/10 text-textBlue" : ""}`}>
                                 <CommentIcon />
                                 <span>Bình luận</span>
                             </div>

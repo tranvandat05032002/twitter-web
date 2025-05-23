@@ -27,7 +27,7 @@ import { AxiosInstance } from "axios";
 import { AddNewMessageResponseType, GetChatResponseType, GetMessagesResponseType, NewMessageRequestType } from "@/types/chatTypes";
 import { ResultTweet, Tweet, TweetForm } from "@/types/tweetTypes";
 import { useQueryClient } from "@tanstack/react-query";
-import { Comment, CommentForm, CommentWithReplies, ResultComment } from "@/types/commentTypes";
+import { Comment, CommentForm, CommentWithReplies, EditCommentPayload, ResultComment } from "@/types/commentTypes";
 import { COMMENT_LIMIT, TWEET_LIMIT } from "@/constant/tweet";
 export const requestRegister = async (registerInfo: RegisterForm) => {
   try {
@@ -626,6 +626,22 @@ export const requestCreateComment = async (data: CommentForm) => {
       }
     });
     return response.data.result as CommentWithReplies
+  } catch (error) {
+    throw error
+  }
+}
+
+export const requestEditComment = async (comment_id: string, data: CommentForm) => {
+  console.log(comment_id, data)
+  const { access_token } = getToken()
+  try {
+    const response = await apiInstance.put(`/comment/${comment_id}`, data, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      }
+    });
+    return response.data
   } catch (error) {
     throw error
   }

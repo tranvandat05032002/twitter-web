@@ -20,6 +20,8 @@ function CommentItem({ tweetUserId, comment, isReply = false, replyingCommentId,
     const { mutate: deleteComment } = useDeleteComment(comment.tweet_id)
     const { user: currentUser } = useMe();
     const [showReplies, setShowReplies] = React.useState(false)
+    const [openFormEdit, setOpenFormEdit] = React.useState(false)
+    const [visible, setVisible] = React.useState(false);
     const childCommentRef = React.useRef<HTMLInputElement | null>(null)
 
     const shouldShowReplyForm =
@@ -47,8 +49,13 @@ function CommentItem({ tweetUserId, comment, isReply = false, replyingCommentId,
         deleteComment(commentId)
     }
 
+    const handleOpenEditComment = () => {
+        setOpenFormEdit(prev => !prev)
+        setVisible(false)
+    }
 
     const isAuthor = comment.user_id === tweetUserId
+    const isEdit = comment.updated_at !== null ? true : false
 
     return (
         <div id={id} className={`flex w-full items-start space-x-2 ${isReply ? "pl-10" : ""} mt-2`}>
@@ -68,69 +75,103 @@ function CommentItem({ tweetUserId, comment, isReply = false, replyingCommentId,
             </div>
             <div className='w-full'>
                 <div className='w-full flex items-center space-x-1 group'>
-                    <div className="bg-[#242526] w-max px-[10px] py-[6px] rounded-xl text-sm text-white">
-                        {isAuthor ?
-                            <div className='flex space-x-2 items-center'>
-                                <span className="font-semibold">{comment?.user.name}</span>
-                                <div className='flex space-x-1 items-center text-xs text-textBlue p-1 rounded-lg bg-textBlue/10'>
-                                    <FaPen className='w-[10px] h-[10px]' />
-                                    <span>Tác giả</span>
+                    {
+                        openFormEdit ? (
+                            <CommentParentInputForm
+                                tweetId={comment.tweet_id}
+                                isChild={!!comment.parent_id}
+                                parentId={comment.parent_id ?? null}
+                                currentUser={currentUser}
+                                setComments={setComments}
+                                commentRef={childCommentRef}
+                                defaultValue={comment.content}
+                                isEdit
+                                commentId={comment._id}
+                                onEditDone={() => setOpenFormEdit(false)}
+                            />
+                        ) : (
+                            <React.Fragment>
+                                <div className="bg-[#242526] w-max px-[10px] py-[6px] rounded-xl text-sm text-white">
+                                    {isAuthor ?
+                                        <div className='flex space-x-2 items-center'>
+                                            <span className="font-semibold">{comment?.user.name}</span>
+                                            <div className='flex space-x-1 items-center text-xs text-textBlue p-1 rounded-lg bg-textBlue/10'>
+                                                <FaPen className='w-[10px] h-[10px]' />
+                                                <span>Tác giả</span>
+                                            </div>
+                                        </div>
+                                        :
+                                        <span className="font-semibold">{comment?.user.name}</span>
+                                    }
+                                    <div className="max-w-[300px] break-words whitespace-normal">
+                                        {comment.content}
+                                    </div>
                                 </div>
-                            </div>
-                            :
-                            <span className="font-semibold">{comment?.user.name}</span>
-                        }
-                        <div className='max-w-[300px] break-words whitespace-normal'>{comment.content}</div>
-                    </div>
-                    {isAuthor && (
-                        <Tippy
-                            interactive
-                            placement='bottom'
-                            trigger="click"
-                            offset={[20, 12]}
-                            render={(attrs) => (
-                                <div
-                                    className="bg-black text-white p-2 rounded-lg shadow-xl border-[0.5px] border-borderGraySecond"
-                                    tabIndex={-1}
-                                    {...attrs}
-                                >
-                                    <button
-                                        type="button"
-                                        className="w-full text-left px-4 py-2 text-sm cursor-pointer hover:bg-iconBackgroundGray"
-                                    >
-                                        Chỉnh sửa
-                                    </button>
+                                {isAuthor && (
+                                    <Tippy
+                                        interactive
+                                        placement='bottom'
+                                        offset={[20, 12]}
+                                        visible={visible}
+                                        onClickOutside={() => setVisible(false)}
+                                        render={(attrs) => (
+                                            <div
+                                                className="bg-black text-white p-2 rounded-lg shadow-xl border-[0.5px] border-borderGraySecond"
+                                                tabIndex={-1}
+                                                {...attrs}
+                                            >
+                                                <button
+                                                    type="button"
+                                                    className="w-full text-left px-4 py-2 text-sm cursor-pointer hover:bg-iconBackgroundGray"
+                                                    onClick={handleOpenEditComment}
+                                                >
+                                                    Chỉnh sửa
+                                                </button>
 
-                                    <button
-                                        type="button"
-                                        className="w-full text-left px-4 py-2 text-sm cursor-pointer hover:bg-iconBackgroundGray"
-                                        onClick={() => handleDeleteComment(comment._id)}
+                                                <button
+                                                    type="button"
+                                                    className="w-full text-left px-4 py-2 text-sm cursor-pointer hover:bg-iconBackgroundGray"
+                                                    onClick={() => handleDeleteComment(comment._id)}
+                                                >
+                                                    Xóa
+                                                </button>
+                                            </div>
+                                        )}
                                     >
-                                        Xóa
-                                    </button>
-                                </div>
-                            )}
-                        >
-                            <div
-                                className="cursor-pointer"
-                            >
-                                <BoxIcon className="hidden group-hover:block">
-                                    <DotsIcon className="h-[15px] w-[15px]" />
-                                </BoxIcon>
-                            </div>
-                        </Tippy>
-                    )}
-                </div>
-                <div className="flex items-center space-x-3 text-xs text-gray-400 mt-1">
-                    {comment.created_at && <span>{time}</span>}
-                    <button className="hover:underline">Thích</button>
-                    <button onClick={handleOpenReply} className="hover:underline">Phản hồi</button>
+                                        <div onClick={() => setVisible(v => !v)} className="cursor-pointer">
+                                            <BoxIcon className="hidden group-hover:block">
+                                                <DotsIcon className="h-[15px] w-[15px]" />
+                                            </BoxIcon>
+                                        </div>
+                                    </Tippy>
+                                )}
+                            </React.Fragment>
+                        )
+                    }
 
-                    <span className="flex items-center space-x-1">
-                        {/* <span>{comment.likes}</span> */}
-                        <HeartIcon />
-                    </span>
                 </div>
+                {
+                    openFormEdit ? (
+                        <div className="flex items-center space-x-1 text-xs text-gray-400 mt-1">
+                            <span>Nhấn nút</span>
+                            <button className="hover:underline text-textBlue" onClick={() => setOpenFormEdit(false)}>Hủy</button>
+                            <span>để hủy</span>
+                        </div>
+                    ) : (
+                        <div className="flex items-center space-x-3 text-xs text-gray-400 mt-1">
+                            {comment.created_at && <span>{time}</span>}
+                            <button className="hover:underline">Thích</button>
+                            <button onClick={handleOpenReply} className="hover:underline">Phản hồi</button>
+
+                            <span className="flex items-center space-x-1">
+                                {/* <span>{comment.likes}</span> */}
+                                <HeartIcon />
+                            </span>
+
+                            {isEdit && <span> Đã chỉnh sửa</span>}
+                        </div>
+                    )
+                }
                 {/* Render replies */}
                 <div className="relative mt-1 w-full">
                     {

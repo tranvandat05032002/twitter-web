@@ -3,7 +3,7 @@
 import { ForgotForm } from "@/app/users/find-account/page";
 import { ResetPasswordForm } from "@/app/users/reset-password/page";
 import { NewMessageRequestType } from "@/types/chatTypes";
-import { Comment, CommentForm } from "@/types/commentTypes";
+import { Comment, CommentForm, EditCommentPayload } from "@/types/commentTypes";
 import { Tweet, TweetForm } from "@/types/tweetTypes";
 import {
   IToken,
@@ -30,6 +30,7 @@ import {
   requestToggleLike,
   requestCreateComment,
   requestDeleteComment,
+  requestEditComment,
 } from "@/utils/api/request";
 import { removeEmailCookies, removeOTPToken } from "@/utils/auth/cookies";
 import { UseMutationResult, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -168,6 +169,17 @@ export const useCreateComment = () => {
     // },
   });
 }
+export const useEditComment = (tweet_id: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ comment_id, ...data }: EditCommentPayload) =>
+      requestEditComment(comment_id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['comments', tweet_id], exact: true });
+    },
+  });
+};
 
 export const useDeleteComment = (tweet_id: string) => {
   const queryClient = useQueryClient();

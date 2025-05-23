@@ -13,6 +13,7 @@ import { CommentParentInputForm } from '@/components/common/Tweet/Comment/Commen
 import { useInfiniteComments } from '@/hooks/useInfiniteQuery';
 import { useInView } from 'react-intersection-observer';
 import { LoadingSniper } from '@/components/common/Loading/LoadingSniper';
+import { useEvent } from '@/store/useEven';
 
 const HomeDetailTweet = ({
     onClose,
@@ -32,6 +33,7 @@ const HomeDetailTweet = ({
         isFetchingNextPage,
     } = useInfiniteComments(tweet._id);
     const { ref: loader, inView } = useInView({ threshold: 1 });
+    const { activeModal, setActiveModal } = useEvent();
     const [comments, setComments] = React.useState<CommentWithReplies[]>([])
     const commentRef = React.useRef<HTMLInputElement | null>(null)
 

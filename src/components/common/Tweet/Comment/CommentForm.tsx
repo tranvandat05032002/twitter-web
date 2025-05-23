@@ -1,4 +1,4 @@
-import { useCreateComment } from '@/hooks/users/useMutation';
+import { useCreateComment, useEditComment } from '@/hooks/users/useMutation';
 import { CommentForm, CommentWithReplies } from '@/types/commentTypes';
 import { HiMiniPaperAirplane } from "react-icons/hi2";
 import BoxIcon from '@/components/SingleUseComponents/BoxIcon';
@@ -6,12 +6,17 @@ import { IUser } from '@/types/userTypes';
 import socket from '@/utils/socket';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import useDebounce from '@/hooks/useDebounce';
 interface CommentInputFormProps {
     tweetId: string;
     parentId: string | null;
     currentUser: IUser | null;
     setComments: React.Dispatch<React.SetStateAction<CommentWithReplies[]>>;
     commentRef: React.MutableRefObject<HTMLInputElement | null>;
+    defaultValue?: string;
+    isEdit?: boolean;
+    commentId?: string;
+    onEditDone?: () => void;
     className?: string;
     isChild: boolean;
 }
@@ -22,6 +27,10 @@ export const CommentParentInputForm: React.FC<CommentInputFormProps> = ({
     currentUser,
     setComments,
     commentRef,
+    defaultValue,
+    isEdit,
+    commentId,
+    onEditDone,
     className,
     isChild
 }) => {
@@ -31,6 +40,7 @@ export const CommentParentInputForm: React.FC<CommentInputFormProps> = ({
         reset,
         watch,
         getValues,
+        setValue,
         formState: { isValid },
     } = useForm<CommentForm>({
         mode: "onSubmit",
@@ -41,7 +51,17 @@ export const CommentParentInputForm: React.FC<CommentInputFormProps> = ({
         },
     });
 
-    const { mutate } = useCreateComment()
+    const { mutate: createComment } = useCreateComment()
+    const { mutate: editComment, isLoading } = useEditComment(tweetId);
+    const content = watch("content")
+    const debouncedContent = useDebounce(content, 300);
+
+    React.useEffect(() => {
+        if (isEdit && defaultValue) {
+            setValue("content", defaultValue);
+            commentRef.current?.focus()
+        }
+    }, [isEdit, defaultValue, setValue]);
 
     const handleCreateCommentEnter = async (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter" && !e.shiftKey) {
@@ -59,38 +79,48 @@ export const CommentParentInputForm: React.FC<CommentInputFormProps> = ({
 
     const handleCreateComment = async (values: CommentForm) => {
         if (!values.content.trim() || !currentUser) return;
-        mutate(values, {
-            onSuccess: (data) => {
-                const newComment = {
-                    ...data,
-                    user: currentUser
-                }
 
-                if (isChild) {
-                    setComments(prev => {
-                        return prev.map(comment => {
-                            if (comment._id === parentId) {
-                                return {
-                                    ...comment,
-                                    replies: [...(comment.replies || []), newComment]
-                                };
-                            }
-                            return comment;
-                        });
-                    });
-                    socket.emit('send_comment', {
-                        ...newComment,
-                        parent_id: parentId
-                    });
-                } else {
-                    setComments(prev => {
-                        return [...prev, newComment]
-                    });
-                    socket.emit('send_comment', newComment);
+        if (isEdit && commentId) {
+            editComment({ ...values, comment_id: commentId }, {
+                onSuccess: () => {
+                    if (onEditDone) onEditDone();
+                    reset();
                 }
-                reset();
-            }
-        })
+            });
+        } else {
+            createComment(values, {
+                onSuccess: (data) => {
+                    const newComment = {
+                        ...data,
+                        user: currentUser
+                    }
+
+                    if (isChild) {
+                        setComments(prev => {
+                            return prev.map(comment => {
+                                if (comment._id === parentId) {
+                                    return {
+                                        ...comment,
+                                        replies: [...(comment.replies || []), newComment]
+                                    };
+                                }
+                                return comment;
+                            });
+                        });
+                        socket.emit('send_comment', {
+                            ...newComment,
+                            parent_id: parentId
+                        });
+                    } else {
+                        setComments(prev => {
+                            return [...prev, newComment]
+                        });
+                        socket.emit('send_comment', newComment);
+                    }
+                    reset();
+                }
+            })
+        }
     }
 
     return (
@@ -110,8 +140,11 @@ export const CommentParentInputForm: React.FC<CommentInputFormProps> = ({
                         />
                     )}
                 />
-                <button className={`absolute right-3 top-[50%] -translate-y-1/2 cursor-not-allowed ${watch("content")?.trim() && "cursor-pointer"}`} type='submit'>
-                    {!watch("content")?.trim() ?
+                <button
+                    className={`absolute right-3 top-[50%] -translate-y-1/2 cursor-not-allowed ${watch("content")?.trim() && "cursor-pointer"}`}
+                    disabled={isLoading}
+                    type='submit'>
+                    {!debouncedContent.trim() ?
                         <div className="p-2">
                             <HiMiniPaperAirplane className={`${isChild ? "w-[19px] h-[19px]" : "w-[23px] h-[23px]"}`} />
                         </div>

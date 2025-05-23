@@ -9,6 +9,7 @@ export type Comment = {
     parent_id: string | null;
     created_by: string;
     created_at: string;
+    updated_at?: string;
 }
 
 export type CommentWithReplies = Comment & {
@@ -20,6 +21,11 @@ export type CommentForm = {
     tweet_id: string;
     parent_id: string | null;
 };
+
+export interface EditCommentPayload extends CommentForm {
+    comment_id: string;
+}
+
 
 export interface ResultComment {
     result: {
