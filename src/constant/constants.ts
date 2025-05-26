@@ -6,6 +6,7 @@ import {
   VerifiedIcon,
   NotificationIcon,
   CommunityIcon,
+  ClaudeIcon,
 } from "../components/SingleUseComponents/Icon";
 export const NAVIGATION_ITEMS = [
   {
@@ -34,9 +35,9 @@ export const NAVIGATION_ITEMS = [
   //   href: "/datdev0503/lists",
   // },
   {
-    title: "Ngrok",
-    icon: ListIcon,
-    href: "/chat/ai/ngrok",
+    title: "Chatbot",
+    icon: ClaudeIcon,
+    href: "/chat/ai/chatbot",
   },
   {
     title: "Communities",

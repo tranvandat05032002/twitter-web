@@ -1,8 +1,16 @@
 import React from 'react';
 
-const BoxIcon = ({ children, className }: { children: React.ReactNode, className?: String }) => {
+type BoxIconProps = React.HTMLAttributes<HTMLDivElement> & {
+    children: React.ReactNode;
+    className?: string;
+};
+
+const BoxIcon = ({ children, className = '', ...rest }: BoxIconProps) => {
     return (
-        <div className={`${className} p-2 rounded-full cursor-pointer hover:bg-iconBackgroundGray`}>
+        <div
+            {...rest}
+            className={`p-2 rounded-full cursor-pointer hover:bg-iconBackgroundGray ${className}`}
+        >
             {children}
         </div>
     );

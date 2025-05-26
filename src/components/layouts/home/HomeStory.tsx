@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import React from 'react'
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { Swiper as SwiperType } from 'swiper';
@@ -93,39 +94,40 @@ export default function HomeStory() {
                 {stories.map((story, idx) => (
                     <SwiperSlide key={idx}>
                         <div
-                            className={`w-[120px] h-[200px] rounded-lg overflow-hidden relative cursor-pointer
-                    }`}
+                            className={`w-[120px] h-[200px] rounded-lg overflow-hidden relative cursor-pointer`}
                         >
-                            <Image
-                                src="/image/avatar.jpg"
-                                alt={story.name}
-                                layout="responsive"
-                                width={120}
-                                height={200}
-                                className={`object-cover transition-transform duration-300 hover:scale-[1.02] ${story.isCreate ? 'opacity-40' : 'hover:opacity-80'}`}
-                            />
-                            {story.isCreate ? (
-                                <div className="absolute inset-0 flex flex-col justify-end items-center p-2">
-                                    <div className="bg-blue-500 w-8 h-8 flex items-center justify-center rounded-full mb-1 z-20">
-                                        <span className="text-white text-xl">+</span>
+                            <Link href={`/stories/${story.isCreate ? "create" : idx}`}>
+                                <Image
+                                    src="/image/avatar.jpg"
+                                    alt={story.name}
+                                    layout="responsive"
+                                    width={120}
+                                    height={200}
+                                    className={`object-cover transition-transform duration-300 hover:scale-[1.02] ${story.isCreate ? 'opacity-40' : 'hover:opacity-80'}`}
+                                />
+                                {story.isCreate ? (
+                                    <div className="absolute inset-0 flex flex-col justify-end items-center p-2">
+                                        <div className="bg-blue-500 w-8 h-8 flex items-center justify-center rounded-full mb-1 z-20">
+                                            <span className="text-white text-xl">+</span>
+                                        </div>
+                                        <p className="text-sm text-white text-center z-20">Tạo tin</p>
                                     </div>
-                                    <p className="text-sm text-white text-center z-20">Tạo tin</p>
-                                </div>
-                            ) : (
-                                <>
-                                    <div className="absolute top-2 left-2 w-8 h-8 rounded-full border-2 border-blue-500 overflow-hidden z-10 hover:bg-[rgba(29,155,240,0.1)]">
-                                        <Image
-                                            src="/image/avatar.jpg"
-                                            alt="story-avatar"
-                                            layout="fill"
-                                            objectFit="cover"
-                                        />
-                                    </div>
-                                    <p className="absolute bottom-2 left-2 right-2 text-sm text-white font-semibold truncate z-10">
-                                        {story.name}
-                                    </p>
-                                </>
-                            )}
+                                ) : (
+                                    <>
+                                        <div className="absolute top-2 left-2 w-8 h-8 rounded-full border-2 border-blue-500 overflow-hidden z-10 hover:bg-[rgba(29,155,240,0.1)]">
+                                            <Image
+                                                src="/image/avatar.jpg"
+                                                alt="story-avatar"
+                                                layout="fill"
+                                                objectFit="cover"
+                                            />
+                                        </div>
+                                        <p className="absolute bottom-2 left-2 right-2 text-sm text-white font-semibold truncate z-10">
+                                            {story.name}
+                                        </p>
+                                    </>
+                                )}
+                            </Link>
                         </div>
                     </SwiperSlide>
                 ))}
@@ -133,13 +135,13 @@ export default function HomeStory() {
             <div className="absolute left-0 top-0 right-0 bottom-0 text-[25px] transition">
                 <button
                     ref={prevRef}
-                    className={`absolute top-1/2 -translate-y-1/2 left-0 z-10 bg-[rgba(0,0,0,0.6)] shadow hover:bg-[rgba(0,0,0,0.8)] text-textGray rounded-full w-9 h-9 flex items-center justify-center shadow  ${!canGoPrev && 'hidden'}`}
+                    className={`absolute top-1/2 -translate-y-1/2 left-0 z-10 bg-[rgba(0,0,0,0.6)] hover:bg-[rgba(0,0,0,0.8)] text-textGray rounded-full w-9 h-9 flex items-center justify-center shadow  ${!canGoPrev && 'hidden'}`}
                 >
                     <IoIosArrowBack className="" />
                 </button>
                 <button
                     ref={nextRef}
-                    className="absolute top-1/2 -translate-y-1/2 right-0 z-10 bg-[rgba(0,0,0,0.6)] shadow hover:bg-[rgba(0,0,0,0.8)] text-textGray rounded-full w-9 h-9 flex items-center justify-center shadow "
+                    className="absolute top-1/2 -translate-y-1/2 right-0 z-10 bg-[rgba(0,0,0,0.6)] hover:bg-[rgba(0,0,0,0.8)] text-textGray rounded-full w-9 h-9 flex items-center justify-center shadow "
                 >
                     <IoIosArrowForward />
                 </button>

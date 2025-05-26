@@ -29,11 +29,13 @@ import {
   HiMiniPaperAirplane
 } from "react-icons/hi2";
 import { RiFileListLine, RiEmojiStickerFill } from "react-icons/ri";
+import { GiBrain } from "react-icons/gi";
 import { LiaUserFriendsSolid, LiaCalendarSolid } from "react-icons/lia";
 import { RxTwitterLogo } from "react-icons/rx";
 import { FaFacebookF, FaGithub, FaRetweet } from "react-icons/fa";
 import { HiMiniMagnifyingGlassMinus, HiMiniMagnifyingGlassPlus, HiMiniVideoCamera } from "react-icons/hi2";
 import { useEvent } from "@/store/useEven";
+
 interface IIcon {
   size?: "big" | "small";
   className?: string;
@@ -151,6 +153,18 @@ export const SearchIcon: React.FC<IIcon> = () => {
 export const NotificationIcon: React.FC<IIcon> = () => {
   return (
     <PiBellRinging
+      style={{
+        width: "45px",
+        height: "33px",
+        marginRight: "12px",
+        fontWeight: 300,
+      }}
+    />
+  );
+};
+export const ClaudeIcon: React.FC<IIcon> = () => {
+  return (
+    <GiBrain
       style={{
         width: "45px",
         height: "33px",
