@@ -10,9 +10,9 @@ import { formatTweetTime } from "@/utils/handlers";
 import TweetComponent from "@/components/common/Tweet/TweetComponent";
 import { useInfiniteTweets } from "@/hooks/useInfiniteQuery";
 import { LoadingSniper } from "@/components/common/Loading/LoadingSniper";
-import { useProfileStore } from "@/store/useProfile";
 import HomeDetailTweet from "./HomeDetailTweet";
 import { Tweet } from "@/types/tweetTypes";
+import { useMe } from "@/context/UserContext";
 
 const HomeLayout = () => {
   const { activeModal, setActiveModal, closeModal } = useEvent();
@@ -28,9 +28,7 @@ const HomeLayout = () => {
     status,
   } = useInfiniteTweets();
   const { ref: loader, inView } = useInView({ threshold: 1 });
-  const { userProfile } = useProfileStore(
-    (state) => state
-  );
+  const { user: userProfile } = useMe()
 
   React.useEffect(() => {
     if (inView && hasNextPage) {
@@ -61,9 +59,9 @@ const HomeLayout = () => {
           <div className="flex items-center space-x-4">
             <div className="w-10 h-10 rounded-full overflow-hidden flex-none cursor-pointer">
               <Avatar
-                src={userProfile.avatar}
+                src={userProfile?.avatar}
                 className="object-fit-cover hover:opacity-80"
-                title={userProfile.name}
+                title={userProfile?.name}
                 sx={{ width: '100%', height: '100%' }}
               />
             </div>

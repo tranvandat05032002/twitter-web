@@ -29,6 +29,7 @@ import { ResultTweet, Tweet, TweetForm } from "@/types/tweetTypes";
 import { useQueryClient } from "@tanstack/react-query";
 import { Comment, CommentForm, CommentWithReplies, EditCommentPayload, ResultComment } from "@/types/commentTypes";
 import { COMMENT_LIMIT, TWEET_LIMIT } from "@/constant/tweet";
+import { ResultStory } from "@/types/storyTypes";
 export const requestRegister = async (registerInfo: RegisterForm) => {
   try {
     const { data } = await apiInstance.post<TRequestToken<IToken>>(
@@ -659,5 +660,24 @@ export const requestDeleteComment = async (comment_id: string) => {
     return response.data
   } catch (error) {
     throw error
+  }
+}
+
+
+// Story
+
+export const requestGetStories = async (): Promise<ResultStory> => {
+  const { access_token } = getToken()
+  try {
+    const response = await apiInstance.get(`/story?limit=${10}&page=${1}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+    console.log("response.data ----> ", response.data)
+    return response.data as ResultStory
+  } catch (error) {
+    throw new Error("Comment not found");
   }
 }

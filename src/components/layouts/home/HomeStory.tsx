@@ -1,3 +1,6 @@
+import { useMe } from '@/context/UserContext';
+import { useGetStories } from '@/hooks/users/useQuery';
+import { SlideItem, StoryGroup } from '@/types/storyTypes';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react'
@@ -7,47 +10,65 @@ import { Navigation } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 export default function HomeStory() {
-    const stories = [
-        {
-            name: "Tạo tin",
-            avatar: "/image/avatar.jpg",
-            isCreate: true,
-        },
-        {
-            name: "Bảo Quốc",
-            avatar: "/image/avatar.jpg",
-        },
-        {
-            name: "Đói Quá Không Ngủ...",
-            avatar: "/image/avatar.jpg",
-        },
-        {
-            name: "Việt Nam Hùng Cường",
-            avatar: "/image/avatar.jpg",
-        },
-        {
-            name: "Nhà Trong Ngõ",
-            avatar: "/image/avatar.jpg",
-        },
-        {
-            name: "Nhà Trong Ngõ",
-            avatar: "/image/avatar.jpg",
-        },
-        {
-            name: "Nhà Trong Ngõ",
-            avatar: "/image/avatar.jpg",
-        },
-        {
-            name: "Nhà Trong Ngõ",
-            avatar: "/image/avatar.jpg",
-        },
-    ];
+    // const stories = [
+    //     {
+    //         name: "Tạo tin",
+    //         avatar: "/image/avatar.jpg",
+    //         isCreate: true,
+    //     },
+    //     {
+    //         name: "Bảo Quốc",
+    //         avatar: "/image/avatar.jpg",
+    //     },
+    //     {
+    //         name: "Đói Quá Không Ngủ...",
+    //         avatar: "/image/avatar.jpg",
+    //     },
+    //     {
+    //         name: "Việt Nam Hùng Cường",
+    //         avatar: "/image/avatar.jpg",
+    //     },
+    //     {
+    //         name: "Nhà Trong Ngõ",
+    //         avatar: "/image/avatar.jpg",
+    //     },
+    //     {
+    //         name: "Nhà Trong Ngõ",
+    //         avatar: "/image/avatar.jpg",
+    //     },
+    //     {
+    //         name: "Nhà Trong Ngõ",
+    //         avatar: "/image/avatar.jpg",
+    //     },
+    //     {
+    //         name: "Nhà Trong Ngõ",
+    //         avatar: "/image/avatar.jpg",
+    //     },
+    // ];
     const prevRef = React.useRef<HTMLButtonElement>(null);
     const nextRef = React.useRef<HTMLButtonElement>(null);
     const [canGoPrev, setCanGoPrev] = React.useState(false);
+    const { user: currentUser } = useMe()
     const swiperRef = React.useRef<SwiperType>();
+    const { data } = useGetStories()
+    const stories = data?.result.stories
+    const slides: SlideItem[] = [
+        {
+            user_id: '',
+            name: 'Tạo tin',
+            avatar: currentUser?.avatar as string,
+            isCreate: true,
+            stories: [],
+        },
+        ...(stories?.map((group) => ({
+            user_id: group._id,
+            name: group.user.name,
+            avatar: group.user.avatar as string,
+            isCreate: false,
+            stories: group.stories, // hoặc group.stories nếu bạn chỉ cần mảng story
+        })) ?? [])
+    ]
     const handleSlideChange = (swiper: any) => {
-        console.log("swiper.activeIndex ===> ", swiper.activeIndex)
         setCanGoPrev(swiper.activeIndex > 0)
     }
     React.useEffect(() => {
@@ -90,22 +111,24 @@ export default function HomeStory() {
                 slidesPerView={5}
                 slidesPerGroup={2}
                 spaceBetween={12}
+                loop={slides.length >= 5} // chỉ loop nếu đủ slide
+                loopFillGroupWithBlank={true} // thêm các slide rỗng nếu thiếu
             >
-                {stories.map((story, idx) => (
+                {slides && slides.map((slide, idx) => (
                     <SwiperSlide key={idx}>
-                        <div
-                            className={`w-[120px] h-[200px] rounded-lg overflow-hidden relative cursor-pointer`}
-                        >
-                            <Link href={`/stories/${story.isCreate ? "create" : idx}`}>
+                        <Link href={`/stories/${slide.isCreate ? "create" : slide.user_id}`}>
+                            <div
+                                className={`w-[120px] h-[200px] rounded-lg overflow-hidden relative cursor-pointer`}
+                            >
                                 <Image
-                                    src="/image/avatar.jpg"
-                                    alt={story.name}
+                                    src={slide.isCreate ? slide.avatar : (slide.stories.length > 0 && slide.stories[0].medias.type === 0 && slide.stories[0].medias.url) as string}
+                                    alt={slide.name}
                                     layout="responsive"
                                     width={120}
                                     height={200}
-                                    className={`object-cover transition-transform duration-300 hover:scale-[1.02] ${story.isCreate ? 'opacity-40' : 'hover:opacity-80'}`}
+                                    className={`object-cover h-[200px] transition-transform debug-css duration-300 hover:scale-[1.02] ${slide.isCreate ? 'opacity-40' : 'hover:opacity-80'}`}
                                 />
-                                {story.isCreate ? (
+                                {slide.isCreate ? (
                                     <div className="absolute inset-0 flex flex-col justify-end items-center p-2">
                                         <div className="bg-blue-500 w-8 h-8 flex items-center justify-center rounded-full mb-1 z-20">
                                             <span className="text-white text-xl">+</span>
@@ -116,21 +139,28 @@ export default function HomeStory() {
                                     <>
                                         <div className="absolute top-2 left-2 w-8 h-8 rounded-full border-2 border-blue-500 overflow-hidden z-10 hover:bg-[rgba(29,155,240,0.1)]">
                                             <Image
-                                                src="/image/avatar.jpg"
+                                                src={slide.avatar}
                                                 alt="story-avatar"
                                                 layout="fill"
                                                 objectFit="cover"
                                             />
                                         </div>
                                         <p className="absolute bottom-2 left-2 right-2 text-sm text-white font-semibold truncate z-10">
-                                            {story.name}
+                                            {slide.name}
                                         </p>
                                     </>
                                 )}
-                            </Link>
-                        </div>
+                            </div>
+                        </Link>
                     </SwiperSlide>
                 ))}
+                {slides.length < 5 &&
+                    Array.from({ length: 5 - slides.length }).map((_, idx) => (
+                        <SwiperSlide key={`blank-${idx}`}>
+                            <div className="w-[120px] h-[200px] rounded-lg bg-translate" />
+                        </SwiperSlide>
+                    ))
+                }
             </Swiper>
             <div className="absolute left-0 top-0 right-0 bottom-0 text-[25px] transition">
                 <button

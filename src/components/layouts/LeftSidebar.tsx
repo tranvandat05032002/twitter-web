@@ -100,7 +100,7 @@ const LeftSidebar: React.FC<ILeftSidebar> = (props) => {
               <div className="flex items-center gap-x-2">
                 <div className="w-10 h-10 overflow-hidden rounded-full relative"> {/* Thêm relative khi dùng fill */}
                   <Avatar
-                    src="/image/avatar.jpg"
+                    src={userInfo?.avatar}
                     alt="Ảnh đại diện"
                     className="object-fit-cover"
                     sx={{ width: 40, height: 40 }}
