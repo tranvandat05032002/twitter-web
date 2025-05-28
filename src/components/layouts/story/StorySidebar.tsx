@@ -10,18 +10,23 @@ import Image from 'next/image';
 import { Avatar } from '@mui/material';
 import StorySidebarItem from '@/components/common/Story/StorySidebarItem';
 import { useMe } from '@/context/UserContext';
-import { useStory } from '@/context/StoryContext';
+import { useGetStories } from '@/hooks/users/useQuery';
+import { MyContextType, StoryContext } from '@/context/StoryContext';
 
 const StorySidebar = () => {
     const router = useRouter();
     const pathname = usePathname();
     const { user: currentUser } = useMe();
-    const storiesGroup = useStory()
-    const [shoeCreateStory, setShowCreateStory] = React.useState(false)
+    const { data } = useGetStories()
+    const storiesGroup = data?.result.stories
+    const [showCreateStory, setShowCreateStory] = React.useState(false)
     const selectedId = String(pathname.split('/').pop()) || '';
 
     const handleClose = () => {
-        router.back();
+        if (selectedId === "create") {
+            router.back();
+        }
+        router.push(routers.homePage);
     }
 
     React.useEffect(() => {
@@ -51,10 +56,10 @@ const StorySidebar = () => {
                     </div>
                 </div>
             </StickyNav>
-            <div className="flex flex-1 flex-col p-2 min-h-0 overflow-y-auto">
+            <div className={`flex flex-1 flex-col p-2 min-h-0 overflow-y-auto`}>
                 {/* Phần tiêu đề + Tạo tin */}
                 {
-                    shoeCreateStory ?
+                    showCreateStory ?
                         <div>
                             <div className='mb-4'>
                                 <h2 className="text-2xl font-bold">Tin của bạn</h2>
@@ -70,6 +75,7 @@ const StorySidebar = () => {
                                 </div>
                                 <div className="font-semibold">{currentUser?.name}</div>
                             </div>
+
                         </div>
                         :
                         (
@@ -87,7 +93,7 @@ const StorySidebar = () => {
                                             <div className="text-xs text-gray-400">Bạn có thể chia sẻ ảnh hoặc viết gì đó.</div>
                                         </div>
                                     </div>
-                                    <div className="text-xs text-gray-400 mb-2">Tất cả tin</div>
+                                    <div className="font-semibold mb-2">Tất cả tin</div>
                                 </div>
 
                                 {/* Phần scroll riêng cho danh sách tin */}
@@ -99,7 +105,6 @@ const StorySidebar = () => {
                             </React.Fragment>
                         )
                 }
-
             </div>
         </aside>
     );

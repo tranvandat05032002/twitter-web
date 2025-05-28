@@ -1,3 +1,4 @@
+'use client'
 import { useMe } from '@/context/UserContext';
 import { useGetStories } from '@/hooks/users/useQuery';
 import { SlideItem, StoryGroup } from '@/types/storyTypes';
@@ -57,6 +58,9 @@ export default function HomeStory() {
             }
         }
     }, [prevRef.current, nextRef.current]);
+
+    //TODO: Get story unseen index
+
     return (
         <div className="relative flex overflow-x-auto gap-2 scrollbar-hide mt-2">
             <Swiper
@@ -78,8 +82,7 @@ export default function HomeStory() {
                 slidesPerView={5}
                 slidesPerGroup={2}
                 spaceBetween={12}
-                loop={slides.length >= 5} // chỉ loop nếu đủ slide
-                loopFillGroupWithBlank={true} // thêm các slide rỗng nếu thiếu
+                loop={slides.length >= 5}
             >
                 {slides && slides.map((slide, idx) => (
                     <SwiperSlide key={idx}>
@@ -87,14 +90,31 @@ export default function HomeStory() {
                             <div
                                 className={`w-[120px] h-[200px] rounded-lg overflow-hidden relative cursor-pointer`}
                             >
-                                <Image
-                                    src={slide.isCreate ? slide.avatar : (slide.stories.length > 0 && slide.stories[0].medias.type === 0 && slide.stories[0].medias.url) as string}
-                                    alt={slide.name}
-                                    layout="responsive"
-                                    width={120}
-                                    height={200}
-                                    className={`object-cover h-[200px] transition-transform duration-300 hover:scale-[1.02] ${slide.isCreate ? 'opacity-40' : 'hover:opacity-80'}`}
-                                />
+                                <div className="relative flex justify-center w-full h-full" >
+                                    {!slide.isCreate &&
+                                        <React.Fragment>
+                                            <div className="absolute top-0 left-0 w-full h-1/4 bg-gradient-to-b from-black/60 to-transparent z-10 rounded-t-lg" />
+                                            <div className="absolute bottom-0 left-0 w-full h-1/4 bg-gradient-to-t from-black/60 to-transparent z-10 rounded-b-lg" />
+                                        </React.Fragment>
+                                    }
+                                    <Image
+                                        src={
+                                            slide.isCreate
+                                                ? slide.avatar
+                                                : (slide.stories.length > 0 &&
+                                                    slide.stories[0].medias.type === 0 &&
+                                                    slide.stories[0].medias.url) as string
+                                        }
+                                        alt={slide.name}
+                                        width={120}
+                                        height={200}
+                                        className={`object-cover rounded-lg transition-transform duration-300 hover:scale-[1.02] ${slide.isCreate
+                                            ? 'opacity-40 w-[120px] h-[140px]'
+                                            : 'w-[120px] h-[200px] hover:opacity-80'
+                                            }`}
+                                    />
+                                </div>
+
                                 {slide.isCreate ? (
                                     <div className="absolute inset-0 flex flex-col justify-end items-center p-2">
                                         <div className="bg-blue-500 w-8 h-8 flex items-center justify-center rounded-full mb-1 z-20">

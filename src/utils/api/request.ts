@@ -25,7 +25,7 @@ import { ForgotForm } from "@/app/users/find-account/page";
 import { ResetPasswordForm } from "@/app/users/reset-password/page";
 import { AxiosInstance } from "axios";
 import { AddNewMessageResponseType, GetChatResponseType, GetMessagesResponseType, NewMessageRequestType } from "@/types/chatTypes";
-import { ResultTweet, Tweet, TweetForm } from "@/types/tweetTypes";
+import { MediaForm, Mediatype, ResultTweet, Tweet, TweetForm } from "@/types/tweetTypes";
 import { useQueryClient } from "@tanstack/react-query";
 import { Comment, CommentForm, CommentWithReplies, EditCommentPayload, ResultComment } from "@/types/commentTypes";
 import { COMMENT_LIMIT, TWEET_LIMIT } from "@/constant/tweet";
@@ -675,9 +675,64 @@ export const requestGetStories = async (): Promise<ResultStory> => {
         Authorization: `Bearer ${access_token}`,
       },
     });
-    console.log("response ----> ", response.data)
     return response.data as ResultStory
   } catch (error) {
     throw new Error("Comment not found");
   }
 }
+
+// Method: POST
+// Story
+export const requestViewStory = async (storyId: string): Promise<any> => {
+  const { access_token } = getToken();
+  if (!access_token) return;
+  try {
+    const response = await apiInstance.patch(
+      `/stories/${storyId}/view`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const requestUploadImage = async (formData: FormData): Promise<{ imageUrl: string }> => {
+  const { access_token } = getToken();
+  try {
+    const response = await apiInstance.post('/upload/image', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const requestCreateStory = async (data: Mediatype) => {
+  const { access_token } = getToken();
+  const dataStory: MediaForm = {
+    medias: {
+      ...data
+    }
+  }
+  try {
+    const response = await apiInstance.post('/story/create', dataStory, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

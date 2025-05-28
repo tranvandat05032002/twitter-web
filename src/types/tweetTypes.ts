@@ -8,6 +8,11 @@ export type Mediatype = {
     url: string,
     type: number
 }
+
+export type MediaForm = {
+    medias: Mediatype
+}
+
 export type HashtagType = {
     _id: string;
     name: string;

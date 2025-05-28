@@ -9,7 +9,7 @@ export type Story = {
     _id: string,
     user_id: string,
     medias: Mediatype,
-    viewers: string[],
+    viewers: IUser[],
     expired_at: Date,
     created_at: Date
 }

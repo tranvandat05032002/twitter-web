@@ -4,7 +4,7 @@ import { ForgotForm } from "@/app/users/find-account/page";
 import { ResetPasswordForm } from "@/app/users/reset-password/page";
 import { NewMessageRequestType } from "@/types/chatTypes";
 import { Comment, CommentForm, EditCommentPayload } from "@/types/commentTypes";
-import { Tweet, TweetForm } from "@/types/tweetTypes";
+import { Mediatype, Tweet, TweetForm } from "@/types/tweetTypes";
 import {
   IToken,
   IUpdateUser,
@@ -31,6 +31,8 @@ import {
   requestCreateComment,
   requestDeleteComment,
   requestEditComment,
+  requestViewStory,
+  requestCreateStory,
 } from "@/utils/api/request";
 import { removeEmailCookies, removeOTPToken } from "@/utils/auth/cookies";
 import { UseMutationResult, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -188,6 +190,29 @@ export const useDeleteComment = (tweet_id: string) => {
     retry: 2,
     onSuccess(data) {
       queryClient.invalidateQueries({ queryKey: ["comments", tweet_id], exact: true })
+    },
+  });
+}
+
+export const useViewStory = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (storyId: string) => requestViewStory(storyId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['stories'] });
+    },
+    onError: (error) => {
+      console.error('Error marking story as viewed:', error);
+    },
+  });
+};
+
+export const useCreateStory = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: Mediatype) => requestCreateStory(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["stories"] })
     },
   });
 }

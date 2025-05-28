@@ -3,7 +3,6 @@ import React from 'react';
 
 const Story = ({ params }: { params: { id: string } }) => {
     const storyGroupId = String(params.id);
-    console.log("storyGroupId ----> ", storyGroupId)
 
     return <StoryView user_id={storyGroupId} />;
 };
