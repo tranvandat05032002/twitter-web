@@ -10,41 +10,6 @@ import { Navigation } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 export default function HomeStory() {
-    // const stories = [
-    //     {
-    //         name: "Tạo tin",
-    //         avatar: "/image/avatar.jpg",
-    //         isCreate: true,
-    //     },
-    //     {
-    //         name: "Bảo Quốc",
-    //         avatar: "/image/avatar.jpg",
-    //     },
-    //     {
-    //         name: "Đói Quá Không Ngủ...",
-    //         avatar: "/image/avatar.jpg",
-    //     },
-    //     {
-    //         name: "Việt Nam Hùng Cường",
-    //         avatar: "/image/avatar.jpg",
-    //     },
-    //     {
-    //         name: "Nhà Trong Ngõ",
-    //         avatar: "/image/avatar.jpg",
-    //     },
-    //     {
-    //         name: "Nhà Trong Ngõ",
-    //         avatar: "/image/avatar.jpg",
-    //     },
-    //     {
-    //         name: "Nhà Trong Ngõ",
-    //         avatar: "/image/avatar.jpg",
-    //     },
-    //     {
-    //         name: "Nhà Trong Ngõ",
-    //         avatar: "/image/avatar.jpg",
-    //     },
-    // ];
     const prevRef = React.useRef<HTMLButtonElement>(null);
     const nextRef = React.useRef<HTMLButtonElement>(null);
     const [canGoPrev, setCanGoPrev] = React.useState(false);
@@ -52,6 +17,8 @@ export default function HomeStory() {
     const swiperRef = React.useRef<SwiperType>();
     const { data } = useGetStories()
     const stories = data?.result.stories
+
+
     const slides: SlideItem[] = [
         {
             user_id: '',
@@ -126,7 +93,7 @@ export default function HomeStory() {
                                     layout="responsive"
                                     width={120}
                                     height={200}
-                                    className={`object-cover h-[200px] transition-transform debug-css duration-300 hover:scale-[1.02] ${slide.isCreate ? 'opacity-40' : 'hover:opacity-80'}`}
+                                    className={`object-cover h-[200px] transition-transform duration-300 hover:scale-[1.02] ${slide.isCreate ? 'opacity-40' : 'hover:opacity-80'}`}
                                 />
                                 {slide.isCreate ? (
                                     <div className="absolute inset-0 flex flex-col justify-end items-center p-2">

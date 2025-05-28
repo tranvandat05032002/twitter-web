@@ -675,7 +675,7 @@ export const requestGetStories = async (): Promise<ResultStory> => {
         Authorization: `Bearer ${access_token}`,
       },
     });
-    console.log("response.data ----> ", response.data)
+    console.log("response ----> ", response.data)
     return response.data as ResultStory
   } catch (error) {
     throw new Error("Comment not found");

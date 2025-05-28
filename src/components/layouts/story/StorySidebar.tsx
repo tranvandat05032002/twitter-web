@@ -10,38 +10,27 @@ import Image from 'next/image';
 import { Avatar } from '@mui/material';
 import StorySidebarItem from '@/components/common/Story/StorySidebarItem';
 import { useMe } from '@/context/UserContext';
-const stories = [
-    { id: 1, name: 'Trần Văn Đạt', time: '1 giờ', avatar: '/image/avatar.jpg' },
-    { id: 2, name: 'Hoàng Anh', time: '12 giờ', avatar: '/image/avatar.jpg' },
-    { id: 3, name: 'Đặng Ngọc Nam', time: '3 giờ', avatar: '/image/avatar.jpg' },
-    { id: 4, name: 'Vương Minh Kiệt', time: '6 giờ', avatar: '/image/avatar.jpg' },
-    { id: 5, name: 'Ngô Bảo Kha', time: '6 giờ', avatar: '/image/avatar.jpg' },
-    { id: 6, name: 'Vương Thế Lâm', time: '6 giờ', avatar: '/image/avatar.jpg' },
-    { id: 7, name: 'Vương Thế Bảo Trâm', time: '6 giờ', avatar: '/image/avatar.jpg' },
-    { id: 8, name: 'Ngô Hoàng Thiên Bảo', time: '6 giờ', avatar: '/image/avatar.jpg' },
-    { id: 9, name: 'Nguyễn Thủy Thiên Trà', time: '6 giờ', avatar: '/image/avatar.jpg' },
-    { id: 9, name: 'Ngô Hữu Kha', time: '6 giờ', avatar: '/image/avatar.jpg' },
-    { id: 9, name: 'PHạm Ngũ Kim', time: '6 giờ', avatar: '/image/avatar.jpg' },
-];
+import { useStory } from '@/context/StoryContext';
+
 const StorySidebar = () => {
     const router = useRouter();
     const pathname = usePathname();
     const { user: currentUser } = useMe();
+    const storiesGroup = useStory()
     const [shoeCreateStory, setShowCreateStory] = React.useState(false)
-    const selectedId = Number(pathname.split('/').pop()) || 1;
-    const selectedName = String(pathname.split('/').pop()) || '';
+    const selectedId = String(pathname.split('/').pop()) || '';
 
     const handleClose = () => {
         router.back();
     }
 
     React.useEffect(() => {
-        if (selectedName === "create") {
+        if (selectedId === "create") {
             setShowCreateStory(true);
         } else {
             setShowCreateStory(false);
         }
-    }, [selectedName]);
+    }, [selectedId]);
 
     const handleCreateStory = () => {
         setShowCreateStory(true)
@@ -103,8 +92,8 @@ const StorySidebar = () => {
 
                                 {/* Phần scroll riêng cho danh sách tin */}
                                 <div className="space-y-2">
-                                    {stories && stories.map((story, index) => (
-                                        <StorySidebarItem key={index} story={story} selectedId={selectedId} />
+                                    {storiesGroup && storiesGroup.map((storyGroup) => (
+                                        <StorySidebarItem key={storyGroup._id} story={storyGroup} selectedId={selectedId} />
                                     ))}
                                 </div>
                             </React.Fragment>

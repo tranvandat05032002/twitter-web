@@ -1,43 +1,46 @@
 'use client'
-import React, { use } from 'react';
+import { useStory } from '@/context/StoryContext';
+import { useGetStories } from '@/hooks/users/useQuery';
+import { Story, StoryGroup } from '@/types/storyTypes';
+import { formatTweetTime } from '@/utils/handlers';
+import { parseISO } from 'date-fns';
+import { useRouter } from 'next/navigation';
+import React from 'react';
 import { IoIosPause, IoIosPlay, IoMdVolumeOff } from "react-icons/io";
 import { IoVolumeMediumSharp } from "react-icons/io5";
 
-const storyContents = [
-    {
-        id: 1,
-        name: 'Haru',
-        avatar: '/image/avatar.jpg',
-        stories: [
-            { id: 101, image: '/image/avatar.jpg', music: 'G.E.M. 邓紫棋', time: '1 giờ' },
-            { id: 102, image: 'https://images2.thanhnien.vn/528068263637045248/2024/1/25/428059e47aeafb68640f168d615371dc-65a11b038315c880-1706156293087602824781.jpg', music: '', time: '1 giờ' },
-        ],
-    },
-    {
-        id: 2,
-        name: 'Nhi Tran',
-        avatar: '/image/avatar.jpg',
-        stories: [
-            { id: 103, image: '/image/avatar.jpg', music: '', time: '12 giờ' },
-        ],
-    },
-];
-
 const DURATION = 10000  //10s
 
-
-const StoryView = () => {
+const StoryView = ({ user_id }: { user_id: string }) => {
+    const router = useRouter();
     const [progress, setProgress] = React.useState(0);
+
     const [storyIndex, setStoryIndex] = React.useState(0);
-    const [userIndex, setUserIndex] = React.useState(0);
+
     const [storyKey, setStoryKey] = React.useState(0);
+
     const [playStory, setPlayStory] = React.useState(true)
+
     const [muteVolumStory, setMuteVolumStory] = React.useState(false)
+
     const [elapsedTime, setElapsedTime] = React.useState(0);
+
     const intervalRef = React.useRef<NodeJS.Timeout | null>(null);
 
-    const user = storyContents[userIndex];
-    const currentStory = user?.stories[storyIndex];
+    // const storyGroup = useStory()
+    const { data } = useGetStories()
+    const storyGroup = data?.result.stories as StoryGroup[]
+
+    console.log("storyGroup ----> ", storyGroup)
+    console.log("data ----> ", data)
+
+    const user = React.useMemo(() => storyGroup.find((id) => id._id === user_id), [storyGroup, user_id]);
+    const currentStoryGroup = React.useMemo(() => {
+        return user?.stories?.[storyIndex] as Story;
+    }, [user, storyIndex]);
+
+    const date = parseISO(currentStoryGroup?.created_at.toString());
+    const time = formatTweetTime(date)
 
     const startProgress = () => {
         const start = Date.now() - elapsedTime;
@@ -51,13 +54,29 @@ const StoryView = () => {
 
             if (percentage >= 100) {
                 clearInterval(intervalRef.current!);
-                handleNextStor();
+                handleNextStory();
             }
         }, 50);
     };
 
+    const handleNextStory = () => {
+        const currentUserIndex = storyGroup.findIndex((u) => u._id === user_id);
+        const hasNextStory = storyIndex + 1 < (user?.stories?.length ?? 0);
+
+        if (hasNextStory) {
+            setStoryIndex((prev) => prev + 1);
+        } else {
+            const nextUser = storyGroup[currentUserIndex + 1];
+            if (nextUser) {
+                router.push(`/story/${nextUser._id}`);
+            }
+            // setStoryIndex(0);
+        }
+    }
+
     React.useEffect(() => {
         if (!playStory) return;
+
         const start = Date.now() - elapsedTime;
 
         const interval = setInterval(() => {
@@ -70,7 +89,7 @@ const StoryView = () => {
 
             if (percentage >= 100) {
                 clearInterval(interval);
-                handleNextStor();
+                handleNextStory();
             }
         }, 50);
 
@@ -91,30 +110,12 @@ const StoryView = () => {
 
     // Khi đổi story
     React.useEffect(() => {
-        if (!currentStory) return;
+        if (!currentStoryGroup) return;
 
         setProgress(0);
         setElapsedTime(0);
-        setStoryKey(prev => prev + 1); // buộc useEffect chạy lại
-    }, [userIndex, storyIndex]);
-
-    const handleNextStor = () => {
-        const hasNextStory = storyIndex + 1 < user?.stories.length
-
-        if (hasNextStory) {
-            setStoryIndex((prev) => prev + 1)
-        } else {
-            const hasNextUser = userIndex + 1 < storyContents.length
-            if (hasNextUser) {
-                setUserIndex((prev) => prev + 1);
-                setStoryIndex(0);
-            } else {
-                //Hết story
-                setUserIndex(0)
-                setStoryIndex(0)
-            }
-        }
-    }
+        setStoryKey((prev) => prev + 1);
+    }, [storyIndex]);
 
     const handlePlayStory = () => {
         setPlayStory((prev) => !prev)
@@ -124,15 +125,15 @@ const StoryView = () => {
         setMuteVolumStory((prev) => !prev)
     }
 
-    if (!currentStory) return <div className="text-white">Không có tin</div>;
+    if (!currentStoryGroup) return <div className="text-white">Không có tin</div>;
 
     return (
         <div className="flex-1 flex flex-col items-center justify-center bg-black px-4 py-6 h-screen overflow-hidden">
             <div className="w-[400px] bg-transparent rounded-lg overflow-hidden shadow-xl border border-gray-700 relative">
                 {/* Progress bar */}
                 <div className="absolute top-0 left-0 w-full flex gap-1 px-2 py-1">
-                    {user?.stories.map((_, index) => (
-                        <div key={index} className="flex-1 h-1 bg-gray-700 rounded overflow-hidden">
+                    {user?.stories.map((story, index) => (
+                        <div key={story._id} className="flex-1 h-1 bg-gray-700 rounded overflow-hidden">
                             <div
                                 className="h-full bg-blue-500 transition-all duration-100 linear"
                                 style={{
@@ -151,18 +152,18 @@ const StoryView = () => {
                 <div className='flex items-center justify-between p-4'>
                     <div className="flex items-center">
                         <img
-                            src={user.avatar}
-                            alt={user.name}
+                            src={user?.user.avatar}
+                            alt={user?.user.name}
                             className="w-10 h-10 rounded-full object-cover"
                         />
                         <div className="ml-3">
                             <div className="font-semibold text-white">
-                                {user.name}
-                                <span className="ml-2 text-xs text-gray-400">{currentStory.time}</span>
+                                {user?.user.name}
+                                <span className="ml-2 text-xs text-gray-400">{time}</span>
                             </div>
-                            {currentStory.music && (
+                            {/* {currentStory.music && (
                                 <div className="text-xs text-blue-400 mt-1">🎵 {currentStory.music}</div>
-                            )}
+                            )} */}
                         </div>
                     </div>
                     <div className='flex items-center space-x-2'>
@@ -195,7 +196,7 @@ const StoryView = () => {
                 {/* Image content */}
                 <div className="flex-1 min-h-0 w-full">
                     <img
-                        src={currentStory.image}
+                        src={currentStoryGroup.medias.url}
                         alt="story"
                         className="w-full h-full object-cover object-top"
                     />

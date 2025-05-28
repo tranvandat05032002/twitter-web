@@ -28,9 +28,6 @@ export const highlightContent = (content: string) => {
     });
 };
 export default function HomeCreatePost({ onClose }: { onClose: () => void }) {
-    const { userProfile, updateProfile } = useProfileStore(
-        (state) => state
-    );
     // const { setShowCreatePost } = useEvent((state) => state);
     const [showFormAddImage, setShowFormAddImage] = React.useState(false)
     const [images, setImages] = React.useState<{ file: File; media: Mediatype }[]>([]);
