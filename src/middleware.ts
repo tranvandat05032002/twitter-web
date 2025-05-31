@@ -23,8 +23,6 @@ export function middleware(req: NextRequest) {
 
         const currentUsername = currentUser?.username
 
-        console.log("profileUsername ----> ", queryProfileUsername)
-
         if (pathname === '/profile/v1') {
             if (queryProfileUsername === currentUsername) {
                 // Nếu đúng user thì redirect về /profile/{username}

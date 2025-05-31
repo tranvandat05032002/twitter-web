@@ -48,7 +48,6 @@ const Likes = ({ params }: { params: { username: string } }) => {
 
   const tweets = data?.pages.flatMap((page) => page?.tweet.tweets ?? []);
 
-  console.log("Tweets ---> ", tweets)
   return (
     <DashboardPage>
       <DynamicLikes params={params}>

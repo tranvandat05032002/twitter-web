@@ -102,8 +102,6 @@ const StoryView = ({ user_id }: { user_id: string }) => {
         })
     }
 
-    console.log("re-render")
-
     if (noMoreStory) {
         return <div className="text-center mt-20 text-gray-400">Không còn tin để xem</div>;
     }

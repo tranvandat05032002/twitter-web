@@ -383,7 +383,6 @@ export const requestSearchUser = async (infoSearch: ISearchUser) => {
         Authorization: `Bearer ${access_token}`,
       },
     });
-    console.log("Search ---> ", response.data)
     return response.data.result.data;
   } catch (error) {
     throw error;
@@ -572,7 +571,6 @@ export const requestToggleLike = async ({ tweet_id, liked, like_id }: { tweet_id
   const { access_token } = getToken()
   try {
     if (liked && like_id) {
-      console.log("running unlike")
       await apiInstance.delete(`/like/${like_id}`, {
         headers: {
           "Content-Type": "application/json",
@@ -650,7 +648,6 @@ export const requestCreateComment = async (data: CommentForm) => {
 }
 
 export const requestEditComment = async (comment_id: string, data: CommentForm) => {
-  console.log(comment_id, data)
   const { access_token } = getToken()
   try {
     const response = await apiInstance.put(`/comment/${comment_id}`, data, {

@@ -1,5 +1,5 @@
 interface IBob extends Blob {
-  name?: string
+    name?: string
 }
 export const createImage = (url: string): Promise<HTMLImageElement> =>
     new Promise((resolve, reject) => {
@@ -90,11 +90,10 @@ export default async function getCroppedImg(
     )
     return new Promise((resolve, reject) => {
         croppedCanvas.toBlob((file: IBob | null) => {
-          if(file) {
-            console.log("file crop: ", file)
-              file.name = "cropped.jpeg"
-              resolve({ file: file, url: URL.createObjectURL(file as Blob) })
-          }
+            if (file) {
+                file.name = "cropped.jpeg"
+                resolve({ file: file, url: URL.createObjectURL(file as Blob) })
+            }
         }, 'image/jpeg')
     })
 }

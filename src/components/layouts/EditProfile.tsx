@@ -157,7 +157,6 @@ const EditProfile = () => {
     }
 
   }, [isSuccess, isError])
-  // console.log("ActiveModal ---> ", active)
   return (
     !openCrop ? (<form onSubmit={handleSubmit(handleUpdateUser)} autoComplete="off">
       <div className="max-w-[600px] w-[600px] bg-black max-h-[650px] h-[650px] overflow-auto rounded-2xl pb-4">

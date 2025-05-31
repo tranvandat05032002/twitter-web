@@ -87,7 +87,6 @@ export const uploadImageToS3 = async (file: File, key: string, type: string) => 
         }
       )
       if (response.status === 200) {
-        console.log("URLS3: ", response.data.result[0].url)
         const media: Mediatype = {
           url: response.data.result[0].url as string,
           type: response.data.result[0].type as number

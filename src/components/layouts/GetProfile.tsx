@@ -21,7 +21,6 @@ const GetProfile: React.FC<IGetProfile> = ({ children }) => {
     const { userProfile, updateProfile } = useProfileStore(
         (state) => state
     );
-    console.log("userProfile ---> ", userProfile._id)
     const searchParams = useSearchParams()
     const params = Object.fromEntries(searchParams.entries())
     const username = decodedUsername(params?.profile_username);

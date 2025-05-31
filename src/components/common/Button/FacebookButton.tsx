@@ -4,9 +4,6 @@ import ButtonType from "./ButtonType";
 const FacebookButton = ({ children }: ButtonProp) => {
     const propsFacebook: ButtonProps = {
         type: "button",
-        // onClick: () => {
-        //   console.log("Call Google Auth")
-        // },
         children,
     };
     return (

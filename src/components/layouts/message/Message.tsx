@@ -7,9 +7,6 @@ import { formatMessageTime } from '@/utils/handlers';
 const Message = ({ message, currentUserId, scroll }: { message: IMessage, currentUserId: string, scroll: React.LegacyRef<HTMLDivElement> }) => {
     const date = parseISO(message?.created_at as string);
     const time = formatMessageTime(date);
-    console.log("message.sender_id === currentUserId ---> ", message.sender_id === currentUserId)
-    console.log("message.sender_id ----> ", message.sender_id)
-    console.log("currentUserId----> ", currentUserId)
     return (
         <Tippy
             placement="left"
