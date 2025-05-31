@@ -4,9 +4,6 @@ import { MdOutlineFileDownload } from "react-icons/md";
 import React from 'react';
 import { createPortal } from 'react-dom';
 import { IoShareSocialSharp } from "react-icons/io5";
-import { FaChevronLeft, FaChevronRight, FaRegCopy } from 'react-icons/fa6';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Mediatype } from '@/types/tweetTypes';
 
 const StoryImagePreview = ({ image, onClose }: { image: string; onClose?: () => void }) => {
     const handleDownloadImage = (url: string) => {

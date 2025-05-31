@@ -529,6 +529,23 @@ export const requestFetchInfiniteOwnerTweets = async ({ pageParam = 1 }) => {
   }
 };
 
+export const requestFetchInfiniteLikedTweets = async ({ pageParam = 1 }) => {
+  const { access_token } = getToken()
+  try {
+    const response = await apiInstance.get(`/tweet/liked?limit=${TWEET_LIMIT}&page=${pageParam}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+    if (response.status === 200) {
+      return response.data.result as ResultTweet
+    }
+  } catch (error) {
+    throw error
+  }
+};
+
 export const requestGetTweetById = async (tweet_id: string): Promise<Tweet> => {
   const { access_token } = getToken()
   // try {
@@ -553,9 +570,9 @@ export const requestGetTweetById = async (tweet_id: string): Promise<Tweet> => {
 // Like/Unlike
 export const requestToggleLike = async ({ tweet_id, liked, like_id }: { tweet_id: string, liked: boolean, like_id: string }) => {
   const { access_token } = getToken()
-  console.log("tweet_id ---> ", tweet_id)
   try {
     if (liked && like_id) {
+      console.log("running unlike")
       await apiInstance.delete(`/like/${like_id}`, {
         headers: {
           "Content-Type": "application/json",
@@ -688,7 +705,7 @@ export const requestViewStory = async (storyId: string): Promise<any> => {
   if (!access_token) return;
   try {
     const response = await apiInstance.patch(
-      `/stories/${storyId}/view`,
+      `/story/${storyId}/view`,
       {},
       {
         headers: {
@@ -736,3 +753,18 @@ export const requestCreateStory = async (data: Mediatype) => {
     throw error;
   }
 };
+
+export const requestDeleteStory = async (story_id: string) => {
+  const { access_token } = getToken()
+  try {
+    const response = await apiInstance.delete(`/story/${story_id}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      }
+    });
+    return response.data
+  } catch (error) {
+    throw error
+  }
+}

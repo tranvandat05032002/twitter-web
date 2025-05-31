@@ -13,6 +13,7 @@ import "vidstack/styles/defaults.css";
 import "vidstack/styles/community-skin/video.css";
 import Image from "next/image";
 import { Avatar } from "@mui/material";
+import { getGoogleAuthUrl } from "@/utils/handlers";
 // import {
 //   MediaCommunitySkin,
 //   MediaOutlet,
@@ -38,28 +39,15 @@ const MainPage = () => {
           </div>
           <p className="text-3xl font-bold mb-7 text-textBlue">Join today.</p>
           <div className="flex flex-col gap-y-3 max-w-[320px] mb-7">
-            <button className="w-80 h-11 rounded-full bg-white text-textBlack transition-all hover:bg-bgHoverWhite py-[2px] px-[10px] relative">
-              <div className="flex items-center">
-                <div className="w-6 h-6 rounded-full overflow-hidden ml-[-4px] mr-2">
-                  <Avatar
-                    src={"/image/avatar.jpg"}
-                    className="object-fit-cover"
-                    sx={{ width: 24, height: 24 }}
-                  />
-                </div>
-                <div className="text-xs text-start">
-                  <span className="text-textBlackBtn font-medium">
-                    Đăng nhập với tên trần văn đạt
+            <button className="w-80 h-11 flex justify-center items-center rounded-full bg-white text-textBlack transition-all hover:bg-bgHoverWhite py-[2px] px-[10px] relative">
+              <Link href={getGoogleAuthUrl()}>
+                <div className="flex items-center justify-center space-x-1">
+                  <GoogleIcon></GoogleIcon>
+                  <span className="text-textBlackBtn text-base font-bold">
+                    Đăng nhập bằng Google
                   </span>
-                  <div className="flex items-center">
-                    <span className="text-textGrayBtn opacity-75">
-                      tranvandatevondev0503@gmail.com
-                    </span>
-                    <BsChevronDown style={{ margin: "0px 0px 0px 8px" }} />
-                  </div>
                 </div>
-                <GoogleIcon></GoogleIcon>
-              </div>
+              </Link>
             </button>
 
             <button className="w-80 h-11 rounded-full bg-white text-textBlack transition-all hover:bg-bgHoverWhite py-[2px] px-[10px]">

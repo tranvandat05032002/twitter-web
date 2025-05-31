@@ -1,28 +1,32 @@
 'use client'
 import BoxIcon from '@/components/SingleUseComponents/BoxIcon';
-import { CloseExternalEventIcon } from '@/components/SingleUseComponents/Icon';
+import { CloseExternalEventIcon, DotsIcon } from '@/components/SingleUseComponents/Icon';
 import { useMe } from '@/context/UserContext';
 import { useGetStories } from '@/hooks/users/useQuery';
 import { Story, StoryGroup } from '@/types/storyTypes';
-import { formatTweetTime } from '@/utils/handlers';
+import { formatStoryTime, formatTweetTime } from '@/utils/handlers';
 import { Avatar } from '@mui/material';
 import { parseISO } from 'date-fns';
 import Image from 'next/image';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 import { IoIosPause, IoIosPlay, IoMdVolumeOff, IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { IoVolumeMediumSharp } from "react-icons/io5";
+import { RiDeleteBin5Fill } from "react-icons/ri";
+import { FaUnlink } from "react-icons/fa";
 import StoryProgress from './StoryProgress';
 import StoryViewerCount from './StoryViewerCount';
 import { FaRegEye } from "react-icons/fa6";
+import Tippy from "@tippyjs/react/headless";
+import { useDeleteStory } from '@/hooks/users/useMutation';
+import { toast } from 'react-toastify';
 
 const DURATION = 10000  //10s
 
 const StoryView = ({ user_id }: { user_id: string }) => {
     const router = useRouter();
-    const searchParams = useSearchParams();
-    const initialStoryIndex = Number(searchParams.get('startIndex')) || 0;
-    const [storyIndex, setStoryIndex] = React.useState(initialStoryIndex);
+    const { mutate: deleteStory, isSuccess } = useDeleteStory()
+    const [storyIndex, setStoryIndex] = React.useState(0);
     const [playStory, setPlayStory] = React.useState(true);
     const { user: currentUser } = useMe();
     const [noMoreStory, setNoMoreStory] = React.useState(false);
@@ -30,6 +34,10 @@ const StoryView = ({ user_id }: { user_id: string }) => {
     const { data } = useGetStories()
     const storyGroup = data?.result.stories as StoryGroup[]
     const [showViewersList, setShowViewersList] = React.useState(false);
+    const [visible, setVisible] = React.useState(false);
+    const [isResetProgress, setIsResetProgress] = React.useState(false);
+
+
 
     const user = React.useMemo(() => storyGroup?.find((id) => id._id === user_id), [storyGroup, user_id]);
     const currentStoryGroup = React.useMemo(() => {
@@ -37,7 +45,7 @@ const StoryView = ({ user_id }: { user_id: string }) => {
     }, [user, storyIndex]);
 
     const date = parseISO(currentStoryGroup?.created_at.toString());
-    const time = formatTweetTime(date)
+    const time = formatStoryTime(date)
 
     const handleNextStory = () => {
         const currentUserIndex = storyGroup.findIndex((u) => u._id === user_id);
@@ -71,6 +79,31 @@ const StoryView = ({ user_id }: { user_id: string }) => {
         setMuteVolumStory((prev) => !prev);
     };
 
+    const handleDeleteStory = () => {
+        if (!currentStoryGroup._id) return
+
+        deleteStory(currentStoryGroup._id, {
+            onSuccess: () => {
+                toast.success("Xóa story thành công", {
+                    pauseOnHover: false,
+                });
+                if (storyIndex + 1 < (user?.stories?.length ?? 0)) {
+                    setIsResetProgress(true)
+                    setStoryIndex(prev => prev);
+                } else {
+                    handleNextStory();
+                }
+            },
+            onError: (err) => {
+                toast.error("Xóa story thất bại", {
+                    pauseOnHover: false,
+                });
+            }
+        })
+    }
+
+    console.log("re-render")
+
     if (noMoreStory) {
         return <div className="text-center mt-20 text-gray-400">Không còn tin để xem</div>;
     }
@@ -96,6 +129,7 @@ const StoryView = ({ user_id }: { user_id: string }) => {
                     user={user}
                     playStory={playStory}
                     storyIndex={storyIndex}
+                    isResetProgress={isResetProgress}
                     handleNextStory={handleNextStory}
                 />
 
@@ -138,6 +172,46 @@ const StoryView = ({ user_id }: { user_id: string }) => {
                                 onClick={handleMuteVolumStory}
                             />
                         )}
+                        <Tippy
+                            interactive
+                            placement='bottom'
+                            offset={[20, 12]}
+                            visible={visible}
+                            onClickOutside={() => setVisible(false)}
+                            render={(attrs) => (
+                                <div
+                                    className="bg-black text-white p-2 rounded-lg shadow-xl border-[0.5px] border-borderGraySecond"
+                                    tabIndex={-1}
+                                    {...attrs}
+                                >
+                                    <div className='flex items-center space-x-2'>
+                                        <FaUnlink />
+                                        <button
+                                            type="button"
+                                            className="w-full text-left py-2 text-sm cursor-pointer hover:bg-iconBackgroundGray"
+                                        // onClick={handleOpenEditComment}
+                                        >
+                                            Sao chép liên kết
+                                        </button>
+                                    </div>
+
+                                    <div className='flex items-center space-x-2'>
+                                        <RiDeleteBin5Fill />
+                                        <button
+                                            type="button"
+                                            className="w-full text-left py-2 text-sm cursor-pointer hover:bg-iconBackgroundGray"
+                                            onClick={handleDeleteStory}
+                                        >
+                                            Xóa
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+                        >
+                            <div onClick={() => setVisible(v => !v)} className="cursor-pointer">
+                                <DotsIcon className="w-[24px] h-[24px] cursor-pointer text-white" />
+                            </div>
+                        </Tippy>
                     </div>
                 </div>
 

@@ -1,5 +1,6 @@
 import LoadingPage from '@/components/common/Loading/LoadingPage';
 import DashboardPage from '@/components/layouts/Dashboard';
+import RightExplore from '@/components/layouts/explore/RightExplore';
 import dynamic from "next/dynamic";
 import React from 'react';
 const DynamicGetProfile = dynamic(() => import("@/components/layouts/GetProfile"), {
@@ -11,7 +12,7 @@ const GetProfile: React.FC = () => {
             <DashboardPage>
                 <DynamicGetProfile> abc </DynamicGetProfile>
                 {/* <RightExplore /> */}
-                <div>This is search page</div>
+                <RightExplore />
             </DashboardPage>
         </React.Fragment>
     );

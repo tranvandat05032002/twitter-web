@@ -33,6 +33,7 @@ import {
   requestEditComment,
   requestViewStory,
   requestCreateStory,
+  requestDeleteStory,
 } from "@/utils/api/request";
 import { removeEmailCookies, removeOTPToken } from "@/utils/auth/cookies";
 import { UseMutationResult, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -156,7 +157,10 @@ export const useToggleLike = () => {
   return useMutation({
     mutationFn: requestToggleLike,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["tweets"] })
+      const keysToInvalidate = ["tweets", "owner_tweets", "liked_tweets"]
+      keysToInvalidate.forEach((key) => {
+        queryClient.invalidateQueries({ queryKey: [key] })
+      })
     },
   })
 }
@@ -213,6 +217,17 @@ export const useCreateStory = () => {
     mutationFn: (data: Mediatype) => requestCreateStory(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["stories"] })
+    },
+  });
+}
+
+export const useDeleteStory = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (story_id: string) => requestDeleteStory(story_id),
+    retry: 2,
+    onSuccess(data) {
+      queryClient.invalidateQueries({ queryKey: ["stories"], exact: true })
     },
   });
 }

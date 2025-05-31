@@ -5,6 +5,8 @@ import classNames from "classnames";
 import { ModalType, useEvent } from '@/store/useEven';
 import { useGetUsersFollowing } from '@/hooks/users/useQuery';
 import ItemUserFollowing from '@/components/common/Tweet/ItemUserFollowing';
+import Link from 'next/link';
+import { IUser } from '@/types/userTypes';
 
 export default function HomeFollowing() {
     const [isSearching, setIsSearching] = React.useState(false)
@@ -43,7 +45,9 @@ export default function HomeFollowing() {
                 </div>
                 <div className="p-[13px] max-h-screen overflow-y-auto">
                     {dataGetUsersFollowing?.data.map((user: any) =>
-                        <ItemUserFollowing data={user?.followUsers} key={user._id} />
+                        <Link href={`/profile/v1/?profile_username=${user?.followUsers.username}`} key={user._id}>
+                            <ItemUserFollowing data={user?.followUsers} />
+                        </Link>
                     )}
                 </div>
             </div>

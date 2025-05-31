@@ -72,11 +72,11 @@
 
 @layer base {
   a {
-    color: #1d9bf0;
+    text-decoration: none;
   }
 
   a:hover {
-    text-decoration: underline;
+    text-decoration: none;
   }
 
   body,

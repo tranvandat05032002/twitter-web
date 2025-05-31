@@ -8,7 +8,7 @@ import {
   ErrorMessage,
   Input,
 } from "@/components/common";
-import { DateOfBirth } from "@/components/SingleUseComponents";
+import { DateOfBirth, TwitterIcon } from "@/components/SingleUseComponents";
 import { useDateStore } from "@/store";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
@@ -94,75 +94,82 @@ const SignUpPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess]);
   return (
-    <form onSubmit={handleSubmit(handleRegister)} autoComplete="off">
-      <h1 className="text-3xl font-bold pb-5">Đăng Ký Tài Khoản</h1>
-      <div className="py-[13px]">
-        <Input
-          placeholder="Tên"
-          type="text"
-          name="name"
-          control={control}
-        ></Input>
-        {errors && <ErrorMessage>{errors.name?.message}</ErrorMessage>}
+    <React.Fragment>
+      <div className="flex items-center justify-center">
+        <TwitterIcon size="small"></TwitterIcon>
       </div>
-      <div className="py-[13px]">
-        <Input
-          placeholder="Email"
-          type="email"
-          name="email"
-          control={control}
-        ></Input>
-        {errors && <ErrorMessage>{errors.email?.message}</ErrorMessage>}
-      </div>
-      <div className="py-[13px]">
-        <Input
-          placeholder="Mật khẩu"
-          type="password"
-          name="password"
-          control={control}
-        ></Input>
-        {errors && <ErrorMessage>{errors.password?.message}</ErrorMessage>}
-      </div>
-      <div className="py-[13px]">
-        <Input
-          placeholder="Nhập lại mật khẩu"
-          type="text"
-          name="confirm_password"
-          control={control}
-        ></Input>
-        {errors && (
-          <ErrorMessage>{errors.confirm_password?.message}</ErrorMessage>
-        )}
-      </div>
-      <div>
-        <DateOfBirth
-          day={day}
-          month={month}
-          year={year}
-          dayItem={dayItem}
-          monthItem={monthItem}
-          yearItem={yearItem}
-          handleChangeDay={handleChangeDay}
-          handleChangeYear={handleChangeYear}
-          handleChangeMonth={handleChangeMonth}
-        ></DateOfBirth>
-      </div>
-      <div className="text-xs">
-        <span>Bạn đã có tài khoản? </span>
-        <Link href={routers.signInPage} className="text-textBlue">
-          Đăng nhập ngay
-        </Link>
-      </div>
+      <form onSubmit={handleSubmit(handleRegister)} autoComplete="off">
+        <div>
+          <h1 className="text-center text-3xl font-bold pb-5">Đăng Ký Tài Khoản</h1>
+        </div>
+        <div className="py-[13px]">
+          <Input
+            placeholder="Tên"
+            type="text"
+            name="name"
+            control={control}
+          ></Input>
+          {errors && <ErrorMessage>{errors.name?.message}</ErrorMessage>}
+        </div>
+        <div className="py-[13px]">
+          <Input
+            placeholder="Email"
+            type="email"
+            name="email"
+            control={control}
+          ></Input>
+          {errors && <ErrorMessage>{errors.email?.message}</ErrorMessage>}
+        </div>
+        <div className="py-[13px]">
+          <Input
+            placeholder="Mật khẩu"
+            type="password"
+            name="password"
+            control={control}
+          ></Input>
+          {errors && <ErrorMessage>{errors.password?.message}</ErrorMessage>}
+        </div>
+        <div className="py-[13px]">
+          <Input
+            placeholder="Nhập lại mật khẩu"
+            type="text"
+            name="confirm_password"
+            control={control}
+          ></Input>
+          {errors && (
+            <ErrorMessage>{errors.confirm_password?.message}</ErrorMessage>
+          )}
+        </div>
+        <div>
+          <DateOfBirth
+            day={day}
+            month={month}
+            year={year}
+            dayItem={dayItem}
+            monthItem={monthItem}
+            yearItem={yearItem}
+            handleChangeDay={handleChangeDay}
+            handleChangeYear={handleChangeYear}
+            handleChangeMonth={handleChangeMonth}
+          ></DateOfBirth>
+        </div>
+        <div className="text-xs">
+          <span>Bạn đã có tài khoản? </span>
+          <Link href={routers.signInPage} className="text-textBlue">
+            Đăng nhập ngay
+          </Link>
+        </div>
 
-      <PrimaryButton
-        className="w-[440px] h-[52px] text-base  my-6 px-8"
-        type="submit"
-        isLoading={isLoading}
-        disabledForm={isLoading}
-      >
-        Tạo tài khoản
-      </PrimaryButton>
-    </form>
+        <PrimaryButton
+          className="w-[440px] h-[52px] text-base  my-6 px-8"
+          type="submit"
+          isLoading={isLoading}
+          disabledForm={isLoading}
+        >
+          Tạo tài khoản
+        </PrimaryButton>
+      </form>
+    </React.Fragment>
   );
 };
 

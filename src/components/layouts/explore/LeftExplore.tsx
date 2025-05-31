@@ -2,24 +2,19 @@
 import BoxIcon from '@/components/SingleUseComponents/BoxIcon';
 import { BackIcon, CloseExternalEventIcon, CloseIcon, DotsIcon, MagnifyingGlassIcon } from '@/components/SingleUseComponents/Icon';
 import { StickyNav } from '@/components/common';
-import { GhostButton } from '@/components/common/Button';
 import Link from 'next/link';
 import { useSearchParams, usePathname, useRouter } from "next/navigation"
 import React from 'react';
 import ItemUser from './ItemUser';
 import useDebounce from '@/hooks/useDebounce';
-import { apiInstance } from '@/utils/api';
 import { IUser, TRequestToken, TRequestUser, UserSearchType } from '@/types/userTypes';
-import { AxiosResponse } from 'axios';
-import { getToken } from '@/utils/auth/cookies';
 import { useSearchUser } from '@/hooks/users/useQuery';
 import { EXPLORE_ITEMS } from '@/constant/constants';
 import classNames from "classnames"
-import { bstHistory } from '@/utils/historySearchBST';
 import ItemUserSearch from './ItemUserSearch';
-import { useUserInfo } from '@/store/useUserInfo';
 import { MyContextType, SearchContext } from '@/context/SearchProvider';
 import SearchItem from './SearchItem';
+import { useMe } from '@/context/UserContext';
 const LeftExplore = () => {
     const searchParams = useSearchParams()
     const slugFilter = searchParams.get('filter') || null;
@@ -76,7 +71,14 @@ const LeftExplore = () => {
                             <div className="w-full max-h-[420px] overflow-y-auto">
                                 {
                                     searchUserAll.data && searchUserAll.data.map((item: UserSearchType) =>
-                                        <ItemUserSearch key={item._id as string} data={item}></ItemUserSearch>
+                                        <Link
+                                            key={item._id as string}
+                                            href={`/profile/v1?profile_username=${item.username}`}
+                                        >
+                                            <ItemUserSearch
+                                                key={item._id as string}
+                                                data={item}></ItemUserSearch>
+                                        </Link>
                                     )
                                 }
                             </div>
@@ -107,36 +109,55 @@ const LeftExplore = () => {
                     })}
                 </div>
             </StickyNav>
-            <div className="py-4 border-t-[1px] border-borderGrayPrimary">
+            <div className="h-full py-4 border-t-[1px] border-borderGrayPrimary">
                 {
-                    slugFilter === "all" ? (
-                        (searchUserAll.data?.length > 0 && slugFilter) ?
+                    !debounceSearchValue ? (
+                        <div className="flex justify-center items-center h-full">
+                            <p className='text-textGray'>Vui lòng nhập từ khóa</p>
+                        </div>
+                    ) : slugFilter === "all" ? (
+                        searchUserAll.data?.length > 0 ? (
                             <div className="w-full h-full">
-                                {
-                                    searchUserAll.data.map((item: UserSearchType) => {
-                                        let isMe: boolean = !!(item.username === userInfo?.username);
-                                        return (
-                                            <div key={item._id as string} className="w-full transition-all">
+                                {searchUserAll.data.map((item: UserSearchType) => {
+                                    const isMe = item.username === userInfo?.username;
+                                    return (
+                                        <Link
+                                            key={item._id as string}
+                                            href={`/profile/v1?profile_username=${item.username}`}
+                                        >
+                                            <div className="w-full transition-all">
                                                 <ItemUser userInfo={userInfo as IUser} data={item} isFollow={item?.is_following ?? false} isMe={isMe} />
                                             </div>
-                                        )
-                                    })
-                                }
-                                {/* {
-                                    searchUserFollowing.data.map((item: UserSearchType) => <div key={item._id as string} className="w-full transition-all"> <ItemUser data={item} isFollow={true} /> </div>)
-                                } */}
-                            </div> : <div className="flex justify-center items-center">
-                                <strong>No results for &quot;Tàiasnaknskaskasnkasaksmasasas&quot;.</strong>
+                                        </Link>
+                                    )
+                                })}
                             </div>
+                        ) : (
+                            <div className="flex justify-center items-center h-full">
+                                <strong className='text-textGray'>Không tìm thấy kết quả cho từ khóa &quot;{debounceSearchValue}&quot;.</strong>
+                            </div>
+                        )
                     ) : (
-                        (searchUserAll.data?.length > 0 && slugFilter) ?
+                        searchUserFollowing.data?.some((item: any) => item.is_following) ? (
                             <div className="w-full h-full">
-                                {
-                                    searchUserFollowing.data.map((item: UserSearchType) => item.is_following === true ? <div key={item._id as string} className="w-full transition-all"> <ItemUser data={item} isFollow={true} /> </div> : null)
-                                }
-                            </div> : <div className="flex justify-center items-center">
-                                <strong>No results for &quot;Tàiasnaknskaskasnkasaksmasasas&quot;.</strong>
+                                {searchUserFollowing.data.map((item: UserSearchType) =>
+                                    item.is_following ? (
+                                        <Link
+                                            key={item._id as string}
+                                            href={`/profile/v1?profile_username=${item.username}`}
+                                        >
+                                            <div className="w-full transition-all">
+                                                <ItemUser data={item} isFollow={true} />
+                                            </div>
+                                        </Link>
+                                    ) : null
+                                )}
                             </div>
+                        ) : (
+                            <div className="flex justify-center items-center h-full">
+                                <strong className='text-textGray'>Không tìm thấy người dùng cho kết quả &quot;{debounceSearchValue}&quot;.</strong>
+                            </div>
+                        )
                     )
                 }
             </div>

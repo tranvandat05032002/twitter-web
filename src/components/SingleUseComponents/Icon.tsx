@@ -48,8 +48,6 @@ export const GoogleIcon: React.FC<IIcon> = () => {
       style={{
         width: "24px",
         height: "24px",
-        position: "absolute",
-        right: "4px",
       }}
     />
   );

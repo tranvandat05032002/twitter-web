@@ -12,6 +12,8 @@ import { useInView } from "react-intersection-observer";
 import { LoadingSniper } from "@/components/common/Loading/LoadingSniper";
 import { ModalType, useEvent } from "@/store/useEven";
 import { Tweet } from "@/types/tweetTypes";
+import HomeDetailTweet from "@/components/layouts/home/HomeDetailTweet";
+import RightExplore from "@/components/layouts/explore/RightExplore";
 const DynamicProfile = dynamic(() => import("@/components/layouts/ProfileLayout"), {
   loading: () => <LoadingPage></LoadingPage>
 })
@@ -63,8 +65,16 @@ const Profile = ({ params }: { params: { username: string } }) => {
             </div>
           ) : <p className="text-center text-textGray my-4">Không còn bài viết nào để hiển thị.</p>}
           {!isLoading && tweets?.length === 0 && <p className="text-center text-textGray my-4">Chưa có bài viết nào.</p>}
+          {activeModal === ModalType.DETAIL_TWEET && selectedTweet && (
+            <HomeDetailTweet
+              onClose={closeModal}
+              tweet={selectedTweet}
+              time={selectedTweetTime}
+            />
+          )}
         </div>
       </DynamicProfile>
+      <RightExplore />
     </DashboardPage>
   );
 };

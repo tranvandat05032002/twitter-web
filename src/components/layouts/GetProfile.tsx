@@ -10,14 +10,18 @@ import Link from 'next/link';
 import ButtonFollow from '../common/Button/ButtonFollow';
 import ModalSendChat from '../common/portal/ModalSendChat';
 import Image from 'next/image';
+import { DEFAULT_IMAGE } from '@/constant/constants';
+import { useMe } from '@/context/UserContext';
 interface IGetProfile {
     children: React.ReactNode
 }
 const GetProfile: React.FC<IGetProfile> = ({ children }) => {
     const router = useRouter();
+    const { user: currentUser } = useMe()
     const { userProfile, updateProfile } = useProfileStore(
         (state) => state
     );
+    console.log("userProfile ---> ", userProfile._id)
     const searchParams = useSearchParams()
     const params = Object.fromEntries(searchParams.entries())
     const username = decodedUsername(params?.profile_username);
@@ -39,7 +43,7 @@ const GetProfile: React.FC<IGetProfile> = ({ children }) => {
     }, [isSuccess]);
     return (
         <React.Fragment>
-            <div className='flex-initial w-[642px] border-r-[0.5px] border-borderGrayPrimary pt-[3px] border'>
+            <div className='flex-initial w-[600px] border-r-[0.5px] border-borderGrayPrimary pt-[3px] border'>
                 <div className="flex flex-col h-full min-h-screen border-r-[0.5px] border-borderGrayPrimary">
                     <StickyNav>
                         <div className="flex items-center pt-1 px-4">
@@ -57,23 +61,23 @@ const GetProfile: React.FC<IGetProfile> = ({ children }) => {
                     </StickyNav>
                     <div className="flex flex-col h-screen overflow-auto">
                         <div className="relative w-full h-[200px] z-0">
-                        <div className="relative w-full h-64">
-                            <div className="absolute w-full h-full top-0 left-0 bg-borderGrayPrimary">
-                                {userProfile.cover_photo && (
-                                <Image
-                                    src={userProfile.cover_photo}
-                                    alt="Ảnh bìa hồ sơ"
-                                    layout="fill" 
-                                    objectFit="cover" 
-                                    className="cursor-pointer"
-                                />
-                                )}
-                            </div>
+                            <div className="relative w-full h-64">
+                                <div className="absolute w-full h-full top-0 left-0 bg-borderGrayPrimary">
+                                    {/* {userProfile.cover_photo && ( */}
+                                    <Image
+                                        src={userProfile.cover_photo ?? DEFAULT_IMAGE}
+                                        alt="Ảnh bìa hồ sơ"
+                                        layout="fill"
+                                        objectFit="cover"
+                                        className="cursor-pointer"
+                                    />
+                                    {/* )} */}
+                                </div>
                             </div>
                             <div className="w-[134px] h-[134px] absolute bottom-0 left-4 translate-y-1/2 cursor-pointer">
                                 <div className="group absolute inset-0 rounded-full">
                                     <Image
-                                        src={userProfile.avatar ?? "/image/avatar.jpg"}
+                                        src={userProfile.avatar ?? DEFAULT_IMAGE}
                                         alt={userProfile.name}
                                         layout="fill" // Để ảnh lấp đầy vùng chứa
                                         objectFit="cover" // Để ảnh phủ toàn bộ mà không bị biến dạng
@@ -142,7 +146,7 @@ const GetProfile: React.FC<IGetProfile> = ({ children }) => {
                         </div>
                         <div>
                             <div className="flex items-center justify-between">
-                                <div className="h-[53px] flex-1 hover:bg-white/10 flex items-center justify-center">
+                                {/* <div className="h-[53px] flex-1 hover:bg-white/10 flex items-center justify-center">
                                     <Link
                                         href={`/profile${username}`}
                                         className={`text-textGray hover:no-underline p-4 text-center ${isActive(
@@ -151,47 +155,7 @@ const GetProfile: React.FC<IGetProfile> = ({ children }) => {
                                     >
                                         Post
                                     </Link>
-                                </div>
-                                <div className="h-[53px] flex-1 hover:bg-white/10 flex items-center justify-center">
-                                    <Link
-                                        href={`/profile${username}/with_replies`}
-                                        className={`text-textGray hover:no-underline px-4 text-center py-4 ${isActive(
-                                            "/profile" + username + "/with_replies"
-                                        )}`}
-                                    >
-                                        Replies
-                                    </Link>
-                                </div>
-                                <div className="h-[53px] flex-1 hover:bg-white/10 flex items-center justify-center">
-                                    <Link
-                                        href={`/profile${username}/highlights`}
-                                        className={`text-textGray hover:no-underline px-4 text-center py-4 ${isActive(
-                                            "/profile" + username + "/highlights"
-                                        )}`}
-                                    >
-                                        HighLights
-                                    </Link>
-                                </div>
-                                <div className="h-[53px] flex-1 hover:bg-white/10 flex items-center justify-center">
-                                    <Link
-                                        href={`/profile${username}/media`}
-                                        className={`text-textGray hover:no-underline px-4 text-center py-4 ${isActive(
-                                            "/profile" + username + "/media"
-                                        )}`}
-                                    >
-                                        Media
-                                    </Link>
-                                </div>
-                                <div className="h-[53px] flex-1 hover:bg-white/10 flex items-center justify-center">
-                                    <Link
-                                        href={`/profile${username}/likes`}
-                                        className={`text-textGray hover:no-underline px-4 text-center py-4 ${isActive(
-                                            "/profile" + username + "/likes"
-                                        )}`}
-                                    >
-                                        Likes
-                                    </Link>
-                                </div>
+                                </div> */}
                             </div>
                             <div className="py-4 border-y-[0.5px] border-borderGrayPrimary">
                                 {children}

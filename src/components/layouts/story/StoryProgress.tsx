@@ -11,6 +11,7 @@ interface ProgressStoryProps {
     storyIndex: number;
     playStory: boolean;
     handleNextStory: () => void;
+    isResetProgress: boolean;
 }
 
 const StoryProgress: React.FC<ProgressStoryProps> = ({
@@ -18,6 +19,7 @@ const StoryProgress: React.FC<ProgressStoryProps> = ({
     storyIndex,
     playStory,
     handleNextStory,
+    isResetProgress
 }) => {
     const [progress, setProgress] = React.useState(0);
     const [storyKey, setStoryKey] = React.useState(0);

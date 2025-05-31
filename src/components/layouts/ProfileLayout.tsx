@@ -16,6 +16,8 @@ import { useGetProfile } from "@/hooks/users/useQuery";
 import { GhostButton } from "../common/Button";
 import ModalSendChat from "../common/portal/ModalSendChat";
 import Image from "next/image";
+import StoryImagePreview from "../common/Story/StoryImagePrewview";
+import { DEFAULT_IMAGE } from "@/constant/constants";
 type TParams = {
   username: string;
 };
@@ -32,6 +34,8 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
   const { data: dataUserProfile, isSuccess } = useGetProfile(username);
   const activeModal = useEvent((state) => state.activeModal);
   const setActiveModal = useEvent((state) => state.setActiveModal);
+  const [showPreviewImageThumb, setShowPreviewImageThumb] = React.useState(false)
+  const [showPreviewImageAvatar, setShowPreviewImageAvatar] = React.useState(false)
   const handleBackHome = React.useCallback(() => {
     router.back();
   }, [router]);
@@ -45,8 +49,6 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
     setActiveModal(ModalType.EDIT);
   }, [setActiveModal]);
 
-  console.log("activeModal ---> ", activeModal)
-
   React.useEffect(() => {
     // getUserProfile(username);
     // setShowModal(!statusUpdate)
@@ -55,7 +57,7 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
       updateProfile(dataUserProfile);
     }
   }, [isSuccess]);
-  const avatarUrl: string = userProfile.avatar ?? '/image/avatar.jpg';
+  const avatarUrl: string = userProfile.avatar ?? DEFAULT_IMAGE;
   return (
     <React.Fragment>
       <div className={`w-[600px] flex flex-col border-r-[0.5px] border-borderGrayPrimary ${activeModal !== ModalType.NONE ? " h-screen overflow-hidden" : "h-full"} `}>
@@ -73,32 +75,33 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
             </div>
           </div>
         </StickyNav>
-        {/* <StickyNav>
-          <div className="p-4">
-            <h1 className="text-xl font-bold">Meteeor</h1>
-          </div>
-        </StickyNav> */}
         <div className="flex flex-col pb-1">
           <div className="relative w-full h-[200px] z-0">
             <div className="absolute w-full h-full top-0 left-0 bg-borderGrayPrimary">
               {userProfile.cover_photo && (
-                <Image
-                  src={userProfile.cover_photo}
-                  alt="Cover photo"
-                  layout="fill"
-                  objectFit="cover"
-                  className="cursor-pointer"
-                />
+                <React.Fragment>
+                  {showPreviewImageThumb && <StoryImagePreview image={userProfile.cover_photo ?? DEFAULT_IMAGE} onClose={() => setShowPreviewImageThumb(false)} />}
+                  <Image
+                    src={userProfile.cover_photo}
+                    alt="Cover photo"
+                    layout="fill"
+                    objectFit="cover"
+                    className="cursor-pointer"
+                    onClick={() => setShowPreviewImageThumb(true)}
+                  />
+                </React.Fragment>
               )}
             </div>
             <div className="w-[134px] h-[134px] absolute bottom-0 left-4 translate-y-1/2 cursor-pointer">
-              <div className="group absolute inset-0 rounded-full">
+              {showPreviewImageAvatar && userProfile.avatar && <StoryImagePreview image={userProfile.avatar} onClose={() => setShowPreviewImageAvatar(false)} />}
+              <div className="group absolute inset-0 rounded-full" onClick={() => setShowPreviewImageAvatar(true)}>
                 <Image
                   src={avatarUrl}
                   alt={userProfile.name}
-                  layout="fill" // Để hình ảnh chiếm toàn bộ không gian
-                  objectFit="cover" // Để hình ảnh được cắt theo tỷ lệ
+                  layout="fill"
+                  objectFit="cover"
                   className="rounded-full border-[3px] border-black"
+                // onClick={() => setShowPreviewImageAvatar(true)}
                 />
                 <div className="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 rounded-full transition-opacity"></div>
               </div>
@@ -169,7 +172,7 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
                     "/profile" + username
                   )}`}
                 >
-                  Post
+                  Bài đăng
                 </Link>
               </div>
               <div className="h-[53px] flex-1 hover:bg-white/10 flex items-center justify-center">
@@ -179,10 +182,10 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
                     "/profile" + username + "/with_replies"
                   )}`}
                 >
-                  Replies
+                  Đã lưu
                 </Link>
               </div>
-              <div className="h-[53px] flex-1 hover:bg-white/10 flex items-center justify-center">
+              {/* <div className="h-[53px] flex-1 hover:bg-white/10 flex items-center justify-center">
                 <Link
                   href={`/profile${username}/highlights`}
                   className={`text-textGray hover:no-underline px-4 text-center py-4 ${isActive(
@@ -191,8 +194,8 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
                 >
                   HighLights
                 </Link>
-              </div>
-              <div className="h-[53px] flex-1 hover:bg-white/10 flex items-center justify-center">
+              </div> */}
+              {/* <div className="h-[53px] flex-1 hover:bg-white/10 flex items-center justify-center">
                 <Link
                   href={`/profile${username}/media`}
                   className={`text-textGray hover:no-underline px-4 text-center py-4 ${isActive(
@@ -201,7 +204,7 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
                 >
                   Media
                 </Link>
-              </div>
+              </div> */}
               <div className="h-[53px] flex-1 hover:bg-white/10 flex items-center justify-center">
                 <Link
                   href={`/profile${username}/likes`}
@@ -209,7 +212,7 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
                     "/profile" + username + "/likes"
                   )}`}
                 >
-                  Likes
+                  Đã thích
                 </Link>
               </div>
             </div>

@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import LoadingPage from "../Loading/LoadingPage";
 import OverlayModal from "../Modal/OverlayModal";
 import { ModalType, useEvent } from "@/store/useEven";
+import { createPortal } from "react-dom";
 const DynamicEditProfile = dynamic(
   () => import("@/components/layouts/EditProfile"),
   {
@@ -16,12 +17,13 @@ const DynamicEditProfile = dynamic(
 const ModalEditProfile = () => {
   const { activeModal } = useEvent((state) => state)
   if (activeModal !== ModalType.EDIT) return null;
-  return (
+  return createPortal(
     <div>
-      <OverlayModal>
+      <div className="fixed inset-0 z-[1000] flex justify-center items-center bg-[rgba(91,112,131,0.4)]">
         <DynamicEditProfile></DynamicEditProfile>
-      </OverlayModal>
-    </div>
+      </div>
+    </div>,
+    document.body
   );
 };
 

@@ -2,12 +2,6 @@ import { CloseExternalEventIcon, MagnifyingGlassIcon } from '@/components/Single
 import { MyContextType, SearchContext } from '@/context/SearchProvider';
 import { useRouter } from 'next/navigation';
 import React from 'react';
-const user_follow = [
-    {
-        id: 1,
-        name: "TranVanDat"
-    }
-]
 const FILTER_ALL = "all";
 const FILTER_FOLLOWING = "following";
 const SearchItem = () => {
@@ -16,6 +10,7 @@ const SearchItem = () => {
     const router = useRouter()
     const handleHistorySearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") {
+            if (searchValue.startsWith(" ")) return
             router.push(`/explore?q=${searchValue}&filter=${FILTER_ALL}`)
             setShowListFilter(false);
 

@@ -22,7 +22,7 @@ const TweetAction = ({ tweet, onOpenDetail, isDetaild }: { tweet: Tweet, onOpenD
             toggleLike({
                 tweet_id: _id,
                 liked,
-                like_id: data?.like_id
+                like_id: data?.like_id ?? tweet.like_id
             })
         }
     }
@@ -35,14 +35,14 @@ const TweetAction = ({ tweet, onOpenDetail, isDetaild }: { tweet: Tweet, onOpenD
                             {liked ? <FaHeart className="group-hover:text-textPinkPrimary text-textPinkPrimary" /> : <HeartIcon className="group-hover:text-textPinkPrimary" />}
                         </button>
                         <span className={`group-hover:text-textPinkPrimary ${liked && "text-textPinkPrimary"}`}>
-                            {likes < 1000 ? likes : likes.toString + "K"}
+                            {likes < 1000 ? likes : likes?.toString + "K"}
                         </span>
                     </div>
                     <div className="flex gap-x-[2px] items-center group cursor-pointer" onClick={onOpenDetail}>
                         <div className="rounded-full p-2 group-hover:bg-textBlue/10 transition duration-200 hover:text-textBlue group">
                             <CommentIcon className="group-hover:text-textBlue" />
                         </div>
-                        <span className="group-hover:text-textBlue">{tweet?.comments >= 0 && tweet?.comments < 1000 ? tweet.comments : tweet.comments.toString + "K"}</span>
+                        <span className="group-hover:text-textBlue">{tweet?.comments >= 0 && tweet?.comments < 1000 ? tweet.comments : tweet.comments?.toString + "K"}</span>
                     </div>
                     <div className="flex gap-x-[2px] items-center group cursor-pointer">
                         <div className="rounded-full p-2 group-hover:bg-textGreen/10 transition duration-200 hover:text-textGreen group">

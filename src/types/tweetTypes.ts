@@ -45,6 +45,7 @@ export type Tweet = {
     bookmarks: number;
     liked: boolean;
     likes: number;
+    like_id?: string;
     comments: number;
     views: number;
     retweet_count: number;

@@ -6,6 +6,7 @@ import { Roboto } from "next/font/google";
 import QueryClientLayoutProvider from "./QueryClientProvider";
 import 'swiper/css';
 import 'swiper/css/navigation';
+import UserProviderLayout from "@/components/UserProvider";
 
 // const roboto = Roboto({
 //   weight: ["100", "300", "500", "700"],
@@ -29,7 +30,9 @@ export default function RootLayout({
       {/* add link stop preload page */}
       <body suppressHydrationWarning={true}>
         <QueryClientLayoutProvider >
-          {children}
+          <UserProviderLayout>
+            {children}
+          </UserProviderLayout>
           <ToastContainer />
         </QueryClientLayoutProvider>
       </body>

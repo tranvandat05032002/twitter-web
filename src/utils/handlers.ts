@@ -1,5 +1,5 @@
 import { IOAuthGoogle } from "@/types/userTypes";
-import { differenceInDays, differenceInMinutes, format, formatISO, isThisWeek, isToday, isValid, isYesterday, parse } from "date-fns";
+import { differenceInDays, differenceInHours, differenceInMinutes, format, formatISO, isThisWeek, isToday, isValid, isYesterday, parse } from "date-fns";
 import { vi } from 'date-fns/locale';
 import { getToken } from "./auth/cookies";
 import { v4 as uuidv4 } from "uuid"
@@ -176,6 +176,36 @@ export const formatTweetTime = (date: Date): string => {
     }
     // Nếu tin nhắn được gửi hơn một tuần trước, hiển thị dd/MM/yyyy
     return format(date, 'dd/MM/yyyy', { locale: vi });
+  }
+}
+
+export const formatStoryTime = (date: Date): string => {
+  // Kiểm tra xem có phải là ngày hợp lệ không
+  if (!isValid(date)) {
+    return "Invalid date";
+  } else {
+    const now = new Date()
+    const minutesDifference = differenceInMinutes(now, date);
+    const daysDifference = differenceInDays(now, date);
+    const hoursDiff = differenceInHours(now, date);
+
+    // Nếu tin nhắn được gửi trong vòng 1 phút, hiển thị "Vừa xong"
+    if (minutesDifference < 1) {
+      return "Vừa xong";
+    }
+    // Nếu tin nhắn được gửi trong vòng 1 giờ, hiển thị số phút
+    if (minutesDifference < 60) {
+      return `${minutesDifference} phút`;
+    }
+    if (hoursDiff < 24) {
+      return `${hoursDiff} giờ`;
+    }
+    // Nếu tin nhắn được gửi hôm nay, hiển thị HH:mm
+    if (isToday(date)) {
+      return format(date, 'HH:mm');
+    }
+
+    return '';
   }
 }
 

@@ -60,16 +60,19 @@ const CreateStory = () => {
             if (!image) return;
 
             createStory(image);
-            if (isSuccess) {
-                setImage(null);
-                setPreview(null);
-                setIsPrewImage(false);
-                router.push(routers.homePage)
-            }
+            setImage(null);
+            setPreview(null);
+            setIsPrewImage(false);
         } catch (error) {
             console.error("Error creating story:", error);
         }
     };
+
+    React.useEffect(() => {
+        if (isSuccess) {
+            router.push(routers.homePage)
+        }
+    }, [isSuccess])
 
     const handleCancelCreateStory = () => {
         setIsPrewImage(false)

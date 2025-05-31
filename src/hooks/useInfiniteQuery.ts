@@ -1,7 +1,7 @@
 import { TWEET_LIMIT } from "@/constant/tweet";
 import { ResultTweet } from "@/types/tweetTypes";
 import { apiInstance } from "@/utils/api";
-import { requestFetchInfiniteComments, requestFetchInfiniteOwnerTweets, requestFetchInfiniteTweets, requestGetTweets } from "@/utils/api/request";
+import { requestFetchInfiniteComments, requestFetchInfiniteLikedTweets, requestFetchInfiniteOwnerTweets, requestFetchInfiniteTweets, requestGetTweets } from "@/utils/api/request";
 import { getToken } from "@/utils/auth/cookies";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
@@ -21,6 +21,17 @@ export const useInfiniteOwnerTweets = () => {
     return useInfiniteQuery({
         queryKey: ['owner_tweets'],
         queryFn: requestFetchInfiniteOwnerTweets,
+        getNextPageParam: (lastPage, allPages) => {
+            if (lastPage?.tweet.tweets.length === 0) return undefined;
+            return allPages.length + 1;
+        },
+    });
+};
+
+export const useInfiniteLikedTweets = () => {
+    return useInfiniteQuery({
+        queryKey: ['liked_tweets'],
+        queryFn: requestFetchInfiniteLikedTweets,
         getNextPageParam: (lastPage, allPages) => {
             if (lastPage?.tweet.tweets.length === 0) return undefined;
             return allPages.length + 1;

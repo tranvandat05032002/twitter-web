@@ -62,3 +62,5 @@ export const EXPLORE_ITEMS = [
     mode: "following"
   }
 ]
+
+export const DEFAULT_IMAGE = "/image/default-image.jpg"

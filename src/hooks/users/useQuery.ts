@@ -72,7 +72,7 @@ export const useGetTweets = () => {
     cacheTime: 2 * 60 * 1000, // Dữ liệu sẽ được lưu trong cache trong 2 phút
     keepPreviousData: true, // Giữ dữ liệu cũ trong khi đang tải dữ liệu mới
     retry: 3, // Số lần thử lại khi có lỗi
-    onError: (error) => {
+    onError: (error: unknown) => {
       console.error('Error fetching tweets:', error);
     },
   });
@@ -84,7 +84,7 @@ export const useGetTweetById = (tweet_id: string) => {
     queryFn: async () => {
       return await requestGetTweetById(tweet_id);
     },
-    onError: (error) => {
+    onError: (error: unknown) => {
       console.error('Error fetching tweets:', error);
     },
   });
@@ -96,7 +96,7 @@ export const useGetComments = (tweet_id: string) => {
     queryFn: async () => {
       return await requestGetComments(tweet_id);
     },
-    onError: (error) => {
+    onError: (error: unknown) => {
       console.error('Error fetching comments:', error);
     },
   });
@@ -108,7 +108,7 @@ export const useGetStories = () => {
     queryFn: async () => {
       return await requestGetStories();
     },
-    onError: (error) => {
+    onError: (error: unknown) => {
       console.error('Error fetching comments:', error);
     },
   });

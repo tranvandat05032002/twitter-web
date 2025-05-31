@@ -13,6 +13,7 @@ import { LoadingSniper } from "@/components/common/Loading/LoadingSniper";
 import HomeDetailTweet from "./HomeDetailTweet";
 import { Tweet } from "@/types/tweetTypes";
 import { useMe } from "@/context/UserContext";
+import Link from "next/link";
 
 const HomeLayout = () => {
   const { activeModal, setActiveModal, closeModal } = useEvent();
@@ -52,18 +53,20 @@ const HomeLayout = () => {
       <div className={`flex w-[662px] flex-col min-h-screen border-r-[0.5px] border-borderGrayPrimary ${activeModal === ModalType.CREATE_POST ? "h-screen overflow-hidden" : ""}`}>
         <StickyNav>
           <div className="p-4">
-            <h1 className="text-xl font-bold">Meteeor</h1>
+            <h1 className="text-xl font-bold">Meteor</h1>
           </div>
         </StickyNav>
         <div className="border-t-[0.5px] border-b-[0.5px] p-4 border-borderGrayPrimary py-[20px] space-y-4">
           <div className="flex items-center space-x-4">
             <div className="w-10 h-10 rounded-full overflow-hidden flex-none cursor-pointer">
-              <Avatar
-                src={userProfile?.avatar}
-                className="object-fit-cover hover:opacity-80"
-                title={userProfile?.name}
-                sx={{ width: '100%', height: '100%' }}
-              />
+              <Link href={`/profile/${userProfile?.username}`}>
+                <Avatar
+                  src={userProfile?.avatar}
+                  className="object-fit-cover hover:opacity-80"
+                  title={userProfile?.name}
+                  sx={{ width: '100%', height: '100%' }}
+                />
+              </Link>
             </div>
             <div className="w-full">
               <button
