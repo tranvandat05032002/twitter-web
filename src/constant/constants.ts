@@ -10,22 +10,26 @@ import {
 } from "../components/SingleUseComponents/Icon";
 export const NAVIGATION_ITEMS = [
   {
-    title: "Home",
+    title: "Trang chủ",
+    titleEng: "Home",
     icon: HomeIcon,
     href: "/home",
   },
   {
-    title: "Explore",
+    title: "Tìm kiếm",
+    titleEng: "Explore",
     icon: SearchIcon,
     href: "/explore",
   },
   {
-    title: "Notifications",
+    title: "Thông báo",
+    titleEng: "Notifications",
     icon: NotificationIcon,
     href: "/notifications",
   },
   {
-    title: "Message",
+    title: "Nhắn tin",
+    titleEng: "Message",
     icon: MessageIcon,
     href: "/messages",
   },
@@ -35,17 +39,17 @@ export const NAVIGATION_ITEMS = [
   //   href: "/datdev0503/lists",
   // },
   {
-    title: "Chatbot",
+    title: "Chat cùng AI",
     icon: ClaudeIcon,
     href: "/chat/ai/chatbot",
   },
   {
-    title: "Communities",
+    title: "Cộng đồng",
     icon: CommunityIcon,
     href: "/datdev0503/communities",
   },
   {
-    title: "Verified",
+    title: "Xác thực",
     icon: VerifiedIcon,
     href: "/verified-choose",
   },

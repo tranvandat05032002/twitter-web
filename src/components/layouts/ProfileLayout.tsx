@@ -9,7 +9,7 @@ import {
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useProfileStore } from "@/store/useProfile";
-import { decodedUsername, formatMonthYear } from "@/utils/handlers";
+import { decodedUsername, formatDateDDMMYYYY, formatDateToVietnamese, formatMonthYear } from "@/utils/handlers";
 import { ModalType, useEvent } from "@/store/useEven";
 import ModalEditProfile from "../common/portal/ModalEditProfile";
 import { useGetProfile } from "@/hooks/users/useQuery";
@@ -71,7 +71,7 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
             </div>
             <div>
               <h2 className="text-xl font-bold">{userProfile?.name}</h2>
-              <p className="text-textGray text-sm font-light">100 posts</p>
+              <p className="text-textGray text-sm font-light">100 bài đăng</p>
             </div>
           </div>
         </StickyNav>
@@ -114,7 +114,7 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
                   className="px-4 py-2 text-white rounded-full w-max"
                   onClick={handleOpenModal}
                 >
-                  Edit profile
+                  Chỉnh sửa
                 </GhostButton>
               </div>
               <div className="flex flex-col items-start text-sm gap-y-4">
@@ -143,21 +143,21 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
                   <div className="flex text-textGray">
                     <CalendarIcon />
                     <span>
-                      Joined{" "}
-                      {formatMonthYear(
+                      Đã tham gia{" "}
+                      {formatDateDDMMYYYY(
                         userProfile?.created_at?.toString() as string
                       )}
                     </span>
                   </div>
                 </div>
                 <div className="flex">
-                  <div className="mr-4 flex items-center gap-x-[2px]">
+                  <div className="mr-4 flex items-center space-x-1">
                     <p>100</p>
-                    <span className="text-textGray">Following</span>
+                    <span className="text-textGray">Đang theo dõi</span>
                   </div>
-                  <div className="flex items-center gap-x-[2px]">
+                  <div className="flex items-center space-x-1">
                     <p>112</p>
-                    <span className="text-textGray">Followers</span>
+                    <span className="text-textGray">Người theo dõi</span>
                   </div>
                 </div>
               </div>

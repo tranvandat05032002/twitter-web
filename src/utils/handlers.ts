@@ -38,6 +38,26 @@ export function formatMonthDayYear(date: string) {
   const formattedDateResults = formattedDate.replace("/", " ");
   return formattedDateResults;
 }
+export function formatDateToVietnamese(date: string) {
+  if (!date) return;
+  const inputDate = new Date(date);
+
+  const day = inputDate.getDate();
+  const month = inputDate.getMonth() + 1;
+  const year = inputDate.getFullYear();
+
+  return `Ngày ${day} tháng ${month} năm ${year}`;
+}
+export function formatDateDDMMYYYY(date: string) {
+  if (!date) return;
+  const inputDate = new Date(date);
+
+  const day = inputDate.getDate();
+  const month = inputDate.getMonth() + 1;
+  const year = inputDate.getFullYear();
+
+  return `${day}/${month}/${year}`;
+}
 export function normalizeEmail(email: string) {
   if (!email) return;
   let excludedPart = email.substring(0, 2);

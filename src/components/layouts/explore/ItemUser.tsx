@@ -27,6 +27,10 @@ const ItemUser = ({ miniItem, isFollow, data, userInfo, isMe }: IItemUser) => {
             router.push(`/profile/v1?profile_username=${data.username}`)
         }
     }
+    const handleFollow = (follow_user_id: string) => {
+        console.log("follow_user_id", follow_user_id)
+        if (!follow_user_id) return;
+    }
     return (
         <div onClick={handleRedirectProfile} className="flex items-center cursor-pointer select-none text-sm py-[10px] px-[15px] hover:bg-bgHoverGray">
             {
@@ -77,7 +81,7 @@ const ItemUser = ({ miniItem, isFollow, data, userInfo, isMe }: IItemUser) => {
                                 {!isMe && <div>
                                     {isFollow ? <button onMouseEnter={handleChange} onMouseLeave={handleChange} className={`rounded-full ${!isHover ? "bg-transparent border-[0.5px] border-[#333639] text-white" : "bg-bgPinkGhost/20 border-[0.5px] border-bgPinkGhost/40 text-bgPinkGhost"} font-bold px-4 py-1 text-[15px]`}>
                                         {isHover ? "Unfollow" : "Following"}
-                                    </button> : <ButtonFollow>follow</ButtonFollow>}
+                                    </button> : <ButtonFollow onClick={() => handleFollow(data._id as string)}>follow</ButtonFollow>}
                                 </div>}
                             </div>
                             <p className="font-light text-textGray text-[15px]">bio: {data.bio ? data.bio : "Không có"}</p>

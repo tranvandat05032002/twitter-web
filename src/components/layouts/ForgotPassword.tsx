@@ -52,20 +52,20 @@ const ForgotPasswordPage = () => {
           </p>
 
           <div className="flex justify-between items-center mb-4">
-            <p>Send an email to {email_normal}</p>
+            <p>Gửi mã xác minh đến {email_normal}</p>
             <Radio name="accept-send" checked={true} size="small" />
           </div>
 
           <p>
-            Contact{" "}
+            Liên hệ{" "}
             <Link
               href={
-                "https://help.twitter.com/en/forms/account-access/regain-access"
+                "https://www.facebook.com/tranvandat.0503?locale=vi_VN"
               }
             >
-              Twitter Support
+              trung tâm hỗ trợ Meteor
             </Link>{" "}
-            if you don’t have access.
+            nếu bạn không thể truy cập.
           </p>
         </div>
         <div className="mt-10">

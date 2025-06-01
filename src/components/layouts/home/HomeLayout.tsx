@@ -14,6 +14,7 @@ import HomeDetailTweet from "./HomeDetailTweet";
 import { Tweet } from "@/types/tweetTypes";
 import { useMe } from "@/context/UserContext";
 import Link from "next/link";
+import { IUser } from "@/types/userTypes";
 
 const HomeLayout = () => {
   const { activeModal, setActiveModal, closeModal } = useEvent();
@@ -104,7 +105,7 @@ const HomeLayout = () => {
         </div>
       </div>
       <>
-        {activeModal === ModalType.CREATE_POST && <HomeCreatePost onClose={closeModal} />}
+        {activeModal === ModalType.CREATE_POST && <HomeCreatePost onClose={closeModal} user={userProfile as IUser} />}
         {activeModal === ModalType.DETAIL_TWEET && selectedTweet && (
           <HomeDetailTweet
             onClose={closeModal}

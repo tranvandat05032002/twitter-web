@@ -45,7 +45,7 @@ const LeftSidebar: React.FC<ILeftSidebar> = (props) => {
           <Link
             key={item.title}
             href={item.href}
-            className={`hover:no-underline text-white flex items-center text-xl py-[10px] my-[2px] px-2 hover:bg-bgHoverBlue rounded-full transition-all ${isActive(
+            className={`hover:no-underline text-white cursor-pointer flex items-center text-xl py-[10px] my-[2px] px-2 hover:bg-bgHoverBlue rounded-full transition-all ${isActive(
               item.href
             )}`}
           >
@@ -55,19 +55,19 @@ const LeftSidebar: React.FC<ILeftSidebar> = (props) => {
         ))}
         <Link
           href={`${routers.profile}/${userInfo?.username}`}
-          className={`hover:no-underline text-white flex items-center text-xl py-[10px] my-[2px] px-2 hover:bg-bgHoverBlue rounded-full transition-all ${isActive(
+          className={`hover:no-underline text-white cursor-pointer flex items-center text-xl py-[10px] my-[2px] px-2 hover:bg-bgHoverBlue rounded-full transition-all ${isActive(
             routers.profile + "/" + userInfo?.username
           )}`}
         >
           <ProfileIcon></ProfileIcon>
-          <p>Profile</p>
+          <p>Trang cá nhân</p>
         </Link>
-        <div className="hover:no-underline text-white flex items-center text-xl py-[10px] my-[2px] px-2 hover:bg-bgHoverBlue rounded-full transition-all ">
+        <div className="hover:no-underline cursor-pointer text-white flex items-center text-xl py-[10px] my-[2px] px-2 hover:bg-bgHoverBlue rounded-full transition-all ">
           <MoreIcon></MoreIcon>
-          <p>More</p>
+          <p>Xem thêm</p>
         </div>
         <div className="mt-1 mb-6">
-          <PrimaryButton className="px-2 w-full py-3">Post</PrimaryButton>
+          <PrimaryButton className="px-2 cursor-pointer w-full py-3">Đăng bài</PrimaryButton>
         </div>
         <Tippy
           interactive
@@ -84,13 +84,13 @@ const LeftSidebar: React.FC<ILeftSidebar> = (props) => {
                 href={"/sign-in"}
                 className="no-underline hover:no-underline text-white w-full py-3 px-4 hover:bg-bgHoverBlue"
               >
-                Add an existing account
+                Thêm tài khoản hiện có
               </Link>
               <button
                 className="py-3 hover:bg-bgHoverBlue w-full text-start px-4"
                 onClick={handleLogout}
               >
-                Log out {userInfo?.username}
+                Đăng xuất {userInfo?.username}
               </button>
             </div>
           )}

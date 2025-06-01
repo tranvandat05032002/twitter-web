@@ -37,7 +37,7 @@ const MainPage = () => {
               Đang diễn ra ngay bây giờ
             </h1>
           </div>
-          <p className="text-3xl font-bold mb-7 text-textBlue">Join today.</p>
+          <p className="text-3xl font-bold mb-7 text-textBlue">Tham gia ngay.</p>
           <div className="flex flex-col gap-y-3 max-w-[320px] mb-7">
             <button className="w-80 h-11 flex justify-center items-center rounded-full bg-white text-textBlack transition-all hover:bg-bgHoverWhite py-[2px] px-[10px] relative">
               <Link href={getGoogleAuthUrl()}>
@@ -123,8 +123,8 @@ const MainPage = () => {
         </div>
       </div>
       <footer className="px-4 py-3 text-textGray text-sm text-center">
-        <span>&copy; 2023 Twitter. </span>
-        <span>Contact: tranvandatevondev0503@gmail.com</span>
+        <span>&copy; 2023 Meteor. </span>
+        <span>Liên hệ: tranvandatevondev0503@gmail.com</span>
       </footer>
     </div>
   );

@@ -9,7 +9,7 @@ import {
 import { SecondaryButton } from "../common/Button";
 import { useForm, Controller } from "react-hook-form";
 import Tippy from "@tippyjs/react";
-import { formatISO8601, formatMonthDayYear, uploadImageToS3 } from "@/utils/handlers";
+import { formatDateToVietnamese, formatISO8601, formatMonthDayYear, uploadImageToS3 } from "@/utils/handlers";
 import { DateOfBirth } from "../SingleUseComponents";
 import { Avatar, MenuItem, SelectChangeEvent } from "@mui/material";
 import { useDateStore } from "@/store";
@@ -160,7 +160,7 @@ const EditProfile = () => {
   return (
     !openCrop ? (<form onSubmit={handleSubmit(handleUpdateUser)} autoComplete="off">
       <div className="max-w-[600px] w-[600px] bg-black max-h-[650px] h-[650px] overflow-auto rounded-2xl pb-4">
-        <HeaderModalEdit title="Edit profile" eventTitle="save" iconType={{ type: "close" }}></HeaderModalEdit>
+        <HeaderModalEdit title="Chỉnh sửa thông tin" eventTitle="Lưu" iconType={{ type: "close" }}></HeaderModalEdit>
         <div>
           <div>
             <div className="relative w-full max-h-[195px] h-[195px] mb-14 px-[3px]">
@@ -247,20 +247,18 @@ const EditProfile = () => {
 
               <div className="">
                 <div className="text-base flex gap-x-1 items-center justify-start">
-                  <p className="text-textGray font-light">Birth date</p>
+                  <p className="text-textGray font-light">Ngày sinh</p>
                   <DotIcon style={{ color: "#71767b" }}></DotIcon>
                 </div>
                 <h3 className="font-medium text-white text-lg">
-                  {formatMonthDayYear(userProfile?.date_of_birth)}
+                  {formatDateToVietnamese(userProfile?.date_of_birth)}
                 </h3>
                 <React.Fragment>
                   <div className="mt-2">
                     <span className="text-textGray text-base">
-                      This should be the date of birth of the person using the
-                      account. Even if you’re making an account for your
-                      business, event, or cat. Twitter uses your age to
-                      customize your experience, including ads, as explained
-                      in our Privacy Policy.
+                      Hãy nhập ngày sinh của người sẽ sử dụng tài khoản này nhé.
+                      Kể cả khi bạn tạo tài khoản cho doanh nghiệp, sự kiện hay... chú mèo của mình.
+                      Chúng tôi dùng thông tin độ tuổi để điều chỉnh trải nghiệm của bạn — bao gồm cả quảng cáo — theo đúng sở thích, như đã nêu trong Chính sách quyền riêng tư.
                     </span>
 
                     <div>

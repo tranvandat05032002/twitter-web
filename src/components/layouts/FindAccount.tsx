@@ -77,7 +77,7 @@ const FindAccountPage = () => {
         <div>
           <div>
             <h1 className="text-3xl font-bold pb-2 text-center">
-              Tìm tài khoản Twitter của bạn
+              Tìm tài khoản Meteor của bạn
             </h1>
             <p className="text-base text-textGray font-light">
               Nhập email được liên kết với tài khoản của bạn để thực hiện thay
@@ -95,9 +95,8 @@ const FindAccountPage = () => {
           </div>
         </div>
         <PrimaryButton
-          className={`w-full py-[12px] text-base rounded-full  mt-6 mb-4 px-8 ${
-            canSubmit ? "hover:bg-none" : ""
-          }`}
+          className={`w-full py-[12px] text-base rounded-full  mt-6 mb-4 px-8 ${canSubmit ? "hover:bg-none" : ""
+            }`}
           type="submit"
           isLoading={isLoading}
           disabled={isLoading}

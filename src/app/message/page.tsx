@@ -150,7 +150,7 @@ const Messages = () => {
   };
   return (
     <div className="h-screen text-black w-full">
-      <p className="text-white">Twitter Chat</p>
+      <p className="text-white">Meteor Chat</p>
       <div className="grid grid-cols-2">
         <div className="flex justify-center items-center flex-col">
           <div className="flex flex-col border border-gray-500 max-h-[200px] h-[300px] overflow-scroll w-[250px]">

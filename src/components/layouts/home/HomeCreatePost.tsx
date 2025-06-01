@@ -18,6 +18,8 @@ import { Mediatype, TweetForm } from '@/types/tweetTypes';
 import { extractHashtags, extractMentios, uploadImageToS3 } from '@/utils/handlers';
 import { useCreateTweet } from '@/hooks/users/useMutation';
 import { HASHTAG_MENTION_REGEX, optionsArea } from '@/constant/tweet';
+import { IUser } from '@/types/userTypes';
+import { DEFAULT_IMAGE } from '@/constant/constants';
 
 export const highlightContent = (content: string) => {
     // if (!content.startsWith("@") || !content.startsWith("#")) return "";
@@ -27,7 +29,7 @@ export const highlightContent = (content: string) => {
         return `<span class="${color}">${match}</span>`;
     });
 };
-export default function HomeCreatePost({ onClose }: { onClose: () => void }) {
+export default function HomeCreatePost({ onClose, user }: { onClose: () => void, user: IUser }) {
     // const { setShowCreatePost } = useEvent((state) => state);
     const [showFormAddImage, setShowFormAddImage] = React.useState(false)
     const [images, setImages] = React.useState<{ file: File; media: Mediatype }[]>([]);
@@ -164,7 +166,7 @@ export default function HomeCreatePost({ onClose }: { onClose: () => void }) {
                                     <div className='flex items-center mb-4'>
                                         <div className="relative w-10 h-10 rounded-full overflow-hidden flex-none">
                                             <Image
-                                                src="/image/avatar.jpg"
+                                                src={user.avatar ?? DEFAULT_IMAGE}
                                                 alt="Avatar"
                                                 layout="fill"
                                                 objectFit="cover"
@@ -172,7 +174,7 @@ export default function HomeCreatePost({ onClose }: { onClose: () => void }) {
                                             />
                                         </div>
                                         <div className='ml-[10px]'>
-                                            <p>Trần Văn Đạt</p>
+                                            <p>{user.name}</p>
                                             <Controller
                                                 name="audience"
                                                 control={control}

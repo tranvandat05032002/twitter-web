@@ -48,7 +48,7 @@ const CropEasy = ({ photoURL, setOpenCrop, setPhotoURL, setFile }: ICropEasy): J
     }
     return (
         <div className="max-w-[600px] w-[600px] bg-black max-h-[650px] h-[650px] rounded-2xl pb-4 overflow-hidden">
-            <HeaderModalEdit title="Edit media" eventTitle="Apply" eventButton={handleCropImage} iconType={{ type: "open", eventIcon: handleBackPage }}></HeaderModalEdit>
+            <HeaderModalEdit title="Cắt hình ảnh" eventTitle="Áp dụng" eventButton={handleCropImage} iconType={{ type: "open", eventIcon: handleBackPage }}></HeaderModalEdit>
             <DialogContent
                 dividers
                 sx={{

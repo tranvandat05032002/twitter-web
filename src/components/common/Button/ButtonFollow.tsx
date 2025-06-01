@@ -5,9 +5,6 @@ import React from "react";
 const ButtonFollow = ({ children }: ButtonProp) => {
     const propsButtonFollow: ButtonProps = {
         type: "button",
-        onClick: () => {
-            console.log("Call Google Auth")
-        },
         children,
     };
     return (

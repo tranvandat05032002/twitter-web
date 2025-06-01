@@ -49,8 +49,8 @@ const VerifyPageComponent = () => {
             ></path>
           </svg>
           <p className="text-gray-200 mb-6">
-            Thank you for verifying your email address. Your account is now
-            active and you can start using our services.
+            Cảm ơn bạn đã xác minh địa chỉ email.
+            Tài khoản của bạn hiện đã được kích hoạt và bạn có thể bắt đầu sử dụng các dịch vụ của chúng tôi.
           </p>
           <button
             onClick={handleComeHome}
@@ -66,20 +66,20 @@ const VerifyPageComponent = () => {
             <TwitterIcon size="small"></TwitterIcon>
           </div>
           {/* <h1 className="text-2xl font-semibold mb-4">Verify Your Email</h1> */}
-          <p className="text-gray-200 mb-6">
-            An email has been sent to your address with a verification link.
-            Please click the link to verify your email.
+          <p className="text-gray-200 mb-6 text-center">
+            Một email đã được gửi đến địa chỉ của bạn kèm theo liên kết xác minh.
+            Vui lòng nhấp vào liên kết để xác minh email của bạn.
           </p>
           <button
             onClick={handleResendVerify}
             className="w-full bg-blue-500 text-white py-2 rounded-full hover:bg-blue-600"
           >
-            Resend Verification Email
+            Gửi lại email xác minh
           </button>
           <p className="mt-4 text-center text-gray-500 text-sm">
-            Didn&apos;t receive the email?{" "}
+            Bạn chưa nhận được email?{" "}
             <a href="#" className="text-blue-500 hover:underline">
-              Contact Support
+              Liên hệ hỗ trợ
             </a>
           </p>
         </div>
@@ -90,7 +90,7 @@ const VerifyPageComponent = () => {
 
 export default function VerifyPage() {
   return (
-    <React.Suspense fallback={<div>Loading...</div>}>
+    <React.Suspense fallback={<div>Đang tải...</div>}>
       <VerifyPageComponent />
     </React.Suspense>
   );

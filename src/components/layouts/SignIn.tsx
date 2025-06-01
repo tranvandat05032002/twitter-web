@@ -10,7 +10,7 @@ import {
   Input,
   ERROR_FORM_MESSAGES,
 } from "../common";
-import {GoogleButton, FacebookButton, PrimaryButton, GithubButton} from "../common/Button";
+import { GoogleButton, FacebookButton, PrimaryButton, GithubButton } from "../common/Button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -57,7 +57,7 @@ const SignInPage = () => {
         <div>
           <div>
             <h1 className="text-3xl font-bold pb-5 text-center">
-              Đăng Nhập Vào Twitter
+              Đăng Nhập Vào Meteor
             </h1>
           </div>
           <div className="py-[13px]">
@@ -104,7 +104,7 @@ const SignInPage = () => {
               <p>Google</p>
             </AuthButtonGoogle> */}
             <GoogleButton>
-            <GoogleIconSignIn></GoogleIconSignIn>
+              <GoogleIconSignIn></GoogleIconSignIn>
               <p>Google</p>
             </GoogleButton>
             <GithubButton>
