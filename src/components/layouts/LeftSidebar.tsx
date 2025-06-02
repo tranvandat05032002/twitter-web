@@ -31,7 +31,7 @@ const LeftSidebar: React.FC<ILeftSidebar> = (props) => {
   };
   const handleLogout = async () => {
     mutateLogout();
-    router.push(routers.mainLayoutPage);
+    router.push(routers.signInPage);
   };
   return (
     <section className="border-r-[0.5px] w-72 h-full fixed border-borderGrayPrimary px-2 py-2">

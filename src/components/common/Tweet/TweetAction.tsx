@@ -15,7 +15,6 @@ const TweetAction = ({ tweet, onOpenDetail, isDetaild }: { tweet: Tweet, onOpenD
     if (bookmarks === undefined) {
         bookmarks = 0
     }
-    console.log("bookmarked ----> ", bookmarked)
     const { mutate: toggleLike, data, isLoading } = useToggleLike()
     const handleToggleLike = (id: string) => {
         if (!isLoading) {

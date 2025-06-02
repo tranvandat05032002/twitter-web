@@ -17,7 +17,6 @@ interface IGetProfile {
 }
 const GetProfile: React.FC<IGetProfile> = ({ children }) => {
     const router = useRouter();
-    const { user: currentUser } = useMe()
     const { userProfile, updateProfile } = useProfileStore(
         (state) => state
     );
@@ -40,6 +39,8 @@ const GetProfile: React.FC<IGetProfile> = ({ children }) => {
             updateProfile(dataUserProfile);
         }
     }, [isSuccess]);
+
+    console.log("Profile ---> ", userProfile)
     return (
         <React.Fragment>
             <div className='flex-initial w-[600px] border-r-[0.5px] border-borderGrayPrimary pt-[3px] border'>
