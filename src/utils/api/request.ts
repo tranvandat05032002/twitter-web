@@ -545,6 +545,23 @@ export const requestFetchInfiniteLikedTweets = async ({ pageParam = 1 }) => {
   }
 };
 
+export const requestFetchInfiniteBookmarkedTweets = async ({ pageParam = 1 }) => {
+  const { access_token } = getToken()
+  try {
+    const response = await apiInstance.get(`/tweet/bookmarked?limit=${TWEET_LIMIT}&page=${pageParam}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+    if (response.status === 200) {
+      return response.data.result as ResultTweet
+    }
+  } catch (error) {
+    throw error
+  }
+};
+
 export const requestGetTweetById = async (tweet_id: string): Promise<Tweet> => {
   const { access_token } = getToken()
   // try {
@@ -589,6 +606,37 @@ export const requestToggleLike = async ({ tweet_id, liked, like_id }: { tweet_id
       const like_id = res.data?.result._id
       return {
         like_id
+      }
+    }
+    return
+  } catch (error) {
+    throw error
+  }
+}
+
+// Bookmark/UnBokmark
+export const requestToggleBookmark = async ({ tweet_id, bookmarked, bookmark_id }: { tweet_id: string, bookmarked: boolean, bookmark_id: string }) => {
+  const { access_token } = getToken()
+  try {
+    if (bookmarked && bookmark_id) {
+      await apiInstance.delete(`/bookmark/${bookmark_id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${access_token}`,
+        },
+      })
+    } else {
+      const res = await apiInstance.post(`/bookmark`, {
+        tweet_id
+      }, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${access_token}`,
+        },
+      })
+      const bookmark_id = res.data?.result._id
+      return {
+        bookmark_id
       }
     }
     return

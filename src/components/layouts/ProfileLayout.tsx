@@ -177,9 +177,9 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
               </div>
               <div className="h-[53px] flex-1 hover:bg-white/10 flex items-center justify-center">
                 <Link
-                  href={`/profile${username}/with_replies`}
+                  href={`/profile${username}/bookmarks`}
                   className={`text-textGray hover:no-underline px-4 text-center py-4 ${isActive(
-                    "/profile" + username + "/with_replies"
+                    "/profile" + username + "/bookmarks"
                   )}`}
                 >
                   Đã lưu

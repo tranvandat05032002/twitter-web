@@ -34,6 +34,7 @@ import {
   requestViewStory,
   requestCreateStory,
   requestDeleteStory,
+  requestToggleBookmark,
 } from "@/utils/api/request";
 import { removeEmailCookies, removeOTPToken } from "@/utils/auth/cookies";
 import { UseMutationResult, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -158,6 +159,21 @@ export const useToggleLike = () => {
     mutationFn: requestToggleLike,
     onSuccess: () => {
       const keysToInvalidate = ["tweets", "owner_tweets", "liked_tweets"]
+      keysToInvalidate.forEach((key) => {
+        queryClient.invalidateQueries({ queryKey: [key] })
+      })
+    },
+  })
+}
+
+// Bookmark/UnBookmark
+export const useToggleBookmark = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: requestToggleBookmark,
+    onSuccess: () => {
+      const keysToInvalidate = ["tweets", "owner_tweets", "bookmarked_tweets"]
       keysToInvalidate.forEach((key) => {
         queryClient.invalidateQueries({ queryKey: [key] })
       })

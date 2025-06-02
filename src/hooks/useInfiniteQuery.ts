@@ -1,7 +1,7 @@
 import { TWEET_LIMIT } from "@/constant/tweet";
 import { ResultTweet } from "@/types/tweetTypes";
 import { apiInstance } from "@/utils/api";
-import { requestFetchInfiniteComments, requestFetchInfiniteLikedTweets, requestFetchInfiniteOwnerTweets, requestFetchInfiniteTweets, requestGetTweets } from "@/utils/api/request";
+import { requestFetchInfiniteBookmarkedTweets, requestFetchInfiniteComments, requestFetchInfiniteLikedTweets, requestFetchInfiniteOwnerTweets, requestFetchInfiniteTweets, requestGetTweets } from "@/utils/api/request";
 import { getToken } from "@/utils/auth/cookies";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
@@ -32,6 +32,18 @@ export const useInfiniteLikedTweets = () => {
     return useInfiniteQuery({
         queryKey: ['liked_tweets'],
         queryFn: requestFetchInfiniteLikedTweets,
+        getNextPageParam: (lastPage, allPages) => {
+            if (lastPage?.tweet.tweets.length === 0) return undefined;
+            return allPages.length + 1;
+        },
+    });
+};
+
+// Bookmark
+export const useInfiniteBookmarkedTweets = () => {
+    return useInfiniteQuery({
+        queryKey: ['bookmarked_tweets'],
+        queryFn: requestFetchInfiniteBookmarkedTweets,
         getNextPageParam: (lastPage, allPages) => {
             if (lastPage?.tweet.tweets.length === 0) return undefined;
             return allPages.length + 1;

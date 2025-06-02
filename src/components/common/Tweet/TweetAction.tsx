@@ -1,5 +1,5 @@
 import { CommentIcon, HeartIcon, RetWeetIcon, StatsIcon } from '@/components/SingleUseComponents/Icon';
-import { useToggleLike } from '@/hooks/users/useMutation';
+import { useToggleBookmark, useToggleLike } from '@/hooks/users/useMutation';
 import { Tweet } from '@/types/tweetTypes';
 import React from 'react';
 import { LuShare } from 'react-icons/lu';
@@ -7,7 +7,7 @@ import { FaHeart } from "react-icons/fa";
 import { ModalType, useEvent } from '@/store/useEven';
 
 const TweetAction = ({ tweet, onOpenDetail, isDetaild }: { tweet: Tweet, onOpenDetail?: () => void, isDetaild: Boolean }) => {
-    let { likes, comment_count, bookmarks, _id, liked, comments: commentSize } = tweet
+    let { likes, comment_count, bookmarks, _id, liked, bookmarked, comments: commentSize } = tweet
     const { setActiveModal, activeModal } = useEvent((state) => state);
     if (comment_count === undefined) {
         comment_count = 0
@@ -15,7 +15,7 @@ const TweetAction = ({ tweet, onOpenDetail, isDetaild }: { tweet: Tweet, onOpenD
     if (bookmarks === undefined) {
         bookmarks = 0
     }
-
+    console.log("bookmarked ----> ", bookmarked)
     const { mutate: toggleLike, data, isLoading } = useToggleLike()
     const handleToggleLike = (id: string) => {
         if (!isLoading) {
@@ -26,12 +26,23 @@ const TweetAction = ({ tweet, onOpenDetail, isDetaild }: { tweet: Tweet, onOpenD
             })
         }
     }
+
+    const { mutate: toggleBookmark, data: bookmarkData, isLoading: isLoadingBookmark } = useToggleBookmark()
+    const handleToggleBookmark = (id: string) => {
+        if (!isLoadingBookmark) {
+            toggleBookmark({
+                tweet_id: _id,
+                bookmarked,
+                bookmark_id: bookmarkData?.bookmark_id
+            })
+        }
+    }
     return (
         <React.Fragment>
             {!isDetaild ?
                 <div className="w-full flex items-center space-x-[80px] text-textGray text-base">
                     <div className="flex gap-x-[2px] items-center group cursor-pointer">
-                        <button type="button" className={`cursor-pointer rounded-full p-2 group-hover:bg-textPinkPrimary/10 transition ${liked && "text-textPinkPrimary"} duration-200 hover:text-textPinkPrimary group ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`} onClick={() => handleToggleLike(_id)}>
+                        <button type="button" className={`cursor-pointer rounded-full p-2 group-hover:bg-textPinkPrimary/10 transition ${liked && "text-textPinkPrimary"} duration-200 hover:text-textPinkPrimary group ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`} onClick={() => handleToggleLike(_id)} title="Thích">
                             {liked ? <FaHeart className="group-hover:text-textPinkPrimary text-textPinkPrimary" /> : <HeartIcon className="group-hover:text-textPinkPrimary" />}
                         </button>
                         <span className={`group-hover:text-textPinkPrimary ${liked && "text-textPinkPrimary"}`}>
@@ -39,19 +50,19 @@ const TweetAction = ({ tweet, onOpenDetail, isDetaild }: { tweet: Tweet, onOpenD
                         </span>
                     </div>
                     <div className="flex gap-x-[2px] items-center group cursor-pointer" onClick={onOpenDetail}>
-                        <div className="rounded-full p-2 group-hover:bg-textBlue/10 transition duration-200 hover:text-textBlue group">
+                        <div className="rounded-full p-2 group-hover:bg-textBlue/10 transition duration-200 hover:text-textBlue group" title='Bình luận'>
                             <CommentIcon className="group-hover:text-textBlue" />
                         </div>
                         <span className="group-hover:text-textBlue">{tweet?.comments >= 0 && tweet?.comments < 1000 ? tweet.comments : tweet.comments?.toString + "K"}</span>
                     </div>
                     <div className="flex gap-x-[2px] items-center group cursor-pointer">
-                        <div className="rounded-full p-2 group-hover:bg-textGreen/10 transition duration-200 hover:text-textGreen group">
+                        <div className={`rounded-full p-2 group-hover:bg-textGreen/10 transition duration-200 hover:text-textGreen group ${bookmarked && "text-textGreen"}`} onClick={() => handleToggleBookmark(_id)} title='Bookmark'>
                             <RetWeetIcon className="group-hover:text-textGreen" />
                         </div>
-                        <span className="group-hover:text-textGreen">{bookmarks >= 0 && bookmarks < 1000 ? bookmarks : bookmarks.toString + "K"}</span>
+                        <span className={`group-hover:text-textGreen ${bookmarked && "text-textGreen"}`}>{bookmarks >= 0 && bookmarks < 1000 ? bookmarks : bookmarks.toString + "K"}</span>
                     </div>
                     <div className="flex gap-x-[2px] items-center group cursor-pointer">
-                        <div className="cursor-pointer rounded-full p-2 hover:bg-textBlue/10 hover:text-textBlue transition duration-200 group">
+                        <div className="cursor-pointer rounded-full p-2 hover:bg-textBlue/10 hover:text-textBlue transition duration-200 group" title='Chia sẻ'>
                             <LuShare className="group-hover:text-textBlue" />
                         </div>
                     </div>
@@ -91,7 +102,7 @@ const TweetAction = ({ tweet, onOpenDetail, isDetaild }: { tweet: Tweet, onOpenD
                             {bookmarks < 1000 ? bookmarks : (bookmarks / 1000).toFixed(1) + "K"} đăng lại
                         </span>
                         <div className='w-full border-y-[0.5px] border-borderGrayPrimary py-1'>
-                            <div className="w-full flex items-center justify-center space-x-2 p-2 group-hover:bg-textGreen/10 transition duration-200 hover:text-textGreen">
+                            <div className={`w-full flex items-center justify-center space-x-2 p-2 group-hover:bg-textGreen/10 transition duration-200 hover:text-textGreen ${bookmarked && "text-textGreen"}`} onClick={() => handleToggleBookmark(_id)}>
                                 <RetWeetIcon />
                                 <span>Đăng lại</span>
                             </div>

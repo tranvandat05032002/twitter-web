@@ -1,9 +1,9 @@
 "use client";
 import DashboardPage from "@/components/layouts/Dashboard";
 import React from "react";
-import dynamic from "next/dynamic";
+import dynamic from "next/dynamic"
 import LoadingPage from "@/components/common/Loading/LoadingPage";
-import { useInfiniteLikedTweets } from "@/hooks/useInfiniteQuery";
+import { useInfiniteBookmarkedTweets } from "@/hooks/useInfiniteQuery";
 import { useInView } from "react-intersection-observer";
 import { ModalType, useEvent } from "@/store/useEven";
 import { Tweet } from "@/types/tweetTypes";
@@ -12,25 +12,20 @@ import { formatTweetTime } from "@/utils/handlers";
 import TweetComponent from "@/components/common/Tweet/TweetComponent";
 import { LoadingSniper } from "@/components/common/Loading/LoadingSniper";
 import HomeDetailTweet from "@/components/layouts/home/HomeDetailTweet";
-const DynamicLikes = dynamic(
-  () => import("@/components/layouts/ProfileLayout"),
-  {
-    loading: () => <LoadingPage></LoadingPage>,
-  }
-);
+const DynamicReplies = dynamic(() => import("@/components/layouts/ProfileLayout"), {
+  loading: () => <LoadingPage></LoadingPage>
+})
 
-const Likes = ({ params }: { params: { username: string } }) => {
+const Replies = ({ params }: { params: { username: string } }) => {
   const {
     data,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
     isLoading,
-    status,
-  } = useInfiniteLikedTweets();
+  } = useInfiniteBookmarkedTweets();
   const { ref: loader, inView } = useInView({ threshold: 1 });
   const { activeModal, setActiveModal, closeModal } = useEvent();
-  const textareaRef = React.useRef<HTMLTextAreaElement | null>(null);
   const [selectedTweet, setSelectedTweet] = React.useState<Tweet | null>(null);
   const [selectedTweetTime, setSelectedTweetTime] = React.useState<string>("");
 
@@ -47,10 +42,9 @@ const Likes = ({ params }: { params: { username: string } }) => {
   }, [setActiveModal]);
 
   const tweets = data?.pages.flatMap((page) => page?.tweet.tweets ?? []);
-
   return (
     <DashboardPage>
-      <DynamicLikes params={params}>
+      <DynamicReplies params={params}>
         <div>
           {data?.pages.map((page, i) => (
             <React.Fragment key={i}>
@@ -75,9 +69,9 @@ const Likes = ({ params }: { params: { username: string } }) => {
             />
           )}
         </div>
-      </DynamicLikes>
+      </DynamicReplies>
     </DashboardPage>
   );
 };
 
-export default Likes;
+export default Replies;

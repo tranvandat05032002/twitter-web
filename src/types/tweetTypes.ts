@@ -43,6 +43,7 @@ export type Tweet = {
     updated_at: string; // Có thể sử dụng Date nếu bạn muốn chuyển đổi
     user: IUser;
     bookmarks: number;
+    bookmarked: boolean;
     liked: boolean;
     likes: number;
     like_id?: string;
