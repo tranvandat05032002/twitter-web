@@ -13,14 +13,13 @@ export interface ButtonProps
   disabledForm?: boolean;
 }
 export interface ButtonProp
-extends React.DetailedHTMLProps<
-  React.ButtonHTMLAttributes<HTMLButtonElement>,
-  HTMLButtonElement
-> {
-children: React.ReactNode;
-className?: string;
-type?: Type;
-isLoading?: boolean;
-onClick?: () => void;
-disabledForm?: boolean;
+  extends React.DetailedHTMLProps<
+    React.ButtonHTMLAttributes<HTMLButtonElement>,
+    HTMLButtonElement
+  > {
+  children: React.ReactNode;
+  className?: string;
+  type?: Type;
+  isLoading?: boolean;
+  disabledForm?: boolean;
 }

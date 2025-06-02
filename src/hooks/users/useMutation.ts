@@ -35,10 +35,11 @@ import {
   requestCreateStory,
   requestDeleteStory,
   requestToggleBookmark,
+  requestFollow,
+  requestUnFollow,
 } from "@/utils/api/request";
 import { removeEmailCookies, removeOTPToken } from "@/utils/auth/cookies";
 import { UseMutationResult, useMutation, useQueryClient } from "@tanstack/react-query";
-import { AxiosInstance } from "axios";
 
 export const useRegister = () =>
   useMutation({
@@ -244,6 +245,33 @@ export const useDeleteStory = () => {
     retry: 2,
     onSuccess(data) {
       queryClient.invalidateQueries({ queryKey: ["stories"], exact: true })
+    },
+  });
+}
+
+// user_following
+export const useFollow = (options?: {
+  onSuccess?: (data: boolean) => void;
+}) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: requestFollow,
+    onSuccess(data) {
+      queryClient.invalidateQueries({ queryKey: ["user_following"], exact: true })
+      options?.onSuccess?.(data);
+    },
+  });
+}
+
+export const useUnFollow = (options?: {
+  onSuccess?: (data: boolean) => void;
+}) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: requestUnFollow,
+    onSuccess(data) {
+      queryClient.invalidateQueries({ queryKey: ["user_following"], exact: true })
+      options?.onSuccess?.(data);
     },
   });
 }

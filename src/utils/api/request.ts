@@ -813,3 +813,38 @@ export const requestDeleteStory = async (story_id: string) => {
     throw error
   }
 }
+
+// Follow/UnFollow
+export const requestFollow = async ({ follow_user_id }: { follow_user_id: string }) => {
+  const { access_token } = getToken()
+  if (!follow_user_id) return;
+  try {
+    const res = await apiInstance.post(`/users/follow`, {
+      follow_user_id
+    }, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      },
+    })
+    return res.data.message
+  } catch (error) {
+    throw error
+  }
+}
+
+export const requestUnFollow = async ({ follow_user_id }: { follow_user_id: string }) => {
+  const { access_token } = getToken()
+  if (!follow_user_id) return;
+  try {
+    const res = await apiInstance.delete(`/users/follow/${follow_user_id}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      },
+    })
+    return res.data.message
+  } catch (error) {
+    throw error
+  }
+}

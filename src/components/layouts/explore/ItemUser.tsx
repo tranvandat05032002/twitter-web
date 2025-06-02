@@ -6,6 +6,7 @@ import { Avatar } from '@mui/material';
 import React from 'react';
 import { routers } from "@/utils/router/routers";
 import ButtonFollow from "@/components/common/Button/ButtonFollow";
+import { useFollow, useUnFollow } from "@/hooks/users/useMutation";
 interface IItemUser {
     miniItem?: boolean | false;
     isFollow?: boolean;
@@ -15,6 +16,13 @@ interface IItemUser {
 }
 const ItemUser = ({ miniItem, isFollow, data, userInfo, isMe }: IItemUser) => {
     const [isHover, setIsHover] = React.useState<boolean>(false);
+    const { mutate: followUser, isLoading: isLoadingFollow } = useFollow({
+        onSuccess: () => setIsFollowed(true)
+    })
+    const { mutate: unFollowUser, isLoading: isLoadingUnFollow } = useUnFollow({
+        onSuccess: () => setIsFollowed(false)
+    })
+    const [isFollowed, setIsFollowed] = React.useState<boolean>(isFollow || false);
     const router = useRouter()
     const handleChange = () => {
         setIsHover((prev) => !prev);
@@ -27,9 +35,18 @@ const ItemUser = ({ miniItem, isFollow, data, userInfo, isMe }: IItemUser) => {
             router.push(`/profile/v1?profile_username=${data.username}`)
         }
     }
-    const handleFollow = (follow_user_id: string) => {
-        console.log("follow_user_id", follow_user_id)
-        if (!follow_user_id) return;
+
+    const handleFollowUnFollow = (follow_user_id: string) => {
+        if (!follow_user_id) return
+        if (isFollowed) {
+            unFollowUser({
+                follow_user_id
+            })
+        } else {
+            followUser({
+                follow_user_id
+            })
+        }
     }
     return (
         <div onClick={handleRedirectProfile} className="flex items-center cursor-pointer select-none text-sm py-[10px] px-[15px] hover:bg-bgHoverGray">
@@ -48,16 +65,29 @@ const ItemUser = ({ miniItem, isFollow, data, userInfo, isMe }: IItemUser) => {
                                 <div className="font-semibold w-[150px] whitespace-nowrap text-ellipsis overflow-hidden text-base">{data?.name}</div>
                                 <p className="max-w-[150px] whitespace-nowrap text-ellipsis overflow-hidden font-light text-[15px] text-textGray">{data?.username}</p>
                             </div>
-                            {/* <button className="rounded-full bg-white text-textBlack transition-all hover:bg-bgHoverWhite/80 font-bold px-4 py-1 text-[15px]">
-                                Follow
-                            </button> */}
                             {!isMe &&
                                 <div>
-                                    {isFollow ? <button onMouseEnter={handleChange} onMouseLeave={handleChange} className={`rounded-full ${!isHover ? "bg-transparent border-[0.5px] border-[#333639] text-white" : "bg-bgPinkGhost/20 border-[0.5px] border-bgPinkGhost/40 text-bgPinkGhost"} font-bold px-4 py-1 text-[15px]`}>
-                                        {isHover ? "Unfollow" : "Following"}
-                                    </button> : <button className="rounded-full bg-white text-textBlack transition-all hover:bg-bgHoverWhite/80 font-bold px-4 py-1 text-[15px]">
-                                        Follow
-                                    </button>}
+                                    {isFollow ?
+                                        <button
+                                            onMouseEnter={handleChange}
+                                            onMouseLeave={handleChange}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleFollowUnFollow(data._id as string)
+                                            }}
+                                            className={`rounded-full ${!isHover ? "bg-transparent border-[0.5px] border-[#333639] text-white" : "bg-bgPinkGhost/20 border-[0.5px] border-bgPinkGhost/40 text-bgPinkGhost"} font-bold px-4 py-1 text-[15px]`}
+                                        >
+                                            {isHover ? "Unfollow" : "Following"}
+                                        </button> :
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleFollowUnFollow(data._id as string)
+                                            }}
+                                            className="rounded-full bg-white text-textBlack transition-all hover:bg-bgHoverWhite/80 font-bold px-4 py-1 text-[15px]"
+                                        >
+                                            Follow
+                                        </button>}
                                 </div>
                             }
                         </div>
@@ -79,9 +109,20 @@ const ItemUser = ({ miniItem, isFollow, data, userInfo, isMe }: IItemUser) => {
                                     <p className="max-w-[180px] whitespace-nowrap text-ellipsis overflow-hidden font-light text-[15px] text-textGray">{data?.username}</p>
                                 </div>
                                 {!isMe && <div>
-                                    {isFollow ? <button onMouseEnter={handleChange} onMouseLeave={handleChange} className={`rounded-full ${!isHover ? "bg-transparent border-[0.5px] border-[#333639] text-white" : "bg-bgPinkGhost/20 border-[0.5px] border-bgPinkGhost/40 text-bgPinkGhost"} font-bold px-4 py-1 text-[15px]`}>
-                                        {isHover ? "Unfollow" : "Following"}
-                                    </button> : <ButtonFollow onClick={() => handleFollow(data._id as string)}>follow</ButtonFollow>}
+                                    {isFollow ?
+                                        <button
+                                            onMouseEnter={handleChange}
+                                            onMouseLeave={handleChange}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleFollowUnFollow(data._id as string)
+                                            }}
+                                            className={`rounded-full ${!isHover ? "bg-transparent border-[0.5px] border-[#333639] text-white" : "bg-bgPinkGhost/20 border-[0.5px] border-bgPinkGhost/40 text-bgPinkGhost"} font-bold px-4 py-1 text-[15px]`}>
+                                            {isHover ? "Unfollow" : "Following"}
+                                        </button> : <ButtonFollow onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleFollowUnFollow(data._id as string)
+                                        }}>follow</ButtonFollow>}
                                 </div>}
                             </div>
                             <p className="font-light text-textGray text-[15px]">bio: {data.bio ? data.bio : "Không có"}</p>
