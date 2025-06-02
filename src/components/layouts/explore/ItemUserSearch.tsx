@@ -7,9 +7,9 @@ const ItemUserSearch = ({ data }: { key: string, data: UserSearchType }) => {
     return (
         <div className="w-full flex items-center cursor-pointer justify-between text-sm py-[10px] my-[2px] px-2 hover:bg-iconBackgroundGray">
             <div className=" w-full flex items-center">
-                <div className="px-4 text-white font-medium">
+                {/* <div className="px-4 text-white font-medium">
                     <MagnifyingGlassIcon className="w-[22px] h-[22px]" />
-                </div>
+                </div> */}
                 <div className="w-full flex items-center justify-between">
                     <div className="flex items-center cursor-pointer select-none text-sm">
                         <div className="w-full flex items-start gap-x-2">
@@ -25,9 +25,9 @@ const ItemUserSearch = ({ data }: { key: string, data: UserSearchType }) => {
                             </div>
                         </div>
                     </div>
-                    <BoxIcon className={"p-1 hover:bg-textBlue/10 mr-4 text-bgBlueFocus"}>
+                    {/* <BoxIcon className={"p-1 hover:bg-textBlue/10 mr-4 text-bgBlueFocus"}>
                         <CloseExternalEventIcon className='w-[15px] h-[15px]' />
-                    </BoxIcon>
+                    </BoxIcon> */}
                 </div>
             </div>
         </div>

@@ -21,5 +21,6 @@ export interface ButtonProp
   className?: string;
   type?: Type;
   isLoading?: boolean;
+  onClick?: () => void;
   disabledForm?: boolean;
 }

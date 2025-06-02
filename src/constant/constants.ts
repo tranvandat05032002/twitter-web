@@ -57,12 +57,12 @@ export const NAVIGATION_ITEMS = [
 export const EXPLORE_ITEMS = [
   {
     id: 1,
-    title: "All",
+    title: "Tất cả",
     mode: "all"
   },
   {
     id: 2,
-    title: "Following",
+    title: "Đang theo dõi",
     mode: "following"
   }
 ]

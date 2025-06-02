@@ -5,7 +5,7 @@ import { BackIcon, CalendarIcon, DotsIcon, LinkIcon, LocationIcon } from '../Sin
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useProfileStore } from '@/store/useProfile';
 import { useGetProfile } from '@/hooks/users/useQuery';
-import { decodedUsername, formatMonthYear } from '@/utils/handlers';
+import { decodedUsername, formatDateDDMMYYYY, formatDateToVietnamese, formatMonthYear } from '@/utils/handlers';
 import Link from 'next/link';
 import ButtonFollow from '../common/Button/ButtonFollow';
 import ModalSendChat from '../common/portal/ModalSendChat';
@@ -65,7 +65,7 @@ const GetProfile: React.FC<IGetProfile> = ({ children }) => {
                                 <div className="absolute w-full h-full top-0 left-0 bg-borderGrayPrimary">
                                     {/* {userProfile.cover_photo && ( */}
                                     <Image
-                                        src={userProfile.cover_photo ?? DEFAULT_IMAGE}
+                                        src={(userProfile.cover_photo !== "" ? userProfile.cover_photo : DEFAULT_IMAGE) as string}
                                         alt="Ảnh bìa hồ sơ"
                                         layout="fill"
                                         objectFit="cover"
@@ -77,10 +77,10 @@ const GetProfile: React.FC<IGetProfile> = ({ children }) => {
                             <div className="w-[134px] h-[134px] absolute bottom-0 left-4 translate-y-1/2 cursor-pointer">
                                 <div className="group absolute inset-0 rounded-full">
                                     <Image
-                                        src={userProfile.avatar ?? DEFAULT_IMAGE}
+                                        src={(userProfile.avatar !== "" ? userProfile.avatar : DEFAULT_IMAGE) as string}
                                         alt={userProfile.name}
-                                        layout="fill" // Để ảnh lấp đầy vùng chứa
-                                        objectFit="cover" // Để ảnh phủ toàn bộ mà không bị biến dạng
+                                        layout="fill"
+                                        objectFit="cover"
                                         className="rounded-full border-4 border-black"
                                     />
                                     <div className="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 rounded-full transition-opacity"></div>
@@ -124,8 +124,8 @@ const GetProfile: React.FC<IGetProfile> = ({ children }) => {
                                         <div className="flex text-textGray">
                                             <CalendarIcon />
                                             <span>
-                                                Joined{" "}
-                                                {formatMonthYear(
+                                                Đã tham gia{" "}
+                                                {formatDateDDMMYYYY(
                                                     userProfile?.created_at?.toString() as string
                                                 )}
                                             </span>

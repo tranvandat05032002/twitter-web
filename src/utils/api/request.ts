@@ -820,7 +820,7 @@ export const requestFollow = async ({ follow_user_id }: { follow_user_id: string
   if (!follow_user_id) return;
   try {
     const res = await apiInstance.post(`/users/follow`, {
-      follow_user_id
+      followed_user_id: follow_user_id
     }, {
       headers: {
         "Content-Type": "application/json",

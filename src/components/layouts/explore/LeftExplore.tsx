@@ -15,9 +15,11 @@ import ItemUserSearch from './ItemUserSearch';
 import { MyContextType, SearchContext } from '@/context/SearchProvider';
 import SearchItem from './SearchItem';
 import { useMe } from '@/context/UserContext';
+import { useSearchExplore } from '@/store/useSearchExplore';
 const LeftExplore = () => {
     const searchParams = useSearchParams()
     const slugFilter = searchParams.get('filter') || null;
+    const { setSearchValue } = useSearchExplore((state) => state)
     const router = useRouter()
     const { userInfo, setShowClose, setShowListFilter, searchValue, showListFilter, inputRef, showButtonFollow, setShowButtonFollow } = React.useContext(SearchContext) as MyContextType
     const handleBack = () => {
@@ -41,6 +43,11 @@ const LeftExplore = () => {
         };
     }, []);
     const debounceSearchValue = useDebounce(searchValue as string, 700);
+    React.useEffect(() => {
+        if (debounceSearchValue !== "") {
+            setSearchValue(debounceSearchValue)
+        }
+    }, [debounceSearchValue])
     const searchUserAll = useSearchUser({
         query: debounceSearchValue,
         limit: 3,
@@ -94,10 +101,10 @@ const LeftExplore = () => {
                     {EXPLORE_ITEMS.map((item) => {
                         const isActive = String(slugFilter).toLowerCase() === String(item.mode).toLowerCase();
                         return (
-                            <div key={item.id} className="h-[53px] flex-1 hover:bg-white/10 flex items-center justify-center">
+                            <div key={item.id} className="h-[53px] px-8 flex-1 hover:bg-white/10 flex items-center justify-center">
                                 <Link
                                     href={`/explore?q=${debounceSearchValue}&filter=${item.mode}`}
-                                    className={classNames(`text-textGray hover:no-underline p-4 text-center`, {
+                                    className={classNames(`text-textGray hover:no-underline flex-1 p-4 text-center`, {
                                         "text-white py-4 px-2 border-b-[3px] box-border border-textBlue transition": isActive,
                                         "": !isActive
                                     })}
@@ -109,7 +116,7 @@ const LeftExplore = () => {
                     })}
                 </div>
             </StickyNav>
-            <div className="h-full py-4 border-t-[1px] border-borderGrayPrimary">
+            <div className="py-4 border-t-[1px] border-borderGrayPrimary">
                 {
                     !debounceSearchValue ? (
                         <div className="flex justify-center items-center h-full">
@@ -117,18 +124,14 @@ const LeftExplore = () => {
                         </div>
                     ) : slugFilter === "all" ? (
                         searchUserAll.data?.length > 0 ? (
-                            <div className="w-full h-full">
+                            <div className="w-full">
                                 {searchUserAll.data.map((item: UserSearchType) => {
                                     const isMe = item.username === userInfo?.username;
                                     return (
-                                        <Link
-                                            key={item._id as string}
-                                            href={`/profile/v1?profile_username=${item.username}`}
-                                        >
-                                            <div className="w-full transition-all">
-                                                <ItemUser userInfo={userInfo as IUser} data={item} isFollow={item?.is_following ?? false} isMe={isMe} />
-                                            </div>
-                                        </Link>
+
+                                        <div className="w-full transition-all" key={item._id as string}>
+                                            <ItemUser userInfo={userInfo as IUser} data={item} isFollow={item?.is_following ?? false} isMe={isMe} />
+                                        </div>
                                     )
                                 })}
                             </div>
@@ -142,14 +145,11 @@ const LeftExplore = () => {
                             <div className="w-full h-full">
                                 {searchUserFollowing.data.map((item: UserSearchType) =>
                                     item.is_following ? (
-                                        <Link
-                                            key={item._id as string}
-                                            href={`/profile/v1?profile_username=${item.username}`}
-                                        >
-                                            <div className="w-full transition-all">
-                                                <ItemUser data={item} isFollow={true} />
-                                            </div>
-                                        </Link>
+                                        <div
+                                            className="w-full transition-all"
+                                            key={item._id as string}>
+                                            <ItemUser data={item} isFollow={true} />
+                                        </div>
                                     ) : null
                                 )}
                             </div>

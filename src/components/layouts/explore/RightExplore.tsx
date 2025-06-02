@@ -2,31 +2,28 @@
 import React from 'react';
 import ItemUser from './ItemUser';
 import { useGetUsersFollowing } from '@/hooks/users/useQuery';
-import Link from 'next/link';
 const RightExplore = () => {
     const usersFollowing = useGetUsersFollowing();
     const dataGetUsersFollowing = usersFollowing.data
     return (
-        <div className={`max-w-full w-full h-full flex flex-col flex-1 pl-[30px] pr-3 pt-3`}>
+        <div className={`max-w-full w-full h-full flex flex-col flex-1 pl-[30px] pr-3 pt-3 debug-css`}>
             <div className="w-full rounded-xl bg-bgGray16181c">
                 <div className="w-full">
                     <h3 className="text-xl font-bold px-[15px] py-[12px]">Người theo dõi ({dataGetUsersFollowing?.total})</h3>
                     <div className="flex flex-col">
                         {dataGetUsersFollowing?.data.map((user: any) => {
                             return (
-                                <Link
-                                    key={user._id as string}
-                                    href={`/profile/v1?profile_username=${user.followUsers.username}`}
-                                >
-                                    <ItemUser data={user?.followUsers} key={user._id} miniItem={true} isFollow={true} />
-                                </Link>
+
+                                <ItemUser
+                                    key={user._id}
+                                    data={user?.followUsers}
+                                    miniItem={true}
+                                    isFollow={true} />
+                                // </Link>
                             )
                         }
                         )}
                     </div>
-                    <button className="cursor-pointer px-[15px] text-[15px] font-light text-bgBlueFocus py-[14px] w-full hover:bg-bgHoverGray bg-transparent transition-all text-start">
-                        Show more
-                    </button>
                 </div>
             </div>
             <div className="max-w-full mt-3 text-textGray text-sm font-light">

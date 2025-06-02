@@ -251,6 +251,7 @@ export const useDeleteStory = () => {
 
 // user_following
 export const useFollow = (options?: {
+  query?: string;
   onSuccess?: (data: boolean) => void;
 }) => {
   const queryClient = useQueryClient();
@@ -258,12 +259,16 @@ export const useFollow = (options?: {
     mutationFn: requestFollow,
     onSuccess(data) {
       queryClient.invalidateQueries({ queryKey: ["user_following"], exact: true })
+      if (options?.query) {
+        queryClient.invalidateQueries({ queryKey: ["user", options.query], exact: true });
+      }
       options?.onSuccess?.(data);
     },
   });
 }
 
 export const useUnFollow = (options?: {
+  query?: string;
   onSuccess?: (data: boolean) => void;
 }) => {
   const queryClient = useQueryClient();
@@ -271,6 +276,9 @@ export const useUnFollow = (options?: {
     mutationFn: requestUnFollow,
     onSuccess(data) {
       queryClient.invalidateQueries({ queryKey: ["user_following"], exact: true })
+      if (options?.query) {
+        queryClient.invalidateQueries({ queryKey: ["user", options.query], exact: true });
+      }
       options?.onSuccess?.(data);
     },
   });
