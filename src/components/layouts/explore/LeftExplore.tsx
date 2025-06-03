@@ -16,6 +16,7 @@ import { MyContextType, SearchContext } from '@/context/SearchProvider';
 import SearchItem from './SearchItem';
 import { useMe } from '@/context/UserContext';
 import { useSearchExplore } from '@/store/useSearchExplore';
+import SimpleBar from 'simplebar-react';
 const LeftExplore = () => {
     const searchParams = useSearchParams()
     const slugFilter = searchParams.get('filter') || null;
@@ -72,10 +73,10 @@ const LeftExplore = () => {
                             <div className="flex px-4 py-3 justify-between items-center">
                                 <h3 className='text-xl font-bold'>Recent</h3>
                                 <button className={`rounded-full bg-transparent text-textBlue font-bold px-2 hover:bg-textBlue/10 transition-all py-[2px] text-[15px]`}>
-                                    Clear all
+                                    Xóa tất cả
                                 </button>
                             </div>
-                            <div className="w-full max-h-[420px] overflow-y-auto">
+                            <SimpleBar className="w-full max-h-[420px]">
                                 {
                                     searchUserAll.data && searchUserAll.data.map((item: UserSearchType) =>
                                         <Link
@@ -88,7 +89,7 @@ const LeftExplore = () => {
                                         </Link>
                                     )
                                 }
-                            </div>
+                            </SimpleBar>
                         </div>
                         }
                         <SearchItem />

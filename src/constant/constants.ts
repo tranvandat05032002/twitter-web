@@ -67,4 +67,17 @@ export const EXPLORE_ITEMS = [
   }
 ]
 
+export const NOTIFY_ITEMS = [
+  {
+    id: 1,
+    title: "Đã xem",
+    mode: "seen"
+  },
+  {
+    id: 2,
+    title: "Chưa xem",
+    mode: "not_seen"
+  }
+]
+
 export const DEFAULT_IMAGE = "/image/default-image.jpg"

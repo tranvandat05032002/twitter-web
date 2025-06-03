@@ -6,7 +6,9 @@ import { Roboto } from "next/font/google";
 import QueryClientLayoutProvider from "./QueryClientProvider";
 import 'swiper/css';
 import 'swiper/css/navigation';
+import 'simplebar-react/dist/simplebar.min.css';
 import UserProviderLayout from "@/components/UserProvider";
+import MainScroll from "@/components/layouts/MainScroll";
 
 // const roboto = Roboto({
 //   weight: ["100", "300", "500", "700"],
@@ -29,12 +31,14 @@ export default function RootLayout({
       {/* <meta httpEquiv="Cross-Origin-Opener-Policy" content="same-origin"></meta> */}
       {/* add link stop preload page */}
       <body suppressHydrationWarning={true}>
-        <QueryClientLayoutProvider >
-          <UserProviderLayout>
-            {children}
-          </UserProviderLayout>
-          <ToastContainer />
-        </QueryClientLayoutProvider>
+        <MainScroll>
+          <QueryClientLayoutProvider >
+            <UserProviderLayout>
+              {children}
+            </UserProviderLayout>
+            <ToastContainer />
+          </QueryClientLayoutProvider>
+        </MainScroll>
       </body>
     </html>
   );

@@ -7,6 +7,7 @@ import { useGetUsersFollowing } from '@/hooks/users/useQuery';
 import ItemUserFollowing from '@/components/common/Tweet/ItemUserFollowing';
 import Link from 'next/link';
 import { IUser } from '@/types/userTypes';
+import SimpleBar from 'simplebar-react';
 
 export default function HomeFollowing() {
     const [isSearching, setIsSearching] = React.useState(false)
@@ -43,13 +44,13 @@ export default function HomeFollowing() {
                     }
                     {/* </StickyNav> */}
                 </div>
-                <div className="p-[13px] max-h-screen overflow-y-auto">
+                <SimpleBar className="p-[13px] max-h-screen">
                     {dataGetUsersFollowing?.data.map((user: any) =>
                         <Link href={`/profile/v1/?profile_username=${user?.followUsers.username}`} key={user._id}>
                             <ItemUserFollowing data={user?.followUsers} />
                         </Link>
                     )}
-                </div>
+                </SimpleBar>
             </div>
         </div>
     )

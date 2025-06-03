@@ -7,6 +7,7 @@ import { useGetChats } from '@/hooks/users/useQuery';
 import { useChat } from '@/store/useChat';
 import { IUser } from '@/types/userTypes';
 import { ICreateMember } from '@/types/chatTypes';
+import SimpleBar from 'simplebar-react';
 const LeftMessage = ({ user }: { user: IUser }) => {
     // Get the chat in chat section
     const { data: chats } = useGetChats(user?._id as string)
@@ -40,7 +41,7 @@ const LeftMessage = ({ user }: { user: IUser }) => {
                             <input type="text" placeholder='Search Direct Messages' className="pl-[40px] pr-[10px]  py-[5px] h-[36px] focus:outline-none border focus:border focus:border-borderBlue border-borderGrayPrimary placeholder:text-textGray placeholder:font-light placeholder:text-sm bg-black rounded-[30px] w-full text-sm font-light" />
                         </div>
                     </div>
-                    <div className="mt-1 overflow-auto">
+                    <SimpleBar className="mt-1 max-h-screen">
                         {
                             chats && chats.map((chat) => {
                                 const isActive = currentChat._id === chat._id
@@ -51,7 +52,7 @@ const LeftMessage = ({ user }: { user: IUser }) => {
                                 )
                             }
                             )}
-                    </div>
+                    </SimpleBar>
                 </div>
             </div>
         </div>

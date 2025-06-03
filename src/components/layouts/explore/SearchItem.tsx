@@ -39,7 +39,7 @@ const SearchItem = () => {
     }
     return (
         <React.Fragment>
-            <input type="text" autoComplete='off' onKeyDown={(e) => handleHistorySearch(e)} id="search-people" placeholder='Search People' value={searchValue as string} onChange={handleSpace} className="pl-[40px] pr-[12px]  py-[12px] w-full h-[43px] focus:outline-none border focus:border focus:border-bgBlueFocus border-borderGrayPrimary placeholder:text-textGray placeholder:font-light placeholder:text-sm bg-black rounded-[30px] text-base font-light" />
+            <input type="text" autoComplete='off' onKeyDown={(e) => handleHistorySearch(e)} id="search-people" placeholder='Tìm kiếm người dùng' value={searchValue as string} onChange={handleSpace} className="pl-[40px] pr-[12px]  py-[12px] w-full h-[43px] focus:outline-none border focus:border focus:border-bgBlueFocus border-borderGrayPrimary placeholder:text-textGray placeholder:font-light placeholder:text-sm bg-black rounded-[30px] text-base font-light" />
             <MagnifyingGlassIcon className="absolute MagnifyingGlassIcon left-[10px] top-[50%] translate-y-[-50%] text-textGray ml-[3px] font-light" />
             {
                 searchValue && showClose &&

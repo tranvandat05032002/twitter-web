@@ -60,7 +60,7 @@ const ProfileLayout: React.FC<IProfile> = ({ children, params }) => {
   const avatarUrl: string = userProfile.avatar ?? DEFAULT_IMAGE;
   return (
     <React.Fragment>
-      <div className={`w-[600px] flex flex-col border-r-[0.5px] border-borderGrayPrimary ${activeModal !== ModalType.NONE ? " h-screen overflow-hidden" : "h-full"} `}>
+      <div className={`w-[600px]  flex flex-col border-r-[0.5px] border-borderGrayPrimary ${activeModal !== ModalType.NONE ? " h-screen overflow-hidden" : "h-full"} `}>
         <StickyNav>
           <div className="flex items-center pt-1 px-4">
             <div className="text-white p-2 mr-6 rounded-full hover:bg-white/10 transition duration-200 cursor-pointer">

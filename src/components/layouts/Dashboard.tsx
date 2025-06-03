@@ -70,7 +70,7 @@ const DashboardPage: React.FC<IDashboard> = (props) => {
           className={`relative flex items-center w-full ${activeModal !== ModalType.NONE ? "h-screen" : "h-full"
             }`}
         >
-          <div className="max-w-screen-xl w-full h-full flex">
+          <div className="max-w-screen-2xl mx-auto w-full h-full flex">
             <LeftSidebar userInfo={userInfo}></LeftSidebar>
             <RightSidebar>{children}</RightSidebar>
           </div>

@@ -70,15 +70,20 @@
   }
 }
 
+body, html {
+  height: 100%;
+  overflow: hidden;
+}
+
 @layer base {
   a {
     text-decoration: none;
   }
-
+  
   a:hover {
     text-decoration: none;
   }
-
+  
   body,
   h1,
   h2,
@@ -88,7 +93,7 @@
     margin: 0;
     padding: 0;
   }
-
+  
   .css-hfutr2-MuiSvgIcon-root-MuiSelect-icon {
     color: gray;
   }
@@ -97,4 +102,32 @@
     color: #9ca3b0;
     font-weight: 300;
   }
+}
+.simplebar-scrollbar:before {
+  background: rgba(29,155,240,0.3) !important; /* Tailwind blue-500 */
+  border-radius: 100px;
+}
+
+.simplebar-content-wrapper {
+  height: 100% !important;
+}
+
+/* default scroll  */
+::-webkit-scrollbar {
+  width: 8px;              /* Chiều rộng thanh cuộn dọc */
+  height: 8px;             /* Chiều cao thanh cuộn ngang (nếu có) */
+}
+
+::-webkit-scrollbar-track {
+  background: #16181c;     /* Màu nền phía sau thanh cuộn */
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(29,155,240,0.1);        /* Màu thanh cuộn */
+  border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(29,155,240,0.1);        /* Màu khi hover */
 }

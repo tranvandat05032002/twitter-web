@@ -14,6 +14,7 @@ import { useInfiniteComments } from '@/hooks/useInfiniteQuery';
 import { useInView } from 'react-intersection-observer';
 import { LoadingSniper } from '@/components/common/Loading/LoadingSniper';
 import { useEvent } from '@/store/useEven';
+import SimpleBar from 'simplebar-react';
 
 const HomeDetailTweet = ({
     onClose,
@@ -115,7 +116,7 @@ const HomeDetailTweet = ({
                         </div>
                     </StickyNav>
 
-                    <div className="flex-1 flex flex-col overflow-auto">
+                    <SimpleBar className="flex-1 flex flex-col overflow-auto">
                         <div className="flex-1 flex flex-col px-[3px]">
                             <TweetHeader tweet={tweet} user={user} time={time} />
                             <TweetAction tweet={tweet} isDetaild={true} />
@@ -139,7 +140,7 @@ const HomeDetailTweet = ({
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </SimpleBar>
                 </div>
             </div>
         </div>,

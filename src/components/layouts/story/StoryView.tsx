@@ -20,6 +20,7 @@ import { FaRegEye } from "react-icons/fa6";
 import Tippy from "@tippyjs/react/headless";
 import { useDeleteStory } from '@/hooks/users/useMutation';
 import { toast } from 'react-toastify';
+import SimpleBar from 'simplebar-react';
 
 const DURATION = 10000  //10s
 
@@ -242,14 +243,14 @@ const StoryView = ({ user_id }: { user_id: string }) => {
 
                         {countViewers > 0 ?
                             currentStoryGroup.viewers.map((user) => (
-                                <div className="flex-1 overflow-y-auto px-1" key={user._id}>
+                                <SimpleBar className="flex-1 overflow-y-auto px-1" key={user._id}>
                                     <div className="py-[12px] rounded-md hover:bg-gray-500/50 ">
                                         <div className='px-[12px] flex items-center space-x-3'>
                                             <Avatar src={user.avatar} sx={{ width: 32, height: 32 }} />
                                             <div className="font-semibold">{user.name}</div>
                                         </div>
                                     </div>
-                                </div>
+                                </SimpleBar>
                             ))
                             : <p className='text-textGray text-center my-auto'>
                                 Không có người xem

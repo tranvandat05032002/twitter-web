@@ -74,7 +74,9 @@ const Profile = ({ params }: { params: { username: string } }) => {
           )}
         </div>
       </DynamicProfile>
-      <RightExplore />
+      <div className="flex-1 ml-4">
+        <RightExplore />
+      </div>
     </DashboardPage>
   );
 };

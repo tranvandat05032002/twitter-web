@@ -12,6 +12,7 @@ import StorySidebarItem from '@/components/common/Story/StorySidebarItem';
 import { useMe } from '@/context/UserContext';
 import { useGetStories } from '@/hooks/users/useQuery';
 import { MyContextType, StoryContext } from '@/context/StoryContext';
+import SimpleBar from 'simplebar-react';
 
 const StorySidebar = () => {
     const router = useRouter();
@@ -56,7 +57,7 @@ const StorySidebar = () => {
                     </div>
                 </div>
             </StickyNav>
-            <div className={`flex flex-1 flex-col p-2 min-h-0 overflow-y-auto`}>
+            <SimpleBar className={`flex flex-1 flex-col p-2 min-h-0`}>
                 {/* Phần tiêu đề + Tạo tin */}
                 {
                     showCreateStory ?
@@ -105,7 +106,7 @@ const StorySidebar = () => {
                             </React.Fragment>
                         )
                 }
-            </div>
+            </SimpleBar>
         </aside>
     );
 };
