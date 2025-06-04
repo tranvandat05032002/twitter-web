@@ -6,10 +6,14 @@ import Link from 'next/link';
 import { useSearchParams, usePathname, useRouter } from "next/navigation"
 import React from 'react';
 import { IUser, UserSearchType } from '@/types/userTypes';
-import { EXPLORE_ITEMS, NOTIFY_ITEMS } from '@/constant/constants';
+import { DEFAULT_IMAGE, EXPLORE_ITEMS, NOTIFY_ITEMS } from '@/constant/constants';
 import classNames from "classnames"
 import SearchItem from './SearchItem';
 import { MyContextType } from '@/context/SearchProvider';
+import { Avatar } from '@mui/material';
+import { FaUserFriends, FaHeart } from "react-icons/fa";
+import { BiSolidCommentDetail } from "react-icons/bi";
+
 const LeftNotify = () => {
     const router = useRouter()
     const searchParams = useSearchParams()
@@ -54,7 +58,135 @@ const LeftNotify = () => {
                 </div>
             </StickyNav>
             <div className="py-4 border-t-[1px] border-borderGrayPrimary">
+                <div className="w-full flex items-center px-2 py-4 cursor-pointer hover:bg-gray-100/10">
+                    <div className="w-full">
+                        {/* <Link
+                            href={`/profile/v1?profile_username=${data.username}`}
+                        > */}
+                        <div className="w-full flex items-start justify-between space-x-2">
+                            <div className="w-10 h-10 mt-[6px] overflow-hidden rounded-full group relative">
+                                {/* <div className="absolute"></div> */}
+                                <Avatar src={DEFAULT_IMAGE} sx={{ width: "100%", height: "100%" }} />
+                            </div>
+                            <div className="flex-1 h-full">
+                                <div className="w-full h-full">
+                                    <div className="flex items-start space-x-1 pr-4">
+                                        <div className='flex-1'>
+                                            <p className="pr-4 whitespace-wrap text-ellipsis overflow-hidden font-light text-[15px] text-textGray">
+                                                <span className='text-white font-bold'>Trần Văn Đạt</span> {" "}
+                                                đã chấp nhận lời mời kết bạn của bạn.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p className="font-light text-textGray text-[15px]">1 giờ</p>
+                            </div>
+                        </div>
+                        {/* </Link> */}
+                    </div>
+                    <div className='mr-5'>
+                        <div className='p-2 rounded-full border-[0.5px] border-borderGrayPrimary'>
+                            <FaUserFriends className='w-6 h-6' />
+                        </div>
+                    </div>
+                </div >
 
+                <div className="w-full flex items-center px-2 py-4 cursor-pointer hover:bg-gray-100/10">
+                    <div className="w-full">
+                        {/* <Link
+                            href={`/profile/v1?profile_username=${data.username}`}
+                        > */}
+                        <div className="w-full flex items-start justify-between space-x-2">
+                            <div className="w-10 h-10 mt-[6px] group relative">
+                                <Avatar src={DEFAULT_IMAGE} sx={{ width: "100%", height: "100%" }} />
+                                <div className="absolute bottom-0 right-0 w-3 h-3 bg-[#1d9bf0] rounded-full border-2 border-white translate-x-1/3 translate-y-1/3 z-10" />
+                            </div>
+                            <div className="flex-1 h-full">
+                                <div className="w-full h-full">
+                                    <div className="flex items-start space-x-1 pr-4">
+                                        <div className='flex-1'>
+                                            <p className="pr-4 whitespace-wrap text-ellipsis overflow-hidden font-light text-[15px] text-gray-300/80">
+                                                <span className='text-white font-bold'>Trần Văn Đạt</span> {" "}
+                                                đã bình luận bài viết của bạn.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p className="font-medium text-[#1d9bf0] text-[15px]">1 giờ</p>
+                            </div>
+                        </div>
+                        {/* </Link> */}
+                    </div>
+                    <div className='mr-5'>
+                        <div className='p-2 rounded-full border-[0.5px] bg-textBlue/20 border-borderGrayPrimary'>
+                            <BiSolidCommentDetail className='w-6 h-6' />
+                        </div>
+                    </div>
+                </div >
+
+                <React.Fragment>
+                    <div className="w-full flex items-center px-2 py-4 cursor-pointer hover:bg-gray-100/10">
+                        <div className="w-full">
+                            {/* <Link
+                                href={`/profile/v1?profile_username=${data.username}`}
+                            > */}
+                            <div className="w-full flex items-start justify-between space-x-2">
+                                <div className="w-10 h-10 mt-[6px] overflow-hidden rounded-full group relative">
+                                    {/* <div className="absolute"></div> */}
+                                    <Avatar src={DEFAULT_IMAGE} sx={{ width: "100%", height: "100%" }} />
+                                </div>
+                                <div className="flex-1 h-full">
+                                    <div className="w-full h-full">
+                                        <div className="flex items-start space-x-1 pr-4">
+                                            <div className='flex-1'>
+                                                <p className="pr-4 whitespace-wrap text-ellipsis overflow-hidden font-light text-[15px] text-textGray">
+                                                    <span className='text-white font-bold'>Trần Văn Đạt</span> {" "}
+                                                    đã yêu thích bài viết của bạn.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p className="font-light text-textGray text-[15px]">1 giờ</p>
+                                </div>
+                            </div>
+                            {/* </Link> */}
+                        </div>
+                        <div className='mr-5'>
+                            <div className='p-2 rounded-full border-[0.5px] bg-textPinkPrimary/20 border-borderGrayPrimary'>
+                                <FaHeart className='w-6 h-6' />
+                            </div>
+                        </div>
+                    </div >
+
+                    <div className="w-full flex items-center px-2 py-4 cursor-pointer hover:bg-gray-100/10">
+                        <div className="w-full">
+                            {/* <Link
+                                href={`/profile/v1?profile_username=${data.username}`}
+                            > */}
+                            <div className="w-full flex items-start justify-between space-x-2">
+                                <div className="w-10 h-10 mt-[6px] overflow-hidden rounded-full group relative">
+                                    {/* <div className="absolute"></div> */}
+                                    <Avatar src={DEFAULT_IMAGE} sx={{ width: "100%", height: "100%" }} />
+                                </div>
+                                <div className="flex-1 h-full">
+                                    <div className="w-full h-full">
+                                        <div className="flex items-start space-x-1 pr-4">
+                                            <div className='flex-1'>
+                                                <p className="pr-4 whitespace-wrap text-ellipsis overflow-hidden font-light text-[15px] text-textGray">
+                                                    <span className='text-white font-bold'>Trần Văn Đạt</span> {" "}
+                                                    đã yêu thích bài viết của bạn.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p className="font-light text-textGray text-[15px]">1 giờ</p>
+                                </div>
+                            </div>
+                            {/* </Link> */}
+                        </div>
+                        <div className='mr-5'>
+                            <div className='p-2 rounded-full border-[0.5px] bg-textPinkPrimary/20 border-borderGrayPrimary'>
+                                <FaHeart className='w-6 h-6' />
+                            </div>
+                        </div>
+                    </div >
+                </React.Fragment>
             </div>
         </div>
     );
