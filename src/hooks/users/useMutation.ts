@@ -39,6 +39,7 @@ import {
   requestUnFollow,
 } from "@/utils/api/request";
 import { removeEmailCookies, removeOTPToken } from "@/utils/auth/cookies";
+import socket from "@/utils/socket";
 import { UseMutationResult, useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useRegister = () =>
@@ -253,16 +254,24 @@ export const useDeleteStory = () => {
 export const useFollow = (options?: {
   query?: string;
   onSuccess?: (data: boolean) => void;
+  sender_id?: string;
+  receiver_id?: string;
 }) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: requestFollow,
-    onSuccess(data) {
+    onSuccess(data: boolean) {
       queryClient.invalidateQueries({ queryKey: ["user_following"], exact: true })
       if (options?.query) {
         queryClient.invalidateQueries({ queryKey: ["user", options.query], exact: true });
       }
       options?.onSuccess?.(data);
+      if (options?.sender_id && options?.receiver_id) {
+        socket.emit('follow_user', {
+          sender_id: options.sender_id,
+          receiver_id: options.receiver_id
+        });
+      }
     },
   });
 }

@@ -9,7 +9,6 @@ import { IUser, UserSearchType } from '@/types/userTypes';
 import { DEFAULT_IMAGE, EXPLORE_ITEMS, NOTIFY_ITEMS } from '@/constant/constants';
 import classNames from "classnames"
 import SearchItem from './SearchItem';
-import { MyContextType } from '@/context/SearchProvider';
 import { Avatar } from '@mui/material';
 import { FaUserFriends, FaHeart } from "react-icons/fa";
 import { BiSolidCommentDetail } from "react-icons/bi";

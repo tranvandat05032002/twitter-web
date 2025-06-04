@@ -9,6 +9,7 @@ import ButtonFollow from "@/components/common/Button/ButtonFollow";
 import { useFollow, useUnFollow } from "@/hooks/users/useMutation";
 import Link from "next/link";
 import { useSearchExplore } from "@/store/useSearchExplore";
+import { useMe } from "@/context/UserContext";
 interface IItemUser {
     miniItem?: boolean | false;
     isFollow?: boolean;
@@ -19,10 +20,13 @@ interface IItemUser {
 const ItemUser = ({ miniItem, isFollow, data, userInfo, isMe }: IItemUser) => {
     const isSubmittingRef = React.useRef(false);
     const [isHover, setIsHover] = React.useState<boolean>(false);
+    const { user: currentUser } = useMe();
     const [isProcessing, setIsProcessing] = React.useState<boolean>(false);
     const { searchValue } = useSearchExplore((state) => state)
     const { mutate: followUser, isLoading: isLoadingFollow } = useFollow({
         query: searchValue,
+        sender_id: currentUser?._id,    // sender_id
+        receiver_id: data._id,           //receiver_id
         onSuccess: () => setIsFollowed(true)
     })
     const { mutate: unFollowUser, isLoading: isLoadingUnFollow } = useUnFollow({
@@ -36,8 +40,6 @@ const ItemUser = ({ miniItem, isFollow, data, userInfo, isMe }: IItemUser) => {
     }
 
     const handleFollowUnFollow = (follow_user_id: string) => {
-        console.log("running unfollow")
-        console.log("follow_user_id ---> ", follow_user_id, isSubmittingRef.current, data)
         if (!follow_user_id || isSubmittingRef.current) return;
 
 

@@ -9,6 +9,7 @@ import 'swiper/css/navigation';
 import 'simplebar-react/dist/simplebar.min.css';
 import UserProviderLayout from "@/components/UserProvider";
 import MainScroll from "@/components/layouts/MainScroll";
+import SocketNotificationListener from "@/components/layouts/SocketNotifyListener";
 
 // const roboto = Roboto({
 //   weight: ["100", "300", "500", "700"],
@@ -34,6 +35,7 @@ export default function RootLayout({
         <MainScroll>
           <QueryClientLayoutProvider >
             <UserProviderLayout>
+              <SocketNotificationListener />
               {children}
             </UserProviderLayout>
             <ToastContainer />
