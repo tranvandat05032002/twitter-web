@@ -93,6 +93,9 @@ export const useGetUserReload = () => {
 export const useLogoutUser = () =>
   useMutation({
     mutationFn: () => requestLogout(),
+    onSuccess: () => {
+      socket.disconnect();
+    }
   });
 
 export const useFindAccountByEmail = () =>

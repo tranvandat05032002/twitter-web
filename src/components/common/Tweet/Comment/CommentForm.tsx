@@ -7,11 +7,15 @@ import socket from '@/utils/socket';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import useDebounce from '@/hooks/useDebounce';
+import { useMe } from '@/context/UserContext';
+import { useGetTweetById } from '@/hooks/users/useQuery';
 interface CommentInputFormProps {
     tweetId: string;
+    tweetCreatedBy?: string;
     parentId: string | null;
     currentUser: IUser | null;
     setComments: React.Dispatch<React.SetStateAction<CommentWithReplies[]>>;
+    comments: CommentWithReplies[];
     commentRef: React.MutableRefObject<HTMLInputElement | null>;
     defaultValue?: string;
     isEdit?: boolean;
@@ -23,9 +27,11 @@ interface CommentInputFormProps {
 
 export const CommentParentInputForm: React.FC<CommentInputFormProps> = ({
     tweetId,
+    tweetCreatedBy,
     parentId,
     currentUser,
     setComments,
+    comments,
     commentRef,
     defaultValue,
     isEdit,
@@ -116,6 +122,17 @@ export const CommentParentInputForm: React.FC<CommentInputFormProps> = ({
                             return [...prev, newComment]
                         });
                         socket.emit('send_comment', newComment);
+
+                        // Send notify
+                        if (currentUser._id !== tweetCreatedBy) {
+                            const commentNotifyData = {
+                                sender_id: currentUser._id,    // current user
+                                receiver_id: tweetCreatedBy,   // user tạo tweet
+                                tweet_id: tweetId,
+                                comment_id: commentId
+                            }
+                            socket.emit('comment_tweet', commentNotifyData)
+                        }
                     }
                     reset();
                 }

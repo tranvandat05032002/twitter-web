@@ -136,7 +136,16 @@ const HomeDetailTweet = ({
                                         className="w-full h-full object-cover" />
                                 </div>
                                 <div className="flex-1">
-                                    <CommentParentInputForm tweetId={tweet._id} isChild={false} currentUser={userMe} setComments={setComments} commentRef={commentRef} parentId={null} />
+                                    {tweet._id &&
+                                        <CommentParentInputForm
+                                            key={tweet.id}
+                                            tweetId={tweet._id}
+                                            tweetCreatedBy={tweet.user_id}
+                                            isChild={false}
+                                            currentUser={userMe}
+                                            setComments={setComments}
+                                            commentRef={commentRef}
+                                            parentId={null} />}
                                 </div>
                             </div>
                         </div>

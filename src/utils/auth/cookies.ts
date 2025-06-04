@@ -117,6 +117,11 @@ export const logOutCookies = () => {
       path: process.env.NEXT_PUBLIC_TOKEN_PATH as string,
       domain: process.env.NEXT_PUBLIC_DOMAIN as string,
     });
+    Cookies.remove(process.env.NEXT_PUBLIC_PROFILE_KEY as string, {
+       ...objTokenCookies,
+       path: process.env.NEXT_PUBLIC_TOKEN_PATH as string,
+      domain: process.env.NEXT_PUBLIC_DOMAIN as string,
+    })
   }
 };
 // check expired token

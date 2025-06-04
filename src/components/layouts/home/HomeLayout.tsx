@@ -15,6 +15,8 @@ import { Tweet } from "@/types/tweetTypes";
 import { useMe } from "@/context/UserContext";
 import Link from "next/link";
 import { IUser } from "@/types/userTypes";
+import { CustomToast } from "@/components/common/Toastify/CustomToast";
+import { toast } from "react-toastify";
 
 const HomeLayout = () => {
   const { activeModal, setActiveModal, closeModal } = useEvent();
