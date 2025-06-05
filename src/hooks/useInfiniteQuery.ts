@@ -1,7 +1,7 @@
 import { TWEET_LIMIT } from "@/constant/tweet";
 import { ResultTweet } from "@/types/tweetTypes";
 import { apiInstance } from "@/utils/api";
-import { requestFetchInfiniteBookmarkedTweets, requestFetchInfiniteComments, requestFetchInfiniteLikedTweets, requestFetchInfiniteOwnerTweets, requestFetchInfiniteTweets, requestGetTweets } from "@/utils/api/request";
+import { requestFetchInfiniteBookmarkedTweets, requestFetchInfiniteComments, requestFetchInfiniteLikedTweets, requestFetchInfiniteNotifications, requestFetchInfiniteOwnerTweets, requestFetchInfiniteTweets, requestGetTweets } from "@/utils/api/request";
 import { getToken } from "@/utils/auth/cookies";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
@@ -61,6 +61,20 @@ export const useInfiniteComments = (tweet_id: string) => {
         }),
         getNextPageParam: (lastPage, allPages) => {
             if (lastPage?.result?.comments.length === 0) return undefined;
+            return allPages.length + 1;
+        }
+    })
+}
+
+// Notifications
+export const useInfiniteNotifications = () => {
+    return useInfiniteQuery({
+        queryKey: ['notifycations'],
+        queryFn: ({ pageParam = 1 }) => requestFetchInfiniteNotifications({
+            pageParam,
+        }),
+        getNextPageParam: (lastPage, allPages) => {
+            if (lastPage?.result?.notifications.length === 0) return undefined;
             return allPages.length + 1;
         }
     })

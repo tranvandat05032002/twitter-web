@@ -30,6 +30,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Comment, CommentForm, CommentWithReplies, EditCommentPayload, ResultComment } from "@/types/commentTypes";
 import { COMMENT_LIMIT, TWEET_LIMIT } from "@/constant/tweet";
 import { ResultStory } from "@/types/storyTypes";
+import { ResultNotify } from "@/types/notifyTypes";
 export const requestRegister = async (registerInfo: RegisterForm) => {
   try {
     const { data } = await apiInstance.post<TRequestToken<IToken>>(
@@ -848,3 +849,23 @@ export const requestUnFollow = async ({ follow_user_id }: { follow_user_id: stri
     throw error
   }
 }
+
+
+// Notification
+export const requestFetchInfiniteNotifications = async ({ pageParam = 1 }: { pageParam: number }) => {
+  const { access_token } = getToken()
+  if (!pageParam) return
+  try {
+    const response = await apiInstance.get(`/notifications?limit=${12}&page=${pageParam}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+    if (response.status === 200) {
+      return response.data as ResultNotify
+    }
+  } catch (error) {
+    throw error
+  }
+};

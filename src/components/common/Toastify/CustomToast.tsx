@@ -23,7 +23,7 @@ export const CustomToast: FC<CustomToastProps> = ({ closeToast, notify }) => {
                             href={`/profile/v1?profile_username=${data.username}`}
                         > */}
                 <div className="w-full flex items-start justify-between space-x-2">
-                    <div className="w-10 h-10 mt-[6px] overflow-hidden rounded-full group relative">
+                    <div className="w-10 h-10 mt-[6px] rounded-full group relative">
                         <div className="absolute bottom-0 right-0 w-3 h-3 bg-[#1d9bf0] rounded-full border-2 border-white translate-x-1/3 translate-y-1/3 z-100 debug-css" />
                         <Avatar src={userSender?.avatar ? userSender?.avatar : DEFAULT_IMAGE} sx={{ width: "100%", height: "100%" }} />
                     </div>

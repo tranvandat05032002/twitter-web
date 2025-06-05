@@ -1,4 +1,5 @@
 'use client'
+import useNotificationStore from '@/store/useNotification';
 import { NotifyRes } from '@/types/notifyTypes';
 import socket from '@/utils/socket'
 import React from 'react'
@@ -6,9 +7,14 @@ import { toast } from 'react-toastify'
 import { CustomToast } from '../common/Toastify/CustomToast';
 
 export default function SocketNotificationListener() {
+    const increaseUnread = useNotificationStore(state => state.increaseUnread)
+    const setUnread = useNotificationStore(state => state.setUnread)
 
     React.useEffect(() => {
         socket.on('receiver_notification', (notify: NotifyRes) => {
+            // Tăng số lượng thông báo lên
+            increaseUnread()
+
             toast(<CustomToast notify={notify} />, {
                 position: "bottom-left",
                 autoClose: 6000,
@@ -21,8 +27,14 @@ export default function SocketNotificationListener() {
             });
         })
 
+        socket.on('notify:update', (newUnreadCount: { unread_count: number }) => {
+            console.log("newUnreadCount ---> ", newUnreadCount)
+            setUnread(newUnreadCount.unread_count);
+        });
+
         return () => {
             socket.off('receiver_notification')
+            socket.off('notify:update')
         }
     }, [])
 

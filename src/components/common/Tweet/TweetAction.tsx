@@ -5,9 +5,12 @@ import React from 'react';
 import { LuShare } from 'react-icons/lu';
 import { FaHeart } from "react-icons/fa";
 import { ModalType, useEvent } from '@/store/useEven';
+import socket from '@/utils/socket';
+import { useMe } from '@/context/UserContext';
 
 const TweetAction = ({ tweet, onOpenDetail, isDetaild }: { tweet: Tweet, onOpenDetail?: () => void, isDetaild: Boolean }) => {
     let { likes, comment_count, bookmarks, _id, liked, bookmarked, comments: commentSize } = tweet
+    const { user: currentUser } = useMe()
     const { setActiveModal, activeModal } = useEvent((state) => state);
     if (comment_count === undefined) {
         comment_count = 0
@@ -21,8 +24,16 @@ const TweetAction = ({ tweet, onOpenDetail, isDetaild }: { tweet: Tweet, onOpenD
             toggleLike({
                 tweet_id: _id,
                 liked,
-                like_id: data?.like_id ?? tweet.like_id
+                like_id: tweet.like_id ?? data?.like_id
             })
+
+            if (!liked && currentUser?._id !== tweet.user_id) {
+                socket.emit('like_tweet', {
+                    sender_id: currentUser?._id,
+                    receiver_id: tweet.user_id,
+                    tweet_id: _id
+                })
+            }
         }
     }
 

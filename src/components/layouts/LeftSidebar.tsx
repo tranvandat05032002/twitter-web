@@ -15,6 +15,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useLogoutUser } from "@/hooks/users/useMutation";
 import Image from "next/image";
 import { Avatar } from "@mui/material";
+import useNotificationStore from "@/store/useNotification";
 
 interface ILeftSidebar {
   userInfo: IUser | null;
@@ -33,6 +34,7 @@ const LeftSidebar: React.FC<ILeftSidebar> = (props) => {
     mutateLogout();
     router.push(routers.signInPage);
   };
+  const unreadCount = useNotificationStore(state => state.unreadCount)
   return (
     <section className="border-r-[0.5px] w-72 h-full fixed border-borderGrayPrimary px-2 py-2">
       <div className="px-1">
@@ -50,7 +52,14 @@ const LeftSidebar: React.FC<ILeftSidebar> = (props) => {
             )}`}
           >
             <item.icon />
-            <p>{item.title}</p>
+            <div className="relative flex items-center gap-2">
+              <p>{item.title}</p>
+              {item.title === "Thông báo" && unreadCount > 0 && (
+                <span className="bg-red-500 text-white text-xs px-2 rounded-full font-bold">
+                  {unreadCount}
+                </span>
+              )}
+            </div>
           </Link>
         ))}
         <Link
