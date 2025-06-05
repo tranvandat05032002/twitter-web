@@ -37,6 +37,7 @@ import {
   requestToggleBookmark,
   requestFollow,
   requestUnFollow,
+  requestDeleteTweet,
 } from "@/utils/api/request";
 import { removeEmailCookies, removeOTPToken } from "@/utils/auth/cookies";
 import socket from "@/utils/socket";
@@ -163,7 +164,7 @@ export const useToggleLike = () => {
   return useMutation({
     mutationFn: requestToggleLike,
     onSuccess: () => {
-      const keysToInvalidate = ["tweets", "owner_tweets", "liked_tweets"]
+      const keysToInvalidate = ["tweets", "owner_tweets", "liked_tweets", "user_tweets"]
       keysToInvalidate.forEach((key) => {
         queryClient.invalidateQueries({ queryKey: [key] })
       })
@@ -178,7 +179,7 @@ export const useToggleBookmark = () => {
   return useMutation({
     mutationFn: requestToggleBookmark,
     onSuccess: () => {
-      const keysToInvalidate = ["tweets", "owner_tweets", "bookmarked_tweets"]
+      const keysToInvalidate = ["tweets", "owner_tweets", "bookmarked_tweets", "user_tweets"]
       keysToInvalidate.forEach((key) => {
         queryClient.invalidateQueries({ queryKey: [key] })
       })
@@ -249,6 +250,20 @@ export const useDeleteStory = () => {
     retry: 2,
     onSuccess(data) {
       queryClient.invalidateQueries({ queryKey: ["stories"], exact: true })
+    },
+  });
+}
+
+export const useDeleteTweet = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (tweet_id: string) => requestDeleteTweet(tweet_id),
+    retry: 2,
+    onSuccess: () => {
+      const keysToInvalidate = ["tweets", "owner_tweets"];
+      keysToInvalidate.forEach((key) => {
+        queryClient.invalidateQueries({ queryKey: [key] })
+      })
     },
   });
 }

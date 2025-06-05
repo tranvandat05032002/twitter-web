@@ -6,12 +6,9 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useProfileStore } from '@/store/useProfile';
 import { useGetProfile } from '@/hooks/users/useQuery';
 import { decodedUsername, formatDateDDMMYYYY, formatDateToVietnamese, formatMonthYear } from '@/utils/handlers';
-import Link from 'next/link';
-import ButtonFollow from '../common/Button/ButtonFollow';
-import ModalSendChat from '../common/portal/ModalSendChat';
 import Image from 'next/image';
 import { DEFAULT_IMAGE } from '@/constant/constants';
-import { useMe } from '@/context/UserContext';
+import ButtonFollowingHandle from '../common/Button/ButtonFollowingHandle';
 interface IGetProfile {
     children: React.ReactNode
 }
@@ -40,7 +37,6 @@ const GetProfile: React.FC<IGetProfile> = ({ children }) => {
         }
     }, [isSuccess]);
 
-    console.log("Profile ---> ", userProfile)
     return (
         <React.Fragment>
             <div className='flex-initial w-[600px] border-r-[0.5px] border-borderGrayPrimary pt-[3px] border'>
@@ -59,30 +55,34 @@ const GetProfile: React.FC<IGetProfile> = ({ children }) => {
                             </div>
                         </div>
                     </StickyNav>
-                    <div className="flex flex-col h-screen overflow-auto">
-                        <div className="relative w-full h-[200px] z-0">
+                    <div className="flex flex-col">
+                        <div className="relative w-full z-0">
                             <div className="relative w-full h-64">
                                 <div className="absolute w-full h-full top-0 left-0 bg-borderGrayPrimary">
                                     {/* {userProfile.cover_photo && ( */}
-                                    <Image
-                                        src={(userProfile.cover_photo !== "" ? userProfile.cover_photo : DEFAULT_IMAGE) as string}
-                                        alt="Ảnh bìa hồ sơ"
-                                        layout="fill"
-                                        objectFit="cover"
-                                        className="cursor-pointer"
-                                    />
+                                    {userProfile?.cover_photo && (
+                                        <Image
+                                            src={userProfile.cover_photo || DEFAULT_IMAGE}
+                                            alt="Ảnh bìa hồ sơ"
+                                            layout="fill"
+                                            objectFit="cover"
+                                            className="cursor-pointer"
+                                        />
+                                    )}
                                     {/* )} */}
                                 </div>
                             </div>
                             <div className="w-[134px] h-[134px] absolute bottom-0 left-4 translate-y-1/2 cursor-pointer">
                                 <div className="group absolute inset-0 rounded-full">
-                                    <Image
-                                        src={(userProfile.avatar !== "" ? userProfile.avatar : DEFAULT_IMAGE) as string}
-                                        alt={userProfile.name}
-                                        layout="fill"
-                                        objectFit="cover"
-                                        className="rounded-full border-4 border-black"
-                                    />
+                                    {userProfile?.avatar && (
+                                        <Image
+                                            src={userProfile.avatar || DEFAULT_IMAGE}
+                                            alt={userProfile.name || "avatar"}
+                                            layout="fill"
+                                            objectFit="cover"
+                                            className="rounded-full border-4 border-black"
+                                        />
+                                    )}
                                     <div className="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 rounded-full transition-opacity"></div>
                                 </div>
                             </div>
@@ -93,7 +93,9 @@ const GetProfile: React.FC<IGetProfile> = ({ children }) => {
                                     <button type="button" className="focus:outline-none inline-flex items-center text-center text-white hover:bg-textPinkPrimary/20 border border-textPinkPrimary font-medium rounded-full text-[15px] px-4 py-1">
                                         Chat
                                     </button>
-                                    <ButtonFollow>Follow</ButtonFollow>
+                                    <div>
+                                        <ButtonFollowingHandle data={userProfile} follwed={userProfile.is_following ?? false} />
+                                    </div>
                                     <div className="p-2 w-max h-max rounded-full cursor-pointer bg-iconBackgroundGray hover:bg-iconHoverBackgroundGray">
                                         <DotsIcon></DotsIcon>
                                     </div>
@@ -134,11 +136,11 @@ const GetProfile: React.FC<IGetProfile> = ({ children }) => {
                                     <div className="flex">
                                         <div className="mr-4 flex items-center gap-x-[2px]">
                                             <p>100</p>
-                                            <span className="text-textGray">Following</span>
+                                            <span className="text-textGray">Đang theo dõi</span>
                                         </div>
                                         <div className="flex items-center gap-x-[2px]">
                                             <p>112</p>
-                                            <span className="text-textGray">Followers</span>
+                                            <span className="text-textGray">Người theo dõi</span>
                                         </div>
                                     </div>
                                 </div>
@@ -157,7 +159,7 @@ const GetProfile: React.FC<IGetProfile> = ({ children }) => {
                                     </Link>
                                 </div> */}
                             </div>
-                            <div className="py-4 border-y-[0.5px] border-borderGrayPrimary">
+                            <div className="flex-1 overflow-auto py-4 border-y-[0.5px] border-borderGrayPrimary">
                                 {children}
                             </div>
                         </div>

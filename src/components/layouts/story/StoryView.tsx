@@ -37,9 +37,6 @@ const StoryView = ({ user_id }: { user_id: string }) => {
     const [showViewersList, setShowViewersList] = React.useState(false);
     const [visible, setVisible] = React.useState(false);
     const [isResetProgress, setIsResetProgress] = React.useState(false);
-
-
-
     const user = React.useMemo(() => storyGroup?.find((id) => id._id === user_id), [storyGroup, user_id]);
     const currentStoryGroup = React.useMemo(() => {
         return user?.stories?.[storyIndex] as Story;

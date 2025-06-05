@@ -7,15 +7,12 @@ import socket from '@/utils/socket';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import useDebounce from '@/hooks/useDebounce';
-import { useMe } from '@/context/UserContext';
-import { useGetTweetById } from '@/hooks/users/useQuery';
 interface CommentInputFormProps {
     tweetId: string;
     tweetCreatedBy?: string;
     parentId: string | null;
     currentUser: IUser | null;
     setComments: React.Dispatch<React.SetStateAction<CommentWithReplies[]>>;
-    comments: CommentWithReplies[];
     commentRef: React.MutableRefObject<HTMLInputElement | null>;
     defaultValue?: string;
     isEdit?: boolean;
@@ -31,7 +28,6 @@ export const CommentParentInputForm: React.FC<CommentInputFormProps> = ({
     parentId,
     currentUser,
     setComments,
-    comments,
     commentRef,
     defaultValue,
     isEdit,

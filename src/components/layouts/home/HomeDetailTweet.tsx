@@ -138,7 +138,7 @@ const HomeDetailTweet = ({
                                 <div className="flex-1">
                                     {tweet._id &&
                                         <CommentParentInputForm
-                                            key={tweet.id}
+                                            key={tweet._id}
                                             tweetId={tweet._id}
                                             tweetCreatedBy={tweet.user_id}
                                             isChild={false}

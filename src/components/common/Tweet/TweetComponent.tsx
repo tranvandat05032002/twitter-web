@@ -1,5 +1,6 @@
 import { DotIcon, DotsIcon } from '@/components/SingleUseComponents/Icon';
 import { optionsArea } from '@/constant/tweet';
+import { useMe } from '@/context/UserContext';
 import { Tweet } from '@/types/tweetTypes';
 import { GridImages } from '@/utils/handlers';
 import { Avatar } from '@mui/material';
@@ -8,9 +9,20 @@ import Link from 'next/link';
 import React from 'react';
 import ImagePreview from './ImagePreview';
 import TweetAction from './TweetAction';
+import Tippy from "@tippyjs/react/headless";
+import { FaUnlink } from 'react-icons/fa';
+import { RiDeleteBin5Fill } from 'react-icons/ri';
+import { useDeleteTweet } from '@/hooks/users/useMutation';
 
 const TweetComponent = ({ tweet, time, onOpenDetail }: { tweet: Tweet, time: string, onOpenDetail: () => void }) => {
     const [showPreviewImage, setShowPreviewImage] = React.useState(false)
+    const [visible, setVisible] = React.useState(false);
+    const { user: currentUser } = useMe()
+    const isMe = String(tweet.user_id) === String(currentUser?._id);
+    const { mutate: deleteTweet, isSuccess } = useDeleteTweet()
+    const handleDeleteTweet = (tweet_id: string) => {
+        deleteTweet(tweet_id)
+    }
     return (
         <div
             className="p-4 pb-2 border-b-[0.25px] border-borderGrayPrimary flex space-x-4"
@@ -35,9 +47,49 @@ const TweetComponent = ({ tweet, time, onOpenDetail }: { tweet: Tweet, time: str
                                     </Link>
                                     <p>{tweet.user.username}</p>
                                 </div>
-                                <div className="cursor-pointer hover:bg-bgHoverBlue group rounded-full">
-                                    <DotsIcon className="text-textGray group-hover:text-textBlue "></DotsIcon>
-                                </div>
+                                {isMe &&
+                                    <Tippy
+                                        interactive
+                                        placement='bottom'
+                                        offset={[20, 12]}
+                                        visible={visible}
+                                        onClickOutside={() => setVisible(false)}
+                                        render={(attrs) => (
+                                            <div
+                                                className="bg-black text-white p-2 rounded-lg shadow-xl border-[0.5px] border-borderGraySecond"
+                                                tabIndex={-1}
+                                                {...attrs}
+                                            >
+                                                <div className='flex items-center space-x-2'>
+                                                    <FaUnlink />
+                                                    <button
+                                                        type="button"
+                                                        className="w-full text-left py-2 text-sm cursor-pointer hover:bg-iconBackgroundGray"
+                                                    // onClick={handleOpenEditComment}
+                                                    >
+                                                        Sao chép liên kết
+                                                    </button>
+                                                </div>
+
+                                                <div className='flex items-center space-x-2'>
+                                                    <RiDeleteBin5Fill />
+                                                    <button
+                                                        type="button"
+                                                        className="w-full text-left py-2 text-sm cursor-pointer hover:bg-iconBackgroundGray"
+                                                        onClick={() => handleDeleteTweet(tweet._id)}
+                                                    >
+                                                        Xóa
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )}
+                                    >
+                                        <div onClick={() => setVisible(v => !v)} className="cursor-pointer hover:bg-bgHoverBlue group rounded-full">
+                                            <DotsIcon className="text-textGray group-hover:text-textBlue "></DotsIcon>
+                                        </div>
+                                    </Tippy>
+
+                                }
                             </div>
                         </div>
                         <div className="flex items-center space-x-1">

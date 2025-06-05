@@ -320,9 +320,15 @@ export const requestResetPassword = async (
 
 export const requestGetUserProfile = async (username: string) => {
   if (!username) return null
+  const { access_token } = getToken();
   try {
     const response = await apiInstance.get<TRequestProfile<IUser>>(
-      `/users${username}`
+      `/users${username}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      },
+    }
     );
     if (response.status === 200) {
       return response.data.result;
@@ -528,6 +534,38 @@ export const requestFetchInfiniteOwnerTweets = async ({ pageParam = 1 }) => {
     throw error
   }
 };
+
+export const requestFetchInfiniteTweetsByUser = async ({ pageParam, user_id }: { pageParam: number, user_id: string }) => {
+  const { access_token } = getToken()
+  try {
+    const response = await apiInstance.get(`/tweet/user/${user_id}?limit=${TWEET_LIMIT}&page=${pageParam}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+    if (response.status === 200) {
+      return response.data.result as ResultTweet
+    }
+  } catch (error) {
+    throw error
+  }
+};
+
+export const requestDeleteTweet = async (tweet_id: string) => {
+  const { access_token } = getToken()
+  try {
+    const response = await apiInstance.delete(`/tweet/${tweet_id}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      }
+    });
+    return response.data
+  } catch (error) {
+    throw error
+  }
+}
 
 export const requestFetchInfiniteLikedTweets = async ({ pageParam = 1 }) => {
   const { access_token } = getToken()

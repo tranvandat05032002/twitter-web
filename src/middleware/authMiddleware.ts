@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 export default function authRedirectMiddleware(req: NextRequest) {
     const pathname = req.nextUrl.pathname
     const access_token = req.cookies.get('twitter_access_token')?.value
+    // TODO: fix lại path local: find-account, vefify,.....
     const isPublicPath =
         pathname === '/' || pathname === '/sign-up' || pathname === '/sign-in' || pathname.startsWith('/_next')
 

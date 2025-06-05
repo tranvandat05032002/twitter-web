@@ -81,7 +81,7 @@ const LeftNotify = () => {
             <div className="py-4 border-t-[1px] border-borderGrayPrimary">
                 {
                     notifications && notifications?.length > 0 && notifications.map((notify) => (
-                        <div className="w-full flex items-center px-2 py-4 cursor-pointer hover:bg-gray-100/10">
+                        <div key={notify._id} className="w-full flex items-center px-2 py-4 cursor-pointer hover:bg-gray-100/10">
                             <div className="w-full">
                                 {/* <Link
                             href={`/profile/v1?profile_username=${data.username}`}

@@ -1,7 +1,7 @@
 import { TWEET_LIMIT } from "@/constant/tweet";
 import { ResultTweet } from "@/types/tweetTypes";
 import { apiInstance } from "@/utils/api";
-import { requestFetchInfiniteBookmarkedTweets, requestFetchInfiniteComments, requestFetchInfiniteLikedTweets, requestFetchInfiniteNotifications, requestFetchInfiniteOwnerTweets, requestFetchInfiniteTweets, requestGetTweets } from "@/utils/api/request";
+import { requestFetchInfiniteBookmarkedTweets, requestFetchInfiniteComments, requestFetchInfiniteLikedTweets, requestFetchInfiniteNotifications, requestFetchInfiniteOwnerTweets, requestFetchInfiniteTweets, requestFetchInfiniteTweetsByUser, requestGetTweets } from "@/utils/api/request";
 import { getToken } from "@/utils/auth/cookies";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
@@ -25,6 +25,20 @@ export const useInfiniteOwnerTweets = () => {
             if (lastPage?.tweet.tweets.length === 0) return undefined;
             return allPages.length + 1;
         },
+    });
+};
+export const useInfiniteUserTweets = (user_id: string) => {
+    return useInfiniteQuery({
+        queryKey: ['user_tweets'],
+        queryFn: ({ pageParam = 1 }) => requestFetchInfiniteTweetsByUser({
+            pageParam,
+            user_id: user_id
+        }),
+        getNextPageParam: (lastPage, allPages) => {
+            if (lastPage?.tweet.tweets.length === 0) return undefined;
+            return allPages.length + 1;
+        },
+        enabled: !!user_id
     });
 };
 
