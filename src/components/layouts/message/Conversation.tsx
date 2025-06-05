@@ -5,14 +5,12 @@ import { StickyNav } from '@/components/common';
 import { useFetchMe, useGetMessage, useGetProfileUserId } from '@/hooks/users/useQuery';
 import { useChat } from '@/store/useChat';
 import { Avatar } from '@mui/material';
-import { v4 as uuidV4 } from "uuid"
 import React from 'react';
-import Picker from '@emoji-mart/react'
 import Message from './Message';
 import { useAddMessage } from '@/hooks/users/useMutation';
 import { IMessage, MessageArray, NewMessageRequestType } from '@/types/chatTypes';
 import { IUser } from '@/types/userTypes';
-import SimpleBar from 'simplebar-react';
+import { FaMapMarkerAlt } from "react-icons/fa";
 import Emoji from '@/components/common/Emoji/Emoji';
 
 const Conversation = ({ user, receiverMessage, setSendMessage }: { user: IUser, receiverMessage: IMessage, setSendMessage: React.Dispatch<React.SetStateAction<IMessage>> }) => {
@@ -35,22 +33,24 @@ const Conversation = ({ user, receiverMessage, setSendMessage }: { user: IUser, 
     setMessages(getMessages as MessageArray)
   }, [getMessages, setMessages])
   const handleChangeNewMessage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.trim();
-    if (value === '') {
-      setShowSend(false);
-    }
-    else {
-      setShowSend(true)
-    }
-    setNewMessage(e.target.value);
+    const value = e.target.value;
+    // if (value === '') {
+    //   setShowSend(false);
+    // }
+    // else {
+    //   setShowSend(true)
+    // }
+    setNewMessage(value);
+    setShowSend(value.trim() !== "");
   }
   const handleSend = () => {
-    if (newMessage === "") return;
+    if (newMessage.trim() === "") return;
     const dateSend = new Date();
     const newMessageObj: NewMessageRequestType = {
       chat_id: currentChat._id,
       sender_id: senderId,
       text: newMessage,
+      isLike: false,
       created_at: dateSend,
       updated_at: dateSend
     }
@@ -94,6 +94,53 @@ const Conversation = ({ user, receiverMessage, setSendMessage }: { user: IUser, 
     }, 0);
   };
 
+  const handleShareLocation = () => {
+    if (!navigator.geolocation) {
+      alert("Trình duyệt của bạn không hỗ trợ chia sẻ vị trí.");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        const locationMessage = `https://www.google.com/maps?q=${latitude},${longitude}`;
+
+        const dateSend = new Date();
+        const newMessageObj: NewMessageRequestType = {
+          chat_id: currentChat._id,
+          sender_id: senderId,
+          text: locationMessage,
+          created_at: dateSend,
+          updated_at: dateSend
+        };
+
+        addNewMessage(newMessageObj);
+        const receiverId = currentChat.members.find((id) => id !== senderId);
+        setSendMessage({ ...newMessageObj, receiver_id: receiverId as string });
+      },
+      (error) => {
+        alert("Không thể lấy vị trí của bạn.");
+        console.error(error);
+      }
+    );
+  };
+
+  const handleLikeIcon = () => {
+    const dateSend = new Date();
+    const newMessageObj: NewMessageRequestType = {
+      chat_id: currentChat._id,
+      sender_id: senderId,
+      text: "",
+      isLike: true,
+      created_at: dateSend,
+      updated_at: dateSend,
+    };
+
+    addNewMessage(newMessageObj);
+    const receiverId = currentChat.members.find((id) => id !== senderId);
+    setSendMessage({ ...newMessageObj, receiver_id: receiverId as string });
+  }
+
   return (
     <React.Fragment>
       {currentChat._id ?
@@ -128,9 +175,10 @@ const Conversation = ({ user, receiverMessage, setSendMessage }: { user: IUser, 
               </div>
             </div>
           </StickyNav>
-          <SimpleBar className="flex-1 px-[8px] pt-2 overflow-y-auto">
-            {messages && messages?.map((message, index) => <Message key={index} message={message} scroll={scroll as React.LegacyRef<HTMLDivElement>} currentUserId={senderId} />)}
-          </SimpleBar>
+          <div className="flex-1 px-[8px] pt-2 overflow-y-auto">
+            {messages && messages?.map((message, index) =>
+              <Message key={index} message={message} scroll={scroll as React.LegacyRef<HTMLDivElement>} currentUserId={senderId} />)}
+          </div>
           {!messages || messages?.length === 0 &&
             <div className='h-full px-[8px] flex items-center justify-center'>
               <p className="text-center text-textGray my-4">Hãy bắt đầu cuộc trò chuyện bằng cách nhắn tin</p>
@@ -143,8 +191,8 @@ const Conversation = ({ user, receiverMessage, setSendMessage }: { user: IUser, 
               <BoxIcon className={"p-[3px]"}>
                 <ImagesIcon className='h-[21px] w-[21px]'></ImagesIcon>
               </BoxIcon>
-              <BoxIcon className={"p-[3px]"}>
-                <StickerSlimeIcon className='h-[21px] w-[21px]'></StickerSlimeIcon>
+              <BoxIcon className={"p-[3px]"} onClick={handleShareLocation} title="Chia sẻ vị trí">
+                <FaMapMarkerAlt className='h-[21px] w-[21px]'></FaMapMarkerAlt>
               </BoxIcon>
               <BoxIcon className={"p-[3px]"}>
                 <GifIcon className='h-[21px] w-[21px]'></GifIcon>
@@ -166,11 +214,12 @@ const Conversation = ({ user, receiverMessage, setSendMessage }: { user: IUser, 
               </BoxIcon>
               {/* <div className="absolute bottom-full mb-2 z-10 right-0 border border-red-500"><Picker onEmojiSelect={console.log} /></div> */}
             </div>
-            {showSend ? <BoxIcon className={"p-2 text-textBlue"}>
-              <PaperAirplaneIcon onClick={handleSend} className='h-[21px] w-[21px]' />
-            </BoxIcon> : <BoxIcon className={"p-2 text-textBlue"}>
-              <LikeIcon className='h-[21px] w-[21px]'></LikeIcon>
-            </BoxIcon>}
+            {showSend ?
+              <BoxIcon className={"p-2 text-textBlue"}>
+                <PaperAirplaneIcon onClick={handleSend} className='h-[21px] w-[21px]' />
+              </BoxIcon> : <BoxIcon className={"p-2 text-textBlue"} onClick={handleLikeIcon}>
+                <LikeIcon className='h-[21px] w-[21px]'></LikeIcon>
+              </BoxIcon>}
           </div>
         </div> :
         <div className='flex-1 h-screen flex justify-center items-center text-textGray'><span>Vui lòng chọn người chat</span></div>}

@@ -31,6 +31,7 @@ export interface IMessage {
     text: string
     created_at?: string | Date,
     updated_at?: string | Date,
+    isLike?: boolean | false
 }
 export type MessageArray = IMessage[]
 export type GetMessagesResponseType = {
