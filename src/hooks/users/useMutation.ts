@@ -2,7 +2,7 @@
 
 import { ForgotForm } from "@/app/users/find-account/page";
 import { ResetPasswordForm } from "@/app/users/reset-password/page";
-import { NewMessageRequestType } from "@/types/chatTypes";
+import { CreateChatForm, NewMessageRequestType } from "@/types/chatTypes";
 import { Comment, CommentForm, EditCommentPayload } from "@/types/commentTypes";
 import { Mediatype, Tweet, TweetForm } from "@/types/tweetTypes";
 import {
@@ -38,10 +38,12 @@ import {
   requestFollow,
   requestUnFollow,
   requestDeleteTweet,
+  requestCreateChat,
 } from "@/utils/api/request";
 import { removeEmailCookies, removeOTPToken } from "@/utils/auth/cookies";
 import socket from "@/utils/socket";
 import { UseMutationResult, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 export const useRegister = () =>
   useMutation({
@@ -260,11 +262,19 @@ export const useDeleteTweet = () => {
     mutationFn: (tweet_id: string) => requestDeleteTweet(tweet_id),
     retry: 2,
     onSuccess: () => {
+      toast.success("Xóa story thành công", {
+        pauseOnHover: false,
+      });
       const keysToInvalidate = ["tweets", "owner_tweets"];
       keysToInvalidate.forEach((key) => {
         queryClient.invalidateQueries({ queryKey: [key] })
       })
     },
+    onError: () => {
+      toast.error("Xóa story không thành công", {
+        pauseOnHover: false,
+      });
+    }
   });
 }
 
@@ -307,6 +317,17 @@ export const useUnFollow = (options?: {
         queryClient.invalidateQueries({ queryKey: ["user", options.query], exact: true });
       }
       options?.onSuccess?.(data);
+    },
+  });
+}
+
+// Chat
+export const useCreateChat = (sender_id: string) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: requestCreateChat,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["chats", sender_id], exact: true })
     },
   });
 }

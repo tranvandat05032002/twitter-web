@@ -5,7 +5,7 @@ export default function authRedirectMiddleware(req: NextRequest) {
     const access_token = req.cookies.get('twitter_access_token')?.value
     // TODO: fix lại path local: find-account, vefify,.....
     const isPublicPath =
-        pathname === '/' || pathname === '/sign-up' || pathname === '/sign-in' || pathname.startsWith('/_next')
+        pathname === '/' || pathname === '/sign-up' || pathname === '/sign-in' || pathname === '/verify' || pathname.startsWith('/users') || pathname.startsWith('/_next')
 
     if (!access_token && !isPublicPath) {
         const loginUrl = req.nextUrl.clone()

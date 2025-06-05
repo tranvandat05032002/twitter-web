@@ -236,7 +236,7 @@ export default function HomeCreatePost({ onClose, user }: { onClose: () => void,
                                                 )}
                                             />
                                         </div>
-                                        <Emoji onSelectEmoji={handleAddEmoji}></Emoji>
+                                        <Emoji className='hover:bg-iconBackgroundGray' onSelectEmoji={handleAddEmoji}></Emoji>
                                     </div>
                                     {showFormAddImage &&
                                         <div className="w-full max-h-[260px] h-[260px] bg-black flex items-center justify-center rounded-xl border-[0.5px] border-borderGrayPrimary">

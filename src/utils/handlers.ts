@@ -1,5 +1,5 @@
 import { IOAuthGoogle } from "@/types/userTypes";
-import { differenceInDays, differenceInHours, differenceInMinutes, format, formatISO, isThisWeek, isToday, isValid, isYesterday, parse } from "date-fns";
+import { differenceInDays, differenceInHours, differenceInMinutes, format, formatISO, isThisWeek, isToday, isValid, isYesterday, parse, parseISO } from "date-fns";
 import { vi } from 'date-fns/locale';
 import { getToken } from "./auth/cookies";
 import { v4 as uuidv4 } from "uuid"
@@ -259,3 +259,30 @@ export function GridImages(imageCount: number): string {
   }
   return gridClasses
 }
+
+export const formatOflineTime = (dateString: string): string => {
+  const dateFmt = parseISO(dateString);
+
+  if (!isValid(dateFmt)) {
+    return "";
+  }
+
+  const now = new Date();
+  const minutes = differenceInMinutes(now, dateFmt);
+  const hours = differenceInHours(now, dateFmt);
+  const days = differenceInDays(now, dateFmt);
+
+  if (minutes < 60) {
+    return `${minutes} phút`;
+  }
+
+  if (hours < 24) {
+    return `${hours} giờ`;
+  }
+
+  if (days < 7) {
+    return `${days} ngày`;
+  }
+
+  return ""; // ẩn nếu quá 7 ngày
+};

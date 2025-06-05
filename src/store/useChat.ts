@@ -35,7 +35,8 @@ export const useChat = create<IConversation>((set) => ({
         _id: "",
         members: [],
         created_at: "",
-        updated_at: ""
+        updated_at: "",
+        member_details: []
     },
     setCurrentChat: (chat: ICreateMember) => set({
         currentChat: chat

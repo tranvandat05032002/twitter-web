@@ -6,8 +6,9 @@ import data from '@emoji-mart/data';
 import Tippy from '@tippyjs/react';
 interface EmojiPickerProps {
     onSelectEmoji: (emoji: string) => void;
+    className?: string
 }
-const Emoji: React.FC<EmojiPickerProps> = ({ onSelectEmoji }) => {
+const Emoji: React.FC<EmojiPickerProps> = ({ onSelectEmoji, className }) => {
     const [showPicker, setShowPicker] = React.useState(false);
     const handleEmojiSelect = (emoji: any) => {
         onSelectEmoji(emoji.native)
@@ -42,7 +43,7 @@ const Emoji: React.FC<EmojiPickerProps> = ({ onSelectEmoji }) => {
                 </div>
             )}
         >
-            <div className='p-2 rounded-full cursor-pointer hover:bg-iconBackgroundGray'>
+            <div className={`p-2 rounded-full cursor-pointer ${className}`}>
                 <FaRegSmile title='Emoji'
                     className="w-[25px] h-[25px] cursor-pointer"
                     onClick={() => handleShowEmoji(showPicker)}

@@ -1,16 +1,26 @@
 // Chat type
-export interface ICreateMember {
-    _id: string,
-    members: string[],
-    created_at: string,
-    updated_at: string
+export interface IMemberDetail {
+    _id: string;
+    name: string;
+    avatar: string;
+    last_online: string; // hoặc có thể là Date nếu bạn dùng định dạng ngày kiểu JS
 }
+
+export interface ICreateMember {
+    _id: string;
+    members: string[];
+    created_at: string;
+    updated_at: string;
+    member_details: IMemberDetail[];
+}
+
 export type GetChatResponseType = {
     result: ICreateMember[]
 };
 export interface IUserSocket {
     userId: string,
-    socketId: string
+    socketId: string,
+    lastOnline?: string
 }
 // Message type
 export interface IMessage {
@@ -31,6 +41,10 @@ export type AddNewMessageResponseType = {
     result: IMessage
 }
 
+export interface CreateChatForm {
+    sender_id: string;
+    receiver_id: string;
+}
 
 // export interface IMessageReceiver extends NewMessageRequestType {
 //     receiverId: string

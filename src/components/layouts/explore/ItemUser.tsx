@@ -6,7 +6,7 @@ import { Avatar } from '@mui/material';
 import React from 'react';
 import { routers } from "@/utils/router/routers";
 import ButtonFollow from "@/components/common/Button/ButtonFollow";
-import { useFollow, useUnFollow } from "@/hooks/users/useMutation";
+import { useCreateChat, useFollow, useUnFollow } from "@/hooks/users/useMutation";
 import Link from "next/link";
 import { useSearchExplore } from "@/store/useSearchExplore";
 import { useMe } from "@/context/UserContext";
@@ -23,11 +23,21 @@ const ItemUser = ({ miniItem, isFollow, data, userInfo, isMe }: IItemUser) => {
     const { user: currentUser } = useMe();
     const [isProcessing, setIsProcessing] = React.useState<boolean>(false);
     const { searchValue } = useSearchExplore((state) => state)
+    const { mutate: createChat } = useCreateChat(currentUser?._id as string);
     const { mutate: followUser, isLoading: isLoadingFollow } = useFollow({
         query: searchValue,
-        sender_id: currentUser?._id,    // sender_id
-        receiver_id: data._id,           //receiver_id
-        onSuccess: () => setIsFollowed(true)
+        sender_id: currentUser?._id,
+        receiver_id: data._id,
+        onSuccess: () => {
+            setIsFollowed(true)
+            // Craete room
+            if (currentUser?._id && data._id) {
+                createChat({
+                    sender_id: currentUser._id,
+                    receiver_id: data._id,
+                });
+            }
+        }
     })
     const { mutate: unFollowUser, isLoading: isLoadingUnFollow } = useUnFollow({
         query: searchValue,

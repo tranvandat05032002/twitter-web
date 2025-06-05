@@ -28,7 +28,6 @@ export default function SocketNotificationListener() {
         })
 
         socket.on('notify:update', (newUnreadCount: { unread_count: number }) => {
-            console.log("newUnreadCount ---> ", newUnreadCount)
             setUnread(newUnreadCount.unread_count);
         });
 

@@ -25,6 +25,7 @@ export type IUser = {
   avatar?: string;
   cover_photo?: string;
   is_following?: boolean;
+  last_online?: string
 }
 
 export type UserSearchType = Omit<IUser, 'created_at' | 'updated_at' | 'verify'>

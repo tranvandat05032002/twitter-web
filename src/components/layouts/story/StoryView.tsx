@@ -100,6 +100,24 @@ const StoryView = ({ user_id }: { user_id: string }) => {
         })
     }
 
+    const handleCopyStoryLink = () => {
+        const link = `${window.location.origin}/stories/${user_id}`;
+        if (!navigator.clipboard) {
+            toast.error("Trình duyệt không hỗ trợ sao chép liên kết", {
+                pauseOnHover: false,
+            });
+        }
+        navigator.clipboard.writeText(link).then(() => {
+            toast.success("Sao chép liên kết thành công", {
+                pauseOnHover: false,
+            });
+        }).catch((err) => {
+            toast.error("Không thể sao chép liên kết", {
+                pauseOnHover: false,
+            });
+        });
+    }
+
     if (noMoreStory) {
         return <div className="text-center mt-20 text-gray-400">Không còn tin để xem</div>;
     }
@@ -185,7 +203,7 @@ const StoryView = ({ user_id }: { user_id: string }) => {
                                         <button
                                             type="button"
                                             className="w-full text-left py-2 text-sm cursor-pointer hover:bg-iconBackgroundGray"
-                                        // onClick={handleOpenEditComment}
+                                            onClick={handleCopyStoryLink}
                                         >
                                             Sao chép liên kết
                                         </button>

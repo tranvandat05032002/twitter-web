@@ -60,7 +60,7 @@ const TweetComponent = ({ tweet, time, onOpenDetail }: { tweet: Tweet, time: str
                                                 tabIndex={-1}
                                                 {...attrs}
                                             >
-                                                <div className='flex items-center space-x-2'>
+                                                {/* <div className='flex items-center space-x-2'>
                                                     <FaUnlink />
                                                     <button
                                                         type="button"
@@ -69,7 +69,7 @@ const TweetComponent = ({ tweet, time, onOpenDetail }: { tweet: Tweet, time: str
                                                     >
                                                         Sao chép liên kết
                                                     </button>
-                                                </div>
+                                                </div> */}
 
                                                 <div className='flex items-center space-x-2'>
                                                     <RiDeleteBin5Fill />

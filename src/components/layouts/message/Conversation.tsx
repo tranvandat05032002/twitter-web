@@ -13,9 +13,11 @@ import { useAddMessage } from '@/hooks/users/useMutation';
 import { IMessage, MessageArray, NewMessageRequestType } from '@/types/chatTypes';
 import { IUser } from '@/types/userTypes';
 import SimpleBar from 'simplebar-react';
+import Emoji from '@/components/common/Emoji/Emoji';
 
 const Conversation = ({ user, receiverMessage, setSendMessage }: { user: IUser, receiverMessage: IMessage, setSendMessage: React.Dispatch<React.SetStateAction<IMessage>> }) => {
   const senderId = user?._id as string
+  const inputRef = React.useRef<HTMLInputElement | null>(null)
   const { currentChat } = useChat((state) => state)
   const [messages, setMessages] = React.useState<MessageArray>([])
   const { data: getMessages } = useGetMessage(currentChat._id as string)
@@ -70,10 +72,32 @@ const Conversation = ({ user, receiverMessage, setSendMessage }: { user: IUser, 
       behavior: "smooth"
     })
   }, [messages])
+
+  const handleAddEmoji = (emoji: string) => {
+    if (!inputRef.current) return;
+
+    const input = inputRef.current;
+    const start = input.selectionStart || 0;
+    const end = input.selectionEnd || 0;
+
+    const before = newMessage.slice(0, start);
+    const after = newMessage.slice(end);
+    const updatedText = before + emoji + after;
+
+    setNewMessage(updatedText);
+
+    setShowSend(updatedText.trim() !== "");
+
+    setTimeout(() => {
+      input.focus();
+      input.setSelectionRange(start + emoji.length, start + emoji.length);
+    }, 0);
+  };
+
   return (
     <React.Fragment>
       {currentChat._id ?
-        <div className="flex-1 h-screen max-h-screen">
+        <div className="flex-1 h-screen max-h-screen flex flex-col">
           <StickyNav className={"w-full"}>
             <div className="flex items-center border-b-[0.5px] border-borderGrayPrimary">
               <div className="px-2 w-full">
@@ -104,9 +128,13 @@ const Conversation = ({ user, receiverMessage, setSendMessage }: { user: IUser, 
               </div>
             </div>
           </StickyNav>
-          <SimpleBar className="max-h-[588px] h-[588px] px-[8px]">
+          <SimpleBar className="flex-1 px-[8px] pt-2 overflow-y-auto">
             {messages && messages?.map((message, index) => <Message key={index} message={message} scroll={scroll as React.LegacyRef<HTMLDivElement>} currentUserId={senderId} />)}
           </SimpleBar>
+          {!messages || messages?.length === 0 &&
+            <div className='h-full px-[8px] flex items-center justify-center'>
+              <p className="text-center text-textGray my-4">Hãy bắt đầu cuộc trò chuyện bằng cách nhắn tin</p>
+            </div>}
           <div className="py-[10px] px-2 flex items-center gap-x-[5px]">
             <div className="flex items-center gap-x-[5px] text-textBlue">
               <BoxIcon className={"p-[3px]"}>
@@ -123,15 +151,18 @@ const Conversation = ({ user, receiverMessage, setSendMessage }: { user: IUser, 
               </BoxIcon>
             </div>
             <div className="relative flex-1 inline-block">
-              <input type="text"
+              <input
+                ref={inputRef}
+                type="text"
                 onChange={handleChangeNewMessage}
                 onKeyDown={handleSendEnter}
                 value={newMessage}
-                placeholder='Search Direct Messages'
+                placeholder='Nhập tin nhắn...'
                 className="pl-[10px] pr-[40px]  py-[5px] h-[36px] focus:outline-none border focus:border focus:border-borderBlue border-borderGrayPrimary placeholder:text-textGray placeholder:font-light placeholder:text-sm bg-black rounded-[30px] text-sm font-light w-full"
               />
               <BoxIcon className={"p-[2px] absolute right-1 top-1/2 -translate-y-1/2 text-textBlue"}>
-                <EmojiSmileFillIcon className='h-[21px] w-[21px]'></EmojiSmileFillIcon>
+                {/* <EmojiSmileFillIcon className='h-[21px] w-[21px]'></EmojiSmileFillIcon> */}
+                <Emoji onSelectEmoji={handleAddEmoji}></Emoji>
               </BoxIcon>
               {/* <div className="absolute bottom-full mb-2 z-10 right-0 border border-red-500"><Picker onEmojiSelect={console.log} /></div> */}
             </div>

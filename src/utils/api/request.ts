@@ -24,7 +24,7 @@ import { useUserInfo } from "@/store/useUserInfo";
 import { ForgotForm } from "@/app/users/find-account/page";
 import { ResetPasswordForm } from "@/app/users/reset-password/page";
 import { AxiosInstance } from "axios";
-import { AddNewMessageResponseType, GetChatResponseType, GetMessagesResponseType, NewMessageRequestType } from "@/types/chatTypes";
+import { AddNewMessageResponseType, CreateChatForm, GetChatResponseType, GetMessagesResponseType, NewMessageRequestType } from "@/types/chatTypes";
 import { MediaForm, Mediatype, ResultTweet, Tweet, TweetForm } from "@/types/tweetTypes";
 import { useQueryClient } from "@tanstack/react-query";
 import { Comment, CommentForm, CommentWithReplies, EditCommentPayload, ResultComment } from "@/types/commentTypes";
@@ -907,3 +907,21 @@ export const requestFetchInfiniteNotifications = async ({ pageParam = 1 }: { pag
     throw error
   }
 };
+
+// Chat
+export const requestCreateChat = async (data: CreateChatForm) => {
+  const { access_token } = getToken()
+  try {
+    const res = await apiInstance.post(`/chat`, {
+      ...data
+    }, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      },
+    })
+    return res.data.message
+  } catch (error) {
+    throw error
+  }
+}
