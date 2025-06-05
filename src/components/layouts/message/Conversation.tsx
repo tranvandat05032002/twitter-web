@@ -12,6 +12,7 @@ import { IMessage, MessageArray, NewMessageRequestType } from '@/types/chatTypes
 import { IUser } from '@/types/userTypes';
 import { FaMapMarkerAlt } from "react-icons/fa";
 import Emoji from '@/components/common/Emoji/Emoji';
+import VideoCall from './VideoCall';
 
 const Conversation = ({ user, receiverMessage, setSendMessage }: { user: IUser, receiverMessage: IMessage, setSendMessage: React.Dispatch<React.SetStateAction<IMessage>> }) => {
   const senderId = user?._id as string
@@ -141,6 +142,9 @@ const Conversation = ({ user, receiverMessage, setSendMessage }: { user: IUser, 
     setSendMessage({ ...newMessageObj, receiver_id: receiverId as string });
   }
 
+  // Lấy id người cần tương tác
+  const receiverId = currentChat.members.find(id => id !== senderId);
+
   return (
     <React.Fragment>
       {currentChat._id ?
@@ -164,9 +168,14 @@ const Conversation = ({ user, receiverMessage, setSendMessage }: { user: IUser, 
                     <BoxIcon>
                       <PhoneIcon></PhoneIcon>
                     </BoxIcon>
-                    <BoxIcon>
+                    {/* <BoxIcon>
                       <VideoCameraIcon></VideoCameraIcon>
-                    </BoxIcon>
+                    </BoxIcon> */}
+                    <VideoCall
+                      currentChatId={currentChat._id}
+                      senderId={senderId}
+                      receiverId={receiverId as string}
+                    />
                     <BoxIcon>
                       <ExclamationIcon></ExclamationIcon>
                     </BoxIcon>
