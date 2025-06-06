@@ -258,14 +258,14 @@ const StoryView = ({ user_id }: { user_id: string }) => {
 
                         {countViewers > 0 ?
                             currentStoryGroup.viewers.map((user) => (
-                                <SimpleBar className="flex-1 overflow-y-auto px-1" key={user._id}>
+                                <div className="flex-1 overflow-y-auto px-1" key={user._id}>
                                     <div className="py-[12px] rounded-md hover:bg-gray-500/50 ">
                                         <div className='px-[12px] flex items-center space-x-3'>
                                             <Avatar src={user.avatar} sx={{ width: 32, height: 32 }} />
                                             <div className="font-semibold">{user.name}</div>
                                         </div>
                                     </div>
-                                </SimpleBar>
+                                </div>
                             ))
                             : <p className='text-textGray text-center my-auto'>
                                 Không có người xem

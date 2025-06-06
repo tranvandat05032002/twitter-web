@@ -5,14 +5,14 @@ import { StickyNav } from '@/components/common';
 import { useFetchMe, useGetMessage, useGetProfileUserId } from '@/hooks/users/useQuery';
 import { useChat } from '@/store/useChat';
 import { Avatar } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
 import Message from './Message';
 import { useAddMessage } from '@/hooks/users/useMutation';
 import { IMessage, MessageArray, NewMessageRequestType } from '@/types/chatTypes';
 import { IUser } from '@/types/userTypes';
 import { FaMapMarkerAlt } from "react-icons/fa";
 import Emoji from '@/components/common/Emoji/Emoji';
-import VideoCall from './VideoCall';
+import VideoCallModal from './VideoCallModal';
 
 const Conversation = ({ user, receiverMessage, setSendMessage }: { user: IUser, receiverMessage: IMessage, setSendMessage: React.Dispatch<React.SetStateAction<IMessage>> }) => {
   const senderId = user?._id as string
@@ -25,6 +25,7 @@ const Conversation = ({ user, receiverMessage, setSendMessage }: { user: IUser, 
   const [newMessage, setNewMessage] = React.useState<string>("")
   const [showSend, setShowSend] = React.useState<boolean>(false)
   const { mutate: addNewMessage } = useAddMessage()
+  const [isVideoCallOpen, setIsVideoCallOpen] = useState(false);
   React.useEffect(() => {
     if (receiverMessage !== null && receiverMessage.chat_id === currentChat._id) {
       setMessages([...(messages || []), receiverMessage]);
@@ -168,14 +169,9 @@ const Conversation = ({ user, receiverMessage, setSendMessage }: { user: IUser, 
                     <BoxIcon>
                       <PhoneIcon></PhoneIcon>
                     </BoxIcon>
-                    {/* <BoxIcon>
+                    <BoxIcon onClick={() => setIsVideoCallOpen(true)}>
                       <VideoCameraIcon></VideoCameraIcon>
-                    </BoxIcon> */}
-                    <VideoCall
-                      currentChatId={currentChat._id}
-                      senderId={senderId}
-                      receiverId={receiverId as string}
-                    />
+                    </BoxIcon>
                     <BoxIcon>
                       <ExclamationIcon></ExclamationIcon>
                     </BoxIcon>
@@ -230,6 +226,14 @@ const Conversation = ({ user, receiverMessage, setSendMessage }: { user: IUser, 
                 <LikeIcon className='h-[21px] w-[21px]'></LikeIcon>
               </BoxIcon>}
           </div>
+          <VideoCallModal
+            isOpen={isVideoCallOpen}
+            onClose={() => setIsVideoCallOpen(false)}
+            currentChatId={currentChat._id}
+            senderId={senderId}
+            receiverId={receiverId as string}
+            userInfo={userInfo as IUser}
+          />
         </div> :
         <div className='flex-1 h-screen flex justify-center items-center text-textGray'><span>Vui lòng chọn người chat</span></div>}
     </React.Fragment>
